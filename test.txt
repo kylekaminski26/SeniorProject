@@ -2,4 +2,6 @@ Please use this file and type your name to test your read and commit access:
 
 1) Kyle Kaminski
 
-2) 
+2) John Miller
+
+3) 
