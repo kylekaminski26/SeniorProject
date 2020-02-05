@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheType: 1
-  lastUpdatedAtString: 2020-02-04T19:13:25.794-05:00
-  initializedAtString: 2020-02-04T19:11:10.014-05:00
+  lastUpdatedAtString: 2020-02-04T19:18:01.864-05:00
+  initializedAtString: 2020-02-04T19:18:01.864-05:00
   currentGitRemote:
     name: origin
     url: https://github.com/kylekaminski26/SeniorProject.git
@@ -25,13 +25,13 @@ MonoBehaviour:
     token: 
   currentGitBranch:
     name: JM-Prototype
-    tracking: 
+    tracking: origin/JM-Prototype
   currentConfigBranch:
     name: JM-Prototype
     remote:
-      name: 
-      url: 
-    trackingBranch: 
+      name: origin
+      url: https://github.com/kylekaminski26/SeniorProject.git
+    trackingBranch: JM-Prototype
   currentConfigRemote:
     name: origin
     url: https://github.com/kylekaminski26/SeniorProject.git
