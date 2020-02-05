@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 61
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -530159753, guid: 68c7e4565cde54155bb78d8e935f1ddb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cacheType: 3
+  lastUpdatedAtString: 2020-02-04T19:14:53.216-05:00
+  initializedAtString: 2020-02-04T19:11:49.457-05:00
+  log:
+  - commitID: 08fabc17e6c38480fd43672f1bb1b68a3122f804
+    mergeA: 
+    mergeB: 
+    authorName: caceresv
+    authorEmail: 59008501+caceresv@users.noreply.github.com
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Update test.txt
+    description: 
+    timeString: 2020-02-04T12:40:53.000-05:00
+    commitTimeString: 2020-02-04T12:40:53.000-05:00
+    changes:
+    - path: test.txt
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\test.txt
+      projectPath: ..\test.txt
+      originalPath: 
+      indexStatus: 3
+      workTreeStatus: 0
+  - commitID: 685d8e9843bcf489c129c160712779c899db2a28
+    mergeA: 
+    mergeB: 
+    authorName: kylekaminski26
+    authorEmail: kaminskik6@students.rowan.edu
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Update test.txt
+    description: 
+    timeString: 2020-02-04T12:32:37.000-05:00
+    commitTimeString: 2020-02-04T12:32:37.000-05:00
+    changes:
+    - path: test.txt
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\test.txt
+      projectPath: ..\test.txt
+      originalPath: 
+      indexStatus: 3
+      workTreeStatus: 0
+  - commitID: 9671ed56b498de31b48eadb22db99638c2df7439
+    mergeA: 
+    mergeB: 
+    authorName: Chrisfalotico
+    authorEmail: 36246712+Chrisfalotico@users.noreply.github.com
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Update test.txt
+    description: Added my name to the test document
+    timeString: 2020-02-02T19:59:53.000-05:00
+    commitTimeString: 2020-02-02T19:59:53.000-05:00
+    changes:
+    - path: test.txt
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\test.txt
+      projectPath: ..\test.txt
+      originalPath: 
+      indexStatus: 3
+      workTreeStatus: 0
+  - commitID: badfb76c2ecb359fc21328d094898ee70135b45d
+    mergeA: 
+    mergeB: 
+    authorName: kylekaminski26
+    authorEmail: kaminskik6@students.rowan.edu
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Created .gitignore for compatibility with Unity
+    description: DO NOT DELETE
+    timeString: 2020-01-29T10:34:34.000-05:00
+    commitTimeString: 2020-01-29T10:34:34.000-05:00
+    changes:
+    - path: .gitignore
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\.gitignore
+      projectPath: ..\.gitignore
+      originalPath: 
+      indexStatus: 3
+      workTreeStatus: 0
+  - commitID: 4cbb011ee16e1a60899315eda148757c7eae1857
+    mergeA: 
+    mergeB: 
+    authorName: kylekaminski26
+    authorEmail: kaminskik6@students.rowan.edu
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Create .gitignore
+    description: 
+    timeString: 2020-01-29T10:33:35.000-05:00
+    commitTimeString: 2020-01-29T10:33:35.000-05:00
+    changes:
+    - path: .gitignore
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\.gitignore
+      projectPath: ..\.gitignore
+      originalPath: 
+      indexStatus: 4
+      workTreeStatus: 0
+  - commitID: e77b5b29fca1fbd871de250d19e7c0a956399f3f
+    mergeA: 
+    mergeB: 
+    authorName: JohnMillerRWN
+    authorEmail: 47404803+JohnMillerRWN@users.noreply.github.com
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Added name to test.txt
+    description: 
+    timeString: 2020-01-25T17:26:13.000-05:00
+    commitTimeString: 2020-01-25T17:26:13.000-05:00
+    changes:
+    - path: test.txt
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\test.txt
+      projectPath: ..\test.txt
+      originalPath: 
+      indexStatus: 3
+      workTreeStatus: 0
+  - commitID: 75a02cd4560ec6f170e88170623115bd4ccf0c0d
+    mergeA: 
+    mergeB: 
+    authorName: kylekaminski26
+    authorEmail: kaminskik6@students.rowan.edu
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Update test.txt
+    description: Added Kyle
+    timeString: 2020-01-25T16:44:32.000-05:00
+    commitTimeString: 2020-01-25T16:44:32.000-05:00
+    changes:
+    - path: test.txt
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\test.txt
+      projectPath: ..\test.txt
+      originalPath: 
+      indexStatus: 3
+      workTreeStatus: 0
+  - commitID: e1945875cbd3f234dbc73eedc7925cab64e6d59e
+    mergeA: 
+    mergeB: 
+    authorName: kylekaminski26
+    authorEmail: kaminskik6@students.rowan.edu
+    commitEmail: noreply@github.com
+    commitName: GitHub
+    summary: Created initial files
+    description: Works for Kyle
+    timeString: 2020-01-25T16:44:04.000-05:00
+    commitTimeString: 2020-01-25T16:44:04.000-05:00
+    changes:
+    - path: test.txt
+      fullPath: C:\Users\JM\Documents\GitHub\SeniorProject\test.txt
+      projectPath: ..\test.txt
+      originalPath: 
+      indexStatus: 4
+      workTreeStatus: 0
