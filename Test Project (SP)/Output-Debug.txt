@@ -1,0 +1,95 @@
+﻿Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\mscorlib.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\mscorlib.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.AIModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ARModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.AccessibilityModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.AndroidJNIModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.AnimationModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.AssetBundleModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.AudioModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClothModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClusterInputModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ClusterRendererModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.CrashReportingModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.DSPGraphModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.DirectorModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.GameCenterModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.GridModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.HotReloadModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.IMGUIModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ImageConversionModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.InputLegacyModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.JSONSerializeModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.LocalizationModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.PerformanceReportingModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.PhysicsModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.Physics2DModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ProfilerModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.ScreenCaptureModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.SharedInternalsModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteMaskModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.SpriteShapeModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.StreamingModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubstanceModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.SubsystemsModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.TLSModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.TerrainPhysicsModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextCoreModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.TextRenderingModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.TilemapModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UIElementsModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UNETModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UmbraModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityAnalyticsModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityConnectModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityTestProtocolModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAssetBundleModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestAudioModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestTextureModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.UnityWebRequestWWWModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.VFXModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.VRModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.VehiclesModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.VideoModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.WindModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.XRModule.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEditor.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\System.Core.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\System.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\Unity.CompilationPipeline.Common.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\UnityExtensions\Unity\UnityVR\Editor\UnityEditor.VR.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\UnityEditor.Graphs.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\PlaybackEngines\WindowsStandaloneSupport\UnityEditor.WindowsStandalone.Extensions.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\PlaybackEngines\MetroSupport\UnityEditor.UWP.Extensions.dll
+Loaded: Module: C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Editor\SyntaxTree.VisualStudio.Unity.Bridge.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Assembly-CSharp.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.Timeline.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.VSCode.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\UnityEngine.UI.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.Timeline.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.CollabProxy.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\UnityEditor.TestRunner.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\UnityEngine.TestRunner.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.Rider.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.2D.Tilemap.Editor.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\Unity.TextMeshPro.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\ScriptAssemblies\UnityEditor.UI.dll
+Loaded: Module: D:\UniGit\SeniorProject\Test Project (SP)\Library\PackageCache\com.unity.ext.nunit@1.0.0\net35\unity-custom\nunit.framework.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\System.Xml.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\System.Xml.Linq.dll
+Loaded: Module: C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Editor\SyntaxTree.VisualStudio.Unity.Messaging.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\MonoBleedingEdge\lib\mono\unityjit\Facades\netstandard.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\Unity.Cecil.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\Unity.SerializationLogic.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\ExCSS.Unity.dll
+Loaded: Module: D:\Unity\2019.3.1f1\Editor\Data\Managed\Unity.Legacy.NRefactory.dll
+The program 'Unity' has exited with code 0 (0x0).
