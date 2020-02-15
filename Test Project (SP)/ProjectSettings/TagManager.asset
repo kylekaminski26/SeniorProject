@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Hazard
   - Enemy
+  - Player_Weapon
+  - Enemy_Weapon
   layers:
   - Default
   - TransparentFX
