@@ -1,0 +1,4 @@
+Floater, PO, PL, Partial Dev- Kyle
+World Gen, Procedural Gen, Rooms- John, Frank
+Enemy, AI, Pathfinding- Matt, Tim
+Player, Battle system, UI/UX- Victor, Chris
