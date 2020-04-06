@@ -121,7 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
-
 --- !u!1 &92817466 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5811371954408236067, guid: 312fa4ac53cff9944b2a3d8801a616fc,
@@ -136,7 +135,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92817466}
   m_Enabled: 1
-
 --- !u!1001 &679877861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -275,7 +273,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46a232a7fac129940bee1303b3ca64d7, type: 3}
-
 --- !u!1001 &1542054854
 PrefabInstance:
   m_ObjectHideFlags: 0
