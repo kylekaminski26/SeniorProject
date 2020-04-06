@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2805084765420022278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2805084765420022276}
+  - component: {fileID: 2805084765420022279}
+  m_Layer: 0
+  m_Name: Room Templates
+  m_TagString: RoomTemplate
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2805084765420022276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2805084765420022278}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2805084765420022279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2805084765420022278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 276d95b1a5b3438468bf2a0f7f278eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bottomRooms:
+  - {fileID: 3838224985884382521, guid: a253f7d159c385f4fb36aecae619d7b8, type: 3}
+  - {fileID: 6699012861109822431, guid: 2e36940520a6c0a4e87bdb4ca5ccce8f, type: 3}
+  - {fileID: 4394876055061788039, guid: e292ce41e43409241bbf7ab08e06d8a1, type: 3}
+  - {fileID: 5533680605523092103, guid: 28a10aceba00f164fb11b4b63231b995, type: 3}
+  - {fileID: 7015927997183082889, guid: 1e4b62e4a16e0174a9c770f2f2ad69ee, type: 3}
+  - {fileID: 5253322122005119810, guid: 8347c1948640c86459eea80508fdb940, type: 3}
+  topRooms:
+  - {fileID: 5533680605523092103, guid: 28a10aceba00f164fb11b4b63231b995, type: 3}
+  - {fileID: 7015927997183082889, guid: 1e4b62e4a16e0174a9c770f2f2ad69ee, type: 3}
+  - {fileID: 5253322122005119810, guid: 8347c1948640c86459eea80508fdb940, type: 3}
+  - {fileID: 4976723486153549174, guid: ed7eec981885ae6468483c4ad994c4ff, type: 3}
+  - {fileID: 7548084430287232460, guid: 529f15d1d2d6a4d40a521d08e20d78f6, type: 3}
+  - {fileID: 9041491226153416477, guid: 0074f3cc017f2f24c94d672b514e5d0a, type: 3}
+  leftRooms:
+  - {fileID: 3838224985884382521, guid: a253f7d159c385f4fb36aecae619d7b8, type: 3}
+  - {fileID: 6699012861109822431, guid: 2e36940520a6c0a4e87bdb4ca5ccce8f, type: 3}
+  - {fileID: 2758689021961186229, guid: 2752ad0bb8cb5e64a84461c753a98dae, type: 3}
+  - {fileID: 7015927997183082889, guid: 1e4b62e4a16e0174a9c770f2f2ad69ee, type: 3}
+  - {fileID: 4976723486153549174, guid: ed7eec981885ae6468483c4ad994c4ff, type: 3}
+  - {fileID: 7548084430287232460, guid: 529f15d1d2d6a4d40a521d08e20d78f6, type: 3}
+  rightRooms:
+  - {fileID: 6699012861109822431, guid: 2e36940520a6c0a4e87bdb4ca5ccce8f, type: 3}
+  - {fileID: 4394876055061788039, guid: e292ce41e43409241bbf7ab08e06d8a1, type: 3}
+  - {fileID: 2758689021961186229, guid: 2752ad0bb8cb5e64a84461c753a98dae, type: 3}
+  - {fileID: 5253322122005119810, guid: 8347c1948640c86459eea80508fdb940, type: 3}
+  - {fileID: 7548084430287232460, guid: 529f15d1d2d6a4d40a521d08e20d78f6, type: 3}
+  - {fileID: 9041491226153416477, guid: 0074f3cc017f2f24c94d672b514e5d0a, type: 3}
+  bottomRoomsEnd:
+  - {fileID: 219728444418710329, guid: c22b4eca816a27645b0b688ab5a1c858, type: 3}
+  topRoomsEnd:
+  - {fileID: 819423072213982888, guid: 024928f40d2c9ba468ea1bfc6c83a81e, type: 3}
+  leftRoomsEnd:
+  - {fileID: 293636488339390558, guid: ecbc6dbdf2dd6a241b59d8460091cdbb, type: 3}
+  rightRoomsEnd:
+  - {fileID: 8255291743329575431, guid: 97dd91d23ae7e484dae24adf4e558fe2, type: 3}
+  entryRoom: {fileID: 2924537084102082285, guid: 40a1b4dff59b9c84a8a65c355dca83fa,
+    type: 3}
+  closedRoom: {fileID: 8177446793149224230, guid: f6b31d1c133cbef4ebebc8dae1aef569,
+    type: 3}
+  endTrigger: {fileID: 545407480033233968, guid: c5def5e22cb3ae943850a3540959a217,
+    type: 3}
+  rooms: []
+  DungeonSize: 8
+  exitSpawned: 0
