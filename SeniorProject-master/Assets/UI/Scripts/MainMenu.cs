@@ -13,8 +13,8 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         aud = GetComponent<AudioSource>();
-        Invoke("ChangeScene", 1);
         aud.Play();
+	ChangeScene();
     }
 
     public void ChangeScene()
