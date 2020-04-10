@@ -17,7 +17,7 @@ TagManager:
   - 
   - 
   - Blocking Layer
-  - 
+  - Obstacle
   - 
   - 
   - 
@@ -52,4 +52,7 @@ TagManager:
     locked: 0
   - name: Player-Enemies
     uniqueID: 2507712799
+    locked: 0
+  - name: Obstacle
+    uniqueID: 1390122741
     locked: 0
