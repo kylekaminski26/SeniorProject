@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Hazard
-  - Enemy
-  - Player_Weapon
-  - Enemy_Weapon
+  - SpawnPoint
+  - Room
+  - RoomTemplate
   layers:
   - Default
   - TransparentFX
@@ -17,8 +16,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Blocking Layer
+  - Obstacle
   - 
   - 
   - 
@@ -42,9 +41,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Floor
-    uniqueID: 1207908865
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Floor
+    uniqueID: 2648680117
+    locked: 0
+  - name: Items
+    uniqueID: 1873469127
+    locked: 0
+  - name: Player-Enemies
+    uniqueID: 2507712799
+    locked: 0
+  - name: Obstacle
+    uniqueID: 1390122741
     locked: 0
