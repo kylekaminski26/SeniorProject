@@ -10,7 +10,7 @@ public class Slime : Battler
 {
     private float chaseRadius; //how far the slime can see
     public Transform target; //the target of this Battler
-    private Collider2D Hitbox;
+    private Collider2D Hitbox; //should be generalized in parent (all Battlers have a list of hitboxes)
     private Random random;
 
 
@@ -51,7 +51,7 @@ public class Slime : Battler
     //having the slimes hitbox sit at the edge of the target's hurtbox
     void Think()
     {
-        /*
+        
 
         //get attackers hitbox center
         Vector3 attackerHitboxCenter = transform.position + (Vector3) GetComponentInChildren<CircleCollider2D>().offset;
@@ -97,7 +97,7 @@ public class Slime : Battler
             }
         }
 
-        */
+        
 
     }
 
