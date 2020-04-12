@@ -19,7 +19,7 @@ public class MainMenu : MonoBehaviour
 
     public void ChangeScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Main Scene");
     }
 
     public void QuitGame() 
