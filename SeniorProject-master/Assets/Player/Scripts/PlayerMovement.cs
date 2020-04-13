@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerState
+public enum PlayerStateJM
 {
     walk,
     attack,
@@ -11,7 +11,7 @@ public enum PlayerState
 
 public class PlayerMovement : MonoBehaviour
 {
-    public PlayerState currentState;
+    public PlayerStateJM currentState;
     public float speed;
     private Rigidbody2D myRigidbody;
     private Vector3 change;
@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        currentState = PlayerState.walk;
+        currentState = PlayerStateJM.walk;
         animator = GetComponent<Animator>();
         myRigidbody = GetComponent<Rigidbody2D>();
         animator.SetFloat("moveX", 0);
