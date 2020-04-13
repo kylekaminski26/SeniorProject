@@ -130,8 +130,8 @@ public class GameController : MonoBehaviour
         slimeVectors.Remove(slimeBVector); //discard
 
         //instantiate the slimes
-        slimeA = (Instantiate(Slime, new Vector3(1, 2, 0), Quaternion.identity)).GetComponent<Slime>();
-        slimeB = (Instantiate(Slime, new Vector3(1, 8, 0), Quaternion.identity)).GetComponent<Slime>();
+        slimeA = (Instantiate(Slime, new Vector3(1, -2, 0), Quaternion.identity)).GetComponent<Slime>();
+        slimeB = (Instantiate(Slime, new Vector3(1, 4, 0), Quaternion.identity)).GetComponent<Slime>();
         //set the slimes to target each other
         slimeA.SetTarget(slimeB.gameObject.transform); //set the target to the scripts game object's transform
         slimeB.SetTarget(slimeA.gameObject.transform);

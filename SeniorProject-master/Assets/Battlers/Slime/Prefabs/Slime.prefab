@@ -58,12 +58,12 @@ GameObject:
   - component: {fileID: 6610829841854614431}
   - component: {fileID: 6610829841854614416}
   - component: {fileID: 6610829841854614417}
-  - component: {fileID: 6610829841854614418}
   - component: {fileID: 6610829841854614419}
   - component: {fileID: 6610829841854614420}
   - component: {fileID: 6610829841854614423}
   - component: {fileID: 6610829841854614422}
   - component: {fileID: 6610829841854614421}
+  - component: {fileID: 3159249977731782264}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Enemy
@@ -155,30 +155,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6610829841854614418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6610829841854614408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4337a65702e14279b41d9a831e90d50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 0
-  maxStamina: 0
-  baseAttack: 0
-  movementSpeed: 0
-  dexterity: 0
-  stamina: 0
-  health: 0
-  lastAttackTime: 0
-  currentState: 0
-  animator: {fileID: 0}
-  rb: {fileID: 0}
-  target: {fileID: 0}
 --- !u!50 &6610829841854614419
 Rigidbody2D:
   serializedVersion: 4
@@ -294,3 +270,29 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: 1
+--- !u!114 &3159249977731782264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6610829841854614408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4337a65702e14279b41d9a831e90d50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  maxStamina: 0
+  baseAttack: 0
+  movementSpeed: 0
+  dexterity: 0
+  stamina: 0
+  health: 0
+  lastAttackTime: 0
+  currentState: 0
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  target: {fileID: 0}
+  currentAIState: 0
+  previousAIState: 0

@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//State variables for AI thinking
+public enum AIState
+{
+    idle,
+    chase,
+    attack,
+    start
+}
 
-//TO-Dos: Need to ensure all states are being accounted for
-// Need to fix code so it is more compact and portable
-// Need to move some elements to the Enemy Class if they can be used elsewhere
+//TO-Dos: Need to reconsider states in Battler, this construction utilizes two sets of states: Battler and AI
+//and it is confusing to make sense of
+
 public class Slime : Battler
 {
     private float chaseRadius; //how far the slime can see
@@ -13,8 +21,14 @@ public class Slime : Battler
     private Collider2D Hitbox; //should be generalized in parent (all Battlers have a list of hitboxes)
     private Random random;
 
+    private Pathfinding.AIPath Path; //used to toggle movement and search restraints
+    private Pathfinding.AIDestinationSetter DestinationSetter; //has variable target (a transform of the goal)
 
-  
+    public AIState currentAIState;
+    public AIState previousAIState;
+
+
+
     void Awake()
     {
         base.Awake();
@@ -24,36 +38,33 @@ public class Slime : Battler
         //this does a breath first search from the parent down to children returning the first occurence of the specified type
         Hitbox = transform.GetChild(0).gameObject.GetComponent<Collider2D>(); //get the 1st and only child object to reference hitbox
         Hitbox.enabled = false;
+
+        Path = GetComponent<Pathfinding.AIPath>();
+        DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
+
+        currentAIState = AIState.idle;
+        previousAIState = AIState.start;
     }
 
     void FixedUpdate()
     {
-        //fail safe to allow game manager to assign targets
         if (target != null)
         {
-            //Slime thinking
-            if (currentState != BattlerState.hitStun)
+            //Depending on Battler State, AI can not transition its State on its own
+            if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
             {
                 Think();
             }
-
-            //toggle hitbox collider based on state
-            if (currentState == BattlerState.attack)
-            {
-                //enable hitbox
-                Hitbox.enabled = true;
-                StartCoroutine(AttackCo());
-            }
-            
-            
+           
         }
     }
 
-    //determines if the target is in view, if so makes that slime moves towards it target
-    //having the slimes hitbox sit at the edge of the target's hurtbox
+   
     void Think()
     {
-        
+        //////////////////////////////////////////////////
+        //Derive variables necessary for state transitions
+        //////////////////////////////////////////////////
 
         //get attackers hitbox center
         Vector3 attackerHitboxCenter = transform.position + (Vector3) GetComponentInChildren<CircleCollider2D>().offset;
@@ -63,58 +74,112 @@ public class Slime : Battler
         Vector3 targetHurtboxCenter = target.position + (Vector3) GetComponent<CircleCollider2D>().offset;
         //get targets hurtbox radius
         float rt = GetComponent<CircleCollider2D>().radius;
-
         //get the distance between the the center of the targets hurt box and the attackers hitbox
         float attackerTargetDistance = Vector3.Distance(attackerHitboxCenter,targetHurtboxCenter) - ra - rt;
         //the unit vector pointing to target
         Vector3 TargetDirection = Vector3.Normalize(targetHurtboxCenter - attackerHitboxCenter);
         //How far inside the targets hurtbox do we want to be?
         float penetration = ra; //penetrate a 1/4 of the hitbox radius into the target
-
         //the vector that points from the attacker's hitbox to the targets hurtbox
         Vector3 TargetVector = TargetDirection * (attackerTargetDistance+penetration) + transform.position;
 
 
-        //Is the attackers hitbox inside the targets hurtbox?
-        //Is the attacker not in hitstun?
-        if (attackerTargetDistance < 0
-            && Time.time > (lastAttackTime + 1/maxStamina) && currentState != BattlerState.hitStun)
+        /////////////////////////////////////////////
+        ///Clean Up State Exits
+        /////////////////////////////////////////////
+
+        if (currentAIState != AIState.chase && previousAIState == AIState.chase)
         {
-            lastAttackTime = Time.time;
-            currentState = BattlerState.attack;
+            DestinationSetter.enabled = false;
+            Path.enabled = false;
         }
 
-        //if not move the slime towards the target
-        else if (attackerTargetDistance <= chaseRadius)
-        {
-            if ((currentState == BattlerState.idle || currentState == BattlerState.walk)
-                && (currentState != BattlerState.hitStun || currentState != BattlerState.dead))
-            {
-                //Vector3 temp = Vector3.MoveTowards(transform.position, TargetVector, movementSpeed * Time.deltaTime);
-                Vector3 temp = Vector3.MoveTowards(transform.position, TargetVector, movementSpeed * Time.deltaTime);
-                changeAnim(temp - transform.position);
-                rb.MovePosition(temp);
-                currentState = BattlerState.walk;
-          
-            }
-        }
 
+
+
+
+
+
+        //////////////////////
+        ///State Transitions
+        //////////////////////
         
+        
+        switch (currentAIState) {
 
-    }
 
-    //Co-routine for handling the termination of Attack State
+            case AIState.idle: //Idle state
+                //Am I already Idling?
+                if (previousAIState != AIState.idle)
+                {
+                    previousAIState = currentAIState;
+                    currentState = BattlerState.idle;
+                }
+                //Is the target in visible range?
+                if (attackerTargetDistance <= chaseRadius)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.chase;
+                }
+                break;
+
+
+
+            case AIState.chase:// Chase state
+
+                //Is this a self transition to chase or from another node?
+                if (previousAIState != AIState.chase) {
+                    currentState = BattlerState.walk;
+                    DestinationSetter.enabled = true;
+                    DestinationSetter.target = target;
+                    Path.enabled = true;
+                    previousAIState = AIState.chase;
+                    currentState = BattlerState.walk;
+                }
+
+                //Is the target no longer in range?
+                if (attackerTargetDistance >= chaseRadius)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.idle;
+                }
+
+
+                //should have a constraints in here for available stamina,
+                //flat attack wait mininum
+                //and attack rate delay based on dexterity
+                if (attackerTargetDistance < 0)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.attack;
+                }
+
+                break;
+
+            case AIState.attack: //Attack state
+
+                StartCoroutine(AttackCo());
+                previousAIState = currentAIState;
+                currentAIState = AIState.idle;
+                break;
+
+
+
+
+        }   
+ }
+        
+    //Co-routine for handling attack (toggling of hitbox and Battler States)
     public IEnumerator AttackCo()
     {
-        if (rb != null)
-        {
-            yield return new WaitForSeconds(0.2f);
-            Hitbox.enabled = false;
-            currentState = BattlerState.idle;
-        }
+        
+        Hitbox.enabled = true;
+        currentState = BattlerState.attack;
+        yield return new WaitForSeconds(0.2f);
+        Hitbox.enabled = false;
+        currentState = BattlerState.idle;
+        
     }
-
-
 
 
     void changeAnim(Vector2 direction)

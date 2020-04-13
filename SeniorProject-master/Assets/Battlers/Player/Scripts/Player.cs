@@ -139,7 +139,6 @@ public class Player : Battler
         if (currentState == BattlerState.attack)
         {
             //enable hitbox
-            Hitbox.enabled = true; //issue this slime has like 45 hitsboxes
             StartCoroutine(AttackCo());
         }
     }
@@ -244,6 +243,7 @@ public class Player : Battler
     {
         if (rb != null)
         {
+            Hitbox.enabled = true;
             yield return new WaitForSeconds(0.2f);
             Hitbox.enabled = false;
             currentState = BattlerState.idle;

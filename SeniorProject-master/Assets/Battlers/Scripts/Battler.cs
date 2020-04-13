@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+//State variables for Battler Constraints and animations
+//Hitstun and attack are used in enemy AI
 public enum BattlerState
 {
     idle,
@@ -88,9 +90,6 @@ public class Battler : MonoBehaviour
         //check if collider is of tag hitbox
         if (collision.gameObject.tag == "Hitbox")
         {
-
-            Debug.Log("Hitbox hurtbox collision");
-            
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
    
@@ -146,7 +145,6 @@ public class Battler : MonoBehaviour
     //All Battlers can take damage
     public void TakeDamage(float dmg)
     {
-        Debug.Log("Damage Taken");
         health -= dmg;
         if (health < 0)
         {
