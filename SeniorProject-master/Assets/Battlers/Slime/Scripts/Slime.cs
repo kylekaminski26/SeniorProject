@@ -20,7 +20,9 @@ public class Slime : Battler
         base.Awake();
         //initialize child specific variables
         chaseRadius = 5f;
-        Hitbox = GetComponentInChildren<CircleCollider2D>();
+        //Hitbox = GetComponentInChildren<CircleCollider2D>(); This manner of reference is problematic, and the name is misleading
+        //this does a breath first search from the parent down to children returning the first occurence of the specified type
+        Hitbox = transform.GetChild(0).gameObject.GetComponent<Collider2D>(); //get the 1st and only child object to reference hitbox
         Hitbox.enabled = false;
     }
 
