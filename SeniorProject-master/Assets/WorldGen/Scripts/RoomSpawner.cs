@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Pathfinding;
 
 public class RoomSpawner : MonoBehaviour
 {
@@ -33,8 +32,6 @@ public class RoomSpawner : MonoBehaviour
             {
                 SpawnEndRooms();
                 SpawnExit();
-
-                AstarPath.active.Scan();
             }
         }
         spawned = true;
