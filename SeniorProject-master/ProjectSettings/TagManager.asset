@@ -7,6 +7,11 @@ TagManager:
   - SpawnPoint
   - Room
   - RoomTemplate
+  - player_attack
+  - audio
+  - player_projectile
+  - Enemy
+  - Potion
   layers:
   - Default
   - TransparentFX
