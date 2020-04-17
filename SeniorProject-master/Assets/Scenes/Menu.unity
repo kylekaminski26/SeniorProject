@@ -128,6 +128,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5490216202001697619, guid: b27dc45feeee2f64c8dd1dd297a3b5a7,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 957502f69cc2e0a4a8fac612f4a68b9c,
+        type: 2}
     - target: {fileID: 5490216202291314905, guid: b27dc45feeee2f64c8dd1dd297a3b5a7,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -233,6 +239,12 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5490216203166898638, guid: b27dc45feeee2f64c8dd1dd297a3b5a7,
+        type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 957502f69cc2e0a4a8fac612f4a68b9c,
+        type: 2}
     - target: {fileID: 5490216203222410471, guid: b27dc45feeee2f64c8dd1dd297a3b5a7,
         type: 3}
       propertyPath: m_AnchoredPosition.x
