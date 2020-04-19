@@ -25,6 +25,7 @@ public class RoomTemplates : MonoBehaviour
     public float waitTime;
     public bool exitSpawned = false;
 
+    private bool scannedBoard = false;
     public int maxX, minX, maxY, minY = 0;
 
     private void Start()
@@ -34,11 +35,10 @@ public class RoomTemplates : MonoBehaviour
 
     private void Update()
     {
-        if (!exitSpawned)
+        if (!scannedBoard)
         {
             if (waitTime <= 0)
             {
-                SpawnExit();
                 SetAndTriggerAStarScan();
             }
             else
@@ -46,13 +46,6 @@ public class RoomTemplates : MonoBehaviour
                 waitTime -= Time.deltaTime;
             }
         }
-    }
-
-    private void SpawnExit()
-    {
-        //spawn the end trigger prefab in the last room in the rooms list
-        Instantiate(endOverlay, rooms[rooms.Count - 1].transform.position, Quaternion.identity);
-        exitSpawned = true;
     }
 
     private void SetAndTriggerAStarScan()
@@ -72,5 +65,6 @@ public class RoomTemplates : MonoBehaviour
         graph.SetDimensions(width, depth, nodeSize);
 
         AstarPath.active.Scan();
+        scannedBoard = true;
     }
 }

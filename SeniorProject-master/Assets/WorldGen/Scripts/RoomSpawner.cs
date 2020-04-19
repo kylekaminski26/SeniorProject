@@ -27,11 +27,22 @@ public class RoomSpawner : MonoBehaviour
             if (templates.dungeonSize > templates.rooms.Count)
             {
                 SpawnRooms();
+                SpawnOverlays();
             }
             else
             {
                 SpawnEndRooms();
                 CalculateMinMaxXY();
+
+                //spawn exit in the first End Room
+                if (!templates.exitSpawned)
+                {
+                    SpawnExit();
+                }
+                else
+                {
+                    SpawnOverlays();
+                }
             }
         }
         spawned = true;
@@ -91,6 +102,22 @@ public class RoomSpawner : MonoBehaviour
             rand = Random.Range(0, templates.rightRoomsEnd.Length);
             Instantiate(templates.rightRoomsEnd[rand], transform.position, Quaternion.identity);
         }
+    }
+
+    public void SpawnOverlays()
+    {
+        //don't generate overlay in the spawn room
+        if(templates.rooms.Count > 1)
+        {
+            rand = Random.Range(0, templates.overlays.Length);
+            Instantiate(templates.overlays[rand], transform.position, Quaternion.identity);
+        }
+    }
+
+    public void SpawnExit()
+    {
+        Instantiate(templates.endOverlay, transform.position, Quaternion.identity);
+        templates.exitSpawned = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

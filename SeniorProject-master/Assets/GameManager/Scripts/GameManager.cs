@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public int gameLevel = 0;
+    static GameManager instance; //used to make this GameObject a singleton
+
+    public int gameLevel = 1;
 
     public GameObject[] enemyList;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        DontDestroyOnLoad(this);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (instance == null)
+        {
+            instance = this; // In first scene, make us the singleton.
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+            Destroy(gameObject); // On reload, singleton already set, so destroy duplicate.
     }
 }
