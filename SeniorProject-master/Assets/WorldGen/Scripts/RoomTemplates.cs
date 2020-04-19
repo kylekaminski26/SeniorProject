@@ -13,17 +13,64 @@ public class RoomTemplates : MonoBehaviour
     public GameObject[] leftRoomsEnd;
     public GameObject[] rightRoomsEnd;
 
+    public GameObject[] overlays;
+
     public GameObject entryRoom;
     public GameObject closedRoom;
-    public GameObject endTrigger;
+    public GameObject endOverlay;
 
     public List<GameObject> rooms;
 
-    public int DungeonSize;
+    public int dungeonSize;
+    public float waitTime;
     public bool exitSpawned = false;
+
+    public int maxX, minX, maxY, minY = 0;
 
     private void Start()
     {
         Instantiate(entryRoom, transform.position, Quaternion.identity);
+    }
+
+    private void Update()
+    {
+        if (!exitSpawned)
+        {
+            if (waitTime <= 0)
+            {
+                SpawnExit();
+                SetAndTriggerAStarScan();
+            }
+            else
+            {
+                waitTime -= Time.deltaTime;
+            }
+        }
+    }
+
+    private void SpawnExit()
+    {
+        //spawn the end trigger prefab in the last room in the rooms list
+        Instantiate(endOverlay, rooms[rooms.Count - 1].transform.position, Quaternion.identity);
+        exitSpawned = true;
+    }
+
+    private void SetAndTriggerAStarScan()
+    {
+        var graph = AstarPath.active.data.gridGraph;
+
+        //get the largest absolute value of max/min
+        int width = maxX > Mathf.Abs(minX) ? maxX : Mathf.Abs(minX);
+        int depth = maxY > Mathf.Abs(minY) ? maxY : Mathf.Abs(minY);
+
+        float nodeSize = 1;
+
+        //Account for the room spawnpoint to the walls (x + 10), double it for the actual width of the entire board
+        width = (width + 10) * 2;
+        depth = (depth + 10) * 2;
+
+        graph.SetDimensions(width, depth, nodeSize);
+
+        AstarPath.active.Scan();
     }
 }
