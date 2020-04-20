@@ -217,4 +217,32 @@ public class Slime : Battler
 
         return statList;
     }
-}
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.gameObject.CompareTag("player_attack") && currentState != BattlerState.hitStun)
+        {
+            //This will be changed to where it gets the damage from the
+            // hitbox rather than from the baseAttack of the enemy.
+            if (health - other.gameObject.GetComponentInParent<Battler>().baseAttack <= 0)
+            {
+                TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
+                Die();
+            }
+            TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
+
+            //* Need to use component in parent to utilize this script. Otherwise
+            //* we need to add a knockback/damage script to the hitboxes of the enemy entity as well
+            //* rather than having it all on the single enemy object.
+
+            if (currentState != BattlerState.dead)
+            {
+                //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+                // Destroy(combatEffect, 0.35f);
+                Knockback(other.transform);
+                StartCoroutine(KnockCo());
+            }
+        }
+    }
+    }

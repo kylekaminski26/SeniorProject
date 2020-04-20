@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /* Effects Map
  * 0 - Hit Effect 1
@@ -136,7 +137,7 @@ public class PlayerControl : Battler
         if (health <= 0)
         {
             currentState = BattlerState.dead;
-            Die();
+            //Die();
         }
 
         if (stamina < 100f)
@@ -266,27 +267,31 @@ public class PlayerControl : Battler
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        /*
-        if (other.gameObject.CompareTag("Enemy") && currentState != PlayerState.hitStun)
+        
+        if (other.gameObject.CompareTag("Enemy") && currentState != BattlerState.hitStun)
         {
             //This will be changed to where it gets the damage from the
             // hitbox rather than from the baseAttack of the enemy.
-
-            TakeDamage(other.gameObject.GetComponentInParent<Enemy>().attackDamage);
-             
-             * Need to use component in parent to utilize this script. Otherwise
-             * we need to add a knockback/damage script to the hitboxes of the enemy entity as well
-             * rather than having it all on the single enemy object.
-             
-            if (currentState != PlayerState.dead)
+            if (health - other.gameObject.GetComponentInParent<Battler>().baseAttack <= 0)
             {
-                GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-                Destroy(combatEffect, 0.35f);
+                TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
+                Die();
+            }
+            TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
+             
+             //* Need to use component in parent to utilize this script. Otherwise
+             //* we need to add a knockback/damage script to the hitboxes of the enemy entity as well
+             //* rather than having it all on the single enemy object.
+             
+            if (currentState != BattlerState.dead)
+            {
+                //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+               // Destroy(combatEffect, 0.35f);
                 Knockback(other.transform);
                 StartCoroutine(KnockCo(rb));
             }
         }
-        */
+        
         /*
         if (other.gameObject.CompareTag("Potion"))
         {
@@ -346,6 +351,7 @@ public class PlayerControl : Battler
     {
         yield return new WaitForSeconds(0.75f);
         this.gameObject.SetActive(false);
+        SceneManager.LoadScene("Menu");
     }
 
     void StaminaRegen()
