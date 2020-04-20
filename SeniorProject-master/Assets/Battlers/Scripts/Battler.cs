@@ -10,7 +10,8 @@ public enum BattlerState
     walk,
     hitStun,
     attack,
-    dead
+    dead,
+    dash
 }
 
 /*This class holds all of the common elements
@@ -46,6 +47,8 @@ public class Battler : MonoBehaviour
     //prefab component references
     public Animator animator;
     public Rigidbody2D rb;
+    public AudioSource[] aud;
+    public GameObject[] effects;
 
     /* When a MonoBehaviour is initialized,there is a sequence of function calls
      * that take place
@@ -92,17 +95,25 @@ public class Battler : MonoBehaviour
         {
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
-   
+
             //is the attacker in an attack state?
             if (attacker.GetBattlerState() == BattlerState.attack)
             {
                 //deal damage (from parent class)
+                /* Concern: If we have enemies that will consist of
+                 * multiple hitboxes, wouldn't it be better to get the damage value
+                 * of the attacks from the hitboxes themselves so they don't all deal
+                 * the same amount of damage. -Victor
+                 */
                 TakeDamage(attacker.GetDamage());
                 //start knockback (these are from the parent)
-                Knockback(attacker.transform);
-                StartCoroutine(KnockCo());
-
-
+                if (currentState != BattlerState.dead)
+                {
+                    //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+                    //Destroy(combatEffect, 0.35f);
+                    Knockback(attacker.transform);
+                    StartCoroutine(KnockCo());
+                }
             }
         }
     }
@@ -134,6 +145,12 @@ public class Battler : MonoBehaviour
     }
 
     //All battlers can die!
+    /* Personally, I do not want to have the Die() funtion as a part
+     * of the battler script as enemies and players have various
+     * death animations. One way around this is figureing out how to
+     * get the time for animations. Otherwise, Die() should be part of
+     * the enemy or player's individual scripts.
+     */
     public void Die()
     {
         //currentState = BattlerState.dead;
@@ -164,6 +181,10 @@ public class Battler : MonoBehaviour
         return currentState;
     }
 
+    public void ChangeState(BattlerState state)
+    {
+        currentState = state;
+    }
     public void SetStats(float maxHealth, float maxStamina, float baseAttack, float movementSpeed, float dexterity)
     {
         this.maxHealth = maxHealth;
@@ -193,5 +214,34 @@ public class Battler : MonoBehaviour
         return "" + maxHealth + ":" + maxStamina + ":" + baseAttack + ":" + movementSpeed + ":" + dexterity;
     }
 
+    public void ChangeAnim(Vector2 direction)
+    {
+        direction = direction.normalized;
 
+        if (direction != Vector2.zero)
+        {
+            animator.SetFloat("Horizontal", direction.x);
+            animator.SetFloat("Vertical", direction.y);
+            animator.SetBool("Moving", true);
+        }
+    }
+
+    public void MoveAndAnimate(Vector3 moveVector, bool toward)
+    {
+        float direction = 1f;
+        if (!toward)
+            direction = -1f;
+
+        Vector3 newPos = Vector3.MoveTowards(transform.position, moveVector, direction * movementSpeed * Time.deltaTime);
+        ChangeAnim(newPos - transform.position);
+        rb.MovePosition(newPos);
+    }
+
+    public void PlayAudio(int index, float startTime, float endTime)
+    {
+        AudioSource audio = aud[index];
+        audio.time = startTime;
+        audio.Play();
+        audio.SetScheduledEndTime(AudioSettings.dspTime + (endTime - startTime));
+    }
 }
