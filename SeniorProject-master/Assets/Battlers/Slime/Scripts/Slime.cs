@@ -44,7 +44,6 @@ public class Slime : Battler
 
         currentAIState = AIState.idle;
         previousAIState = AIState.start;
-        target = GameObject.FindWithTag("Player").transform;
     }
 
     void FixedUpdate()

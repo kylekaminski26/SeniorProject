@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 1236377108519374387}
   - component: {fileID: 1898867047911094972}
   - component: {fileID: 2911199520195883747}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Exit Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
