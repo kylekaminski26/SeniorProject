@@ -17,21 +17,32 @@ public class RoomSpawner : MonoBehaviour
     {
         Destroy(gameObject, waitTime);
         templates = GameObject.FindGameObjectWithTag("RoomTemplate").GetComponent<RoomTemplates>();
-        Invoke("Spawn", 0.4f);
+        Invoke("Spawn", 0.2f);
     }
 
     private void Spawn()
     {
         if (spawned == false)
         {
-            if (templates.DungeonSize > templates.rooms.Count)
+            if (templates.dungeonSize > templates.rooms.Count)
             {
                 SpawnRooms();
+                SpawnOverlays();
             }
             else
             {
                 SpawnEndRooms();
-                SpawnExit();
+                CalculateMinMaxXY();
+
+                //spawn exit in the first End Room
+                if (!templates.exitSpawned)
+                {
+                    SpawnExit();
+                }
+                else
+                {
+                    SpawnOverlays();
+                }
             }
         }
         spawned = true;
@@ -93,24 +104,24 @@ public class RoomSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnExit()
+    public void SpawnOverlays()
     {
-        //spawns the End Trigger only if this is the FIRST Terminating Room
-        if (!templates.exitSpawned)
+        //don't generate overlay in the spawn room
+        if(templates.rooms.Count > 1)
         {
-            Instantiate(templates.endTrigger, transform.position, Quaternion.identity);
-            templates.exitSpawned = true;
+            rand = Random.Range(0, templates.overlays.Length);
+            Instantiate(templates.overlays[rand], transform.position, Quaternion.identity);
         }
+    }
+
+    public void SpawnExit()
+    {
+        Instantiate(templates.endOverlay, transform.position, Quaternion.identity);
+        templates.exitSpawned = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        /*
-         if (collision.CompareTag("SpawnPoint") && collision.GetComponent<RoomSpawner>().spawned == true)
-         {
-             Destroy(gameObject);
-         }*/
-         
         if (collision.CompareTag("SpawnPoint"))
         {
             if (collision.GetComponent<RoomSpawner>().spawned == false && spawned == false)
@@ -119,6 +130,26 @@ public class RoomSpawner : MonoBehaviour
                 Destroy(gameObject);
             }
             spawned = true;
+        }
+    }
+
+    private void CalculateMinMaxXY()
+    {
+        if (transform.position.x > templates.maxX)
+        {
+            templates.maxX = (int) transform.position.x;
+        }
+        else if (transform.position.x < templates.minX)
+        {
+            templates.minX = (int) transform.position.x;
+        }
+        if (transform.position.y > templates.maxY)
+        {
+            templates.maxY = (int) transform.position.y;
+        }
+        else if (transform.position.y < templates.minY)
+        {
+            templates.minY = (int) transform.position.y;
         }
     }
 }
