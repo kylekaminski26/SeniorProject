@@ -3870,7 +3870,7 @@ GameObject:
   - component: {fileID: 5533680606127155417}
   - component: {fileID: 5533680606127155418}
   - component: {fileID: 5533680606127155419}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Dungeon Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}

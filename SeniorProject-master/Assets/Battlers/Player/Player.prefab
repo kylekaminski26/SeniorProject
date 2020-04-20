@@ -181,8 +181,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1787254497
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 7152930139536384079, guid: 2042ef59c4703924595e0d259873086e,
     type: 3}
@@ -253,14 +253,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 596065a9d66e62849aad3ce9fd8794b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 20
+  maxStamina: 0
+  baseAttack: 0
+  movementSpeed: 0
+  dexterity: 0
+  stamina: 0
+  health: 20
+  lastAttackTime: 0
+  currentState: 0
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  aud: []
+  effects: []
   projectilePrefab: {fileID: 5556534669846236767, guid: 3b0a521fd3762f841a04b880d1dd570d,
     type: 3}
-  health: 20
-  maxHealth: 20
-  stamina: 0
-  maxStamina: 0
-  hitEffectPrefab: {fileID: 7184407920531726515, guid: fdd70b8e694e2394492133a3e6d2c647,
-    type: 3}
+  dashEffectPrefab: {fileID: 0}
 --- !u!1 &3418207685975614776
 GameObject:
   m_ObjectHideFlags: 0
