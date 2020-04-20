@@ -84,12 +84,19 @@ MonoBehaviour:
   - {fileID: 293636488339390558, guid: ecbc6dbdf2dd6a241b59d8460091cdbb, type: 3}
   rightRoomsEnd:
   - {fileID: 8255291743329575431, guid: 97dd91d23ae7e484dae24adf4e558fe2, type: 3}
+  overlays:
+  - {fileID: 4079371377862344902, guid: 344f1b7277b7e534dba5efa46e6984bf, type: 3}
   entryRoom: {fileID: 2924537084102082285, guid: 40a1b4dff59b9c84a8a65c355dca83fa,
     type: 3}
   closedRoom: {fileID: 8177446793149224230, guid: f6b31d1c133cbef4ebebc8dae1aef569,
     type: 3}
-  endTrigger: {fileID: 545407480033233968, guid: c5def5e22cb3ae943850a3540959a217,
+  endOverlay: {fileID: 545407480033233968, guid: c5def5e22cb3ae943850a3540959a217,
     type: 3}
   rooms: []
-  DungeonSize: 8
+  dungeonSize: 8
+  waitTime: 2
   exitSpawned: 0
+  maxX: 0
+  minX: 0
+  maxY: 0
+  minY: 0
