@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 7773370190678450648}
   - component: {fileID: 7773370190678450650}
   - component: {fileID: 7773370190678450654}
+  - component: {fileID: 6507015337588552255}
   - component: {fileID: 7773370190678450655}
   - component: {fileID: 7773370190678450652}
   - component: {fileID: 1984122239962397745}
@@ -215,6 +216,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   target: {fileID: 0}
+--- !u!114 &6507015337588552255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773370190678450625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e6c29e32504465faa943c537d8029b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  targets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  delay: 0
 --- !u!114 &7773370190678450655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,6 +325,11 @@ MonoBehaviour:
   aud: []
   effects: []
   target: {fileID: 0}
+  chaseDistance: 0
+  waypoint: {fileID: 7940196410648704177, guid: 4a748215d02f2dc4c95ff5db51329e41,
+    type: 3}
+  searchTime: 0
+  searchRange: 0
   currentAIState: 0
   previousAIState: 0
   attackerTargetDistance: 0

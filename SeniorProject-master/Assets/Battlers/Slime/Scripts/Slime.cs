@@ -6,7 +6,10 @@ using UnityEngine;
 public enum AIState
 {
     idle,
+    patrol,
     chase,
+    sleuth,
+    flee,
     attack,
     start
 }
@@ -22,8 +25,19 @@ public class Slime : Battler
     private BoxCollider2D targetHurtbox;
     private Random random;
 
+    [SerializeField] private float chaseDistance; //The distance in which the enemy will try to maintain from the player during chase
+    [SerializeField] private GameObject waypoint;
+
+    private GameObject[] patrolPointArray = new GameObject[4];//Must be the same size declared in the Patrol script attached to enemy
+    private GameObject[] searchPointArray = new GameObject[4];
+    [SerializeField] private float searchTime;//How long this enemy will search for a target
+    [SerializeField] private float searchRange;//The range in which the enemy will search for the player
+
+    private bool bIsSearching;
+
     private Pathfinding.AIPath Path; //used to toggle movement and search restraints
     private Pathfinding.AIDestinationSetter DestinationSetter; //has variable target (a transform of the goal)
+    private Pathfinding.Patrol AIPatrol; //used to define a patrol path
 
     public AIState currentAIState;
     public AIState previousAIState;
@@ -45,6 +59,7 @@ public class Slime : Battler
 
         Path = GetComponent<Pathfinding.AIPath>();
         DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
+        AIPatrol = GetComponent<Pathfinding.Patrol>();
 
         currentAIState = AIState.idle;
         previousAIState = AIState.start;
@@ -56,6 +71,14 @@ public class Slime : Battler
         
         targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
+        //I am not searching on instantiation
+        bIsSearching = false;
+
+        //Create patrol waypoints
+        patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
+        patrolPointArray[1] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y - 5f, 0), new Quaternion());
+        patrolPointArray[2] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
+        patrolPointArray[3] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y - 5f, 0), new Quaternion());
 
     }
 
@@ -119,7 +142,11 @@ public class Slime : Battler
             Path.enabled = false;
         }
 
-
+        if (currentAIState != AIState.patrol && previousAIState == AIState.patrol)
+        {
+            AIPatrol.enabled = false;
+            Path.enabled = false;
+        }
 
 
 
@@ -129,26 +156,21 @@ public class Slime : Battler
         ///State Transitions
         //////////////////////
 
-        
-
-
-
         switch (currentAIState)
         {
-
 
             case AIState.idle: //Idle state
 
                 //if in HitStun lock into Idle
                 if (currentState != BattlerState.hitStun)
                 {
-
                     //Am I already Idling?
                     if (previousAIState != AIState.idle)
                     {
                         previousAIState = currentAIState;
                         currentState = BattlerState.idle;
                     }
+
                     //Is the target in visible range?
                     if (attackerTargetDistance <= chaseRadius)
                     {
@@ -156,11 +178,47 @@ public class Slime : Battler
                         currentAIState = AIState.chase;
                     }
 
+                    //If the target is not in visual range and I am NOT currently looking for them
+                    //Then Patrol
+                    if ((attackerTargetDistance > chaseRadius) && currentAIState != AIState.sleuth)
+                    {
+                        previousAIState = currentAIState;
+                        currentAIState = AIState.patrol;
+                    }
+
                 }
                 
-
                 break;
 
+
+            case AIState.patrol: //Patrol state
+                //  Enable patrol script with the created waypoints
+                //  Can Switch to chase
+
+                //Am I already patrolling?
+                if (previousAIState != AIState.patrol)
+                {
+                    AIPatrol.targets[0] = patrolPointArray[0].transform;
+                    AIPatrol.targets[1] = patrolPointArray[1].transform;
+                    AIPatrol.targets[2] = patrolPointArray[2].transform;
+                    AIPatrol.targets[3] = patrolPointArray[3].transform;
+
+                    AIPatrol.delay = 0f;    //Sets a delay(seconds) before the enemy will begin towards next search point
+                    Path.enabled = true;
+                    AIPatrol.enabled = true;
+                    previousAIState = AIState.patrol;
+                    currentState = BattlerState.walk;
+
+                }
+
+                //Is the target in visible range?
+                if (attackerTargetDistance <= chaseRadius)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.chase;
+                }
+
+                break;
 
 
             case AIState.chase:// Chase state
@@ -176,13 +234,28 @@ public class Slime : Battler
                     currentState = BattlerState.walk;
                 }
 
+                //TODO Refine the implementation of Fixed Chase Distance
+                //Chasing Should ALWAYS be from a fixed distance away from the target
+
+                //If the distance from the enemy to the target is less than the given chase distance
+                if (((target.position - gameObject.transform.position).magnitude) < chaseDistance)
+                {
+                    //idle to let player to make distance (Could change target position to self at the time)
+                    DestinationSetter.target = gameObject.transform;
+                }
+                else
+                {
+                    //Continue to chase (if melee)
+                    //or Attack (if ranged)
+                    DestinationSetter.target = target;
+                }
+
                 //Is the target no longer in range?
                 if (attackerTargetDistance >= chaseRadius)
                 {
                     previousAIState = currentAIState;
-                    currentAIState = AIState.idle;
+                    currentAIState = AIState.sleuth;
                 }
-
 
                 //should have a constraints in here for available stamina,
                 //flat attack wait mininum
@@ -202,18 +275,94 @@ public class Slime : Battler
                     currentAIState = AIState.idle;
                 }
 
+                break;
+
+
+            case AIState.sleuth: //Sleuth state
+                //Can switch to patrol or chase
+
+                //Am I already searching?
+                if (previousAIState != AIState.sleuth)
+                {
+                    bIsSearching = true;
+
+                    // Instantiate waypoints based on the target's position
+                    searchPointArray[0] = Instantiate(waypoint, new Vector3(target.transform.position.x, target.transform.position.y + searchRange, 0), new Quaternion());
+                    searchPointArray[1] = Instantiate(waypoint, new Vector3(target.transform.position.x, target.transform.position.y - searchRange, 0), new Quaternion());
+                    searchPointArray[2] = Instantiate(waypoint, new Vector3(target.transform.position.x + searchRange, target.transform.position.y, 0), new Quaternion());
+                    searchPointArray[3] = Instantiate(waypoint, new Vector3(target.transform.position.x - searchRange, target.transform.position.y, 0), new Quaternion());
+
+                    //Set targets to the waypoints created for searching
+                    AIPatrol.targets[0] = searchPointArray[0].transform;
+                    AIPatrol.targets[1] = searchPointArray[1].transform;
+                    AIPatrol.targets[2] = searchPointArray[2].transform;
+                    AIPatrol.targets[3] = searchPointArray[3].transform;
+
+                    Path.enabled = true;
+                    AIPatrol.delay = 1f; //Sets a delay(seconds) before the enemy will begin towards next search point
+                    AIPatrol.enabled = true;
+                    previousAIState = AIState.sleuth;
+                    currentState = BattlerState.walk;
+
+                }
+
+                //After searching for X amount of time | See function searchForTime
+                //If I am no longer searching
+                //Return to normal patrol
+                if (bIsSearching == false)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.patrol;
+
+                    AIPatrol.enabled = false;
+
+                    Destroy(searchPointArray[0]);
+                    Destroy(searchPointArray[1]);
+                    Destroy(searchPointArray[2]);
+                    Destroy(searchPointArray[3]);
+                }
+
+                //Is the target in visible range?
+                //If yes, chase
+                if (attackerTargetDistance <= chaseRadius)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.chase;
+
+                    AIPatrol.enabled = false;
+
+                    Destroy(searchPointArray[0]);
+                    Destroy(searchPointArray[1]);
+                    Destroy(searchPointArray[2]);
+                    Destroy(searchPointArray[3]);
+                }
+
+                //Count down until I give up the search
+                StartCoroutine(searchForTime(searchTime));
 
                 break;
+
+
+                //TODO Create approach state
+            
+
 
             case AIState.attack: //Attack state
 
                 StartCoroutine(AttackCo());
                 previousAIState = currentAIState;
                 currentAIState = AIState.idle;
+
                 break;
 
 
+            case AIState.flee:
+                //TODO Complete flee state
+                //When health is low, Flee to a patrol point
+                //and resume a patrol after X amount of time
 
+
+                break;
 
         }
 
@@ -230,6 +379,13 @@ public class Slime : Battler
         Hitbox.enabled = false;
         currentState = BattlerState.idle;
         
+    }
+
+    public IEnumerator searchForTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        //After X seconds I am no longer searching for the target
+        bIsSearching = false;
     }
 
 
@@ -294,4 +450,4 @@ public class Slime : Battler
             }
         }
     }
-    }
+}
