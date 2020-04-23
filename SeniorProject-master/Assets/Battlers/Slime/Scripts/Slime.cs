@@ -34,6 +34,7 @@ public class Slime : Battler
     [SerializeField] private float searchRange;//The range in which the enemy will search for the player
 
     private bool bIsSearching;
+    private bool bIsCounting;
 
     private Pathfinding.AIPath Path; //used to toggle movement and search restraints
     private Pathfinding.AIDestinationSetter DestinationSetter; //has variable target (a transform of the goal)
@@ -73,6 +74,7 @@ public class Slime : Battler
 
         //I am not searching on instantiation
         bIsSearching = false;
+        bIsCounting = false;
 
         //Create patrol waypoints
         patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
@@ -285,6 +287,7 @@ public class Slime : Battler
                 if (previousAIState != AIState.sleuth)
                 {
                     bIsSearching = true;
+                    bIsCounting = false;
 
                     // Instantiate waypoints based on the target's position
                     searchPointArray[0] = Instantiate(waypoint, new Vector3(target.transform.position.x, target.transform.position.y + searchRange, 0), new Quaternion());
@@ -311,7 +314,7 @@ public class Slime : Battler
                 //Return to normal patrol
                 if (bIsSearching == false)
                 {
-                    previousAIState = currentAIState;
+                    previousAIState = AIState.sleuth;
                     currentAIState = AIState.patrol;
 
                     AIPatrol.enabled = false;
@@ -326,7 +329,7 @@ public class Slime : Battler
                 //If yes, chase
                 if (attackerTargetDistance <= chaseRadius)
                 {
-                    previousAIState = currentAIState;
+                    previousAIState = AIState.sleuth;
                     currentAIState = AIState.chase;
 
                     AIPatrol.enabled = false;
@@ -338,7 +341,10 @@ public class Slime : Battler
                 }
 
                 //Count down until I give up the search
-                StartCoroutine(searchForTime(searchTime));
+                if(bIsCounting == false)
+                {
+                    StartCoroutine(searchForTime());
+                }
 
                 break;
 
@@ -381,9 +387,11 @@ public class Slime : Battler
         
     }
 
-    public IEnumerator searchForTime(float time)
+    public IEnumerator searchForTime()
     {
-        yield return new WaitForSeconds(time);
+        bIsCounting = true;
+
+        yield return new WaitForSeconds(searchTime);
         //After X seconds I am no longer searching for the target
         bIsSearching = false;
     }
