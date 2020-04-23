@@ -404,7 +404,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Slime
       value: 
-      objectReference: {fileID: 6610829841854614408, guid: 54f64e7f99d544409881d76008970726,
+      objectReference: {fileID: 7773370190678450625, guid: 54f64e7f99d544409881d76008970726,
         type: 3}
     - target: {fileID: 5169495596020357967, guid: 9a76dd789e7474d24829dbcdd83c38d3,
         type: 3}

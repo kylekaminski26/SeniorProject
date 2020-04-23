@@ -18,7 +18,8 @@ public class Slime : Battler
 {
     private float chaseRadius; //how far the slime can see
     public Transform target; //the target of this Battler
-    private Collider2D Hitbox; //should be generalized in parent (all Battlers have a list of hitboxes)
+    private CircleCollider2D Hitbox; //should be generalized in parent (all Battlers have a list of hitboxes)
+    private BoxCollider2D targetHurtbox;
     private Random random;
 
     private Pathfinding.AIPath Path; //used to toggle movement and search restraints
@@ -27,6 +28,8 @@ public class Slime : Battler
     public AIState currentAIState;
     public AIState previousAIState;
 
+    public float attackerTargetDistance = 0;
+
 
 
     void Awake()
@@ -34,10 +37,11 @@ public class Slime : Battler
         base.Awake();
         //initialize child specific variables
         chaseRadius = 5f;
-        //Hitbox = GetComponentInChildren<CircleCollider2D>(); This manner of reference is problematic, and the name is misleading
-        //this does a breath first search from the parent down to children returning the first occurence of the specified type
-        Hitbox = transform.GetChild(0).gameObject.GetComponent<Collider2D>(); //get the 1st and only child object to reference hitbox
+
+        //Hitbox = GameObject.Find("Hitbox").GetComponent<CircleCollider2D>();
+        Hitbox = GetComponentInChildren<CircleCollider2D>();
         Hitbox.enabled = false;
+
 
         Path = GetComponent<Pathfinding.AIPath>();
         DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
@@ -45,19 +49,21 @@ public class Slime : Battler
         currentAIState = AIState.idle;
         previousAIState = AIState.start;
 
-        target = GameObject.FindWithTag("Player").transform;
+        if (GameObject.Find("Player"))
+        {
+            target = GameObject.FindWithTag("Player").transform;
+        }
+        
+        targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
+
+
     }
 
     void FixedUpdate()
     {
         if (target != null)
         {
-            //Depending on Battler State, AI can not transition its State on its own
-            if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
-            {
-                Think();
-            }
-           
+            Think();
         }
     }
 
@@ -68,22 +74,39 @@ public class Slime : Battler
         //Derive variables necessary for state transitions
         //////////////////////////////////////////////////
 
-        //get attackers hitbox center
-        Vector3 attackerHitboxCenter = transform.position + (Vector3) GetComponentInChildren<CircleCollider2D>().offset;
-        //attackers Hitbox radius
-        float ra = GetComponentInChildren<CircleCollider2D>().radius;
-        //get targets hurtbox center
-        Vector3 targetHurtboxCenter = target.position + (Vector3) GetComponent<CircleCollider2D>().offset;
-        //get targets hurtbox radius
-        float rt = GetComponent<CircleCollider2D>().radius;
-        //get the distance between the the center of the targets hurt box and the attackers hitbox
-        float attackerTargetDistance = Vector3.Distance(attackerHitboxCenter,targetHurtboxCenter) - ra - rt;
+
+        //center of my hitbox
+        Vector3 attackerHitboxCenter = (Vector3)Hitbox.transform.position + (Vector3)Hitbox.offset;
+
+        //center of target's hurtbox
+        Vector3 targetHurtboxCenter = (Vector3)targetHurtbox.transform.position + (Vector3)targetHurtbox.offset;//(Vector3)targetHurtbox.bounds.center;
+
+        //maximal dimension of target's hurtbox(needs to be boxcollider2D)
+        float minDim = (targetHurtbox.size.x < targetHurtbox.size.y) ? targetHurtbox.size.x : targetHurtbox.size.y;
+
+        //radius of my hitbox
+        float ra = Hitbox.radius;
+
+        //note that the if the the distance between the center points is the radius + the mininal dimension
+        //it will guarentee you are inside the hitbox
+
+
+        //distance between centers
+        //remove from public when done
+        attackerTargetDistance = Vector3.Distance(attackerHitboxCenter, targetHurtboxCenter);
+
         //the unit vector pointing to target
         Vector3 TargetDirection = Vector3.Normalize(targetHurtboxCenter - attackerHitboxCenter);
+
         //How far inside the targets hurtbox do we want to be?
-        float penetration = ra; //penetrate a 1/4 of the hitbox radius into the target
+        //aim to have atleast half of your hitbox in them
+        float penetration = ra/2; 
+
         //the vector that points from the attacker's hitbox to the targets hurtbox
-        Vector3 TargetVector = TargetDirection * (attackerTargetDistance+penetration) + transform.position;
+        Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
+
+        float touchDistance = ra + minDim/2;
+
 
 
         /////////////////////////////////////////////
@@ -105,24 +128,37 @@ public class Slime : Battler
         //////////////////////
         ///State Transitions
         //////////////////////
+
         
-        
-        switch (currentAIState) {
+
+
+
+        switch (currentAIState)
+        {
 
 
             case AIState.idle: //Idle state
-                //Am I already Idling?
-                if (previousAIState != AIState.idle)
+
+                //if in HitStun lock into Idle
+                if (currentState != BattlerState.hitStun)
                 {
-                    previousAIState = currentAIState;
-                    currentState = BattlerState.idle;
+
+                    //Am I already Idling?
+                    if (previousAIState != AIState.idle)
+                    {
+                        previousAIState = currentAIState;
+                        currentState = BattlerState.idle;
+                    }
+                    //Is the target in visible range?
+                    if (attackerTargetDistance <= chaseRadius)
+                    {
+                        previousAIState = currentAIState;
+                        currentAIState = AIState.chase;
+                    }
+
                 }
-                //Is the target in visible range?
-                if (attackerTargetDistance <= chaseRadius)
-                {
-                    previousAIState = currentAIState;
-                    currentAIState = AIState.chase;
-                }
+                
+
                 break;
 
 
@@ -130,7 +166,8 @@ public class Slime : Battler
             case AIState.chase:// Chase state
 
                 //Is this a self transition to chase or from another node?
-                if (previousAIState != AIState.chase) {
+                if (previousAIState != AIState.chase)
+                {
                     currentState = BattlerState.walk;
                     DestinationSetter.enabled = true;
                     DestinationSetter.target = target;
@@ -150,11 +187,21 @@ public class Slime : Battler
                 //should have a constraints in here for available stamina,
                 //flat attack wait mininum
                 //and attack rate delay based on dexterity
-                if (attackerTargetDistance < 0)
+                //touch distance is the smallest possible distance without an intersection
+                //of hit box and hurtbox
+                if (attackerTargetDistance < touchDistance)
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.attack;
                 }
+
+                //was I hit?
+                if (currentState == BattlerState.hitStun)
+                {
+                    previousAIState = AIState.chase;
+                    currentAIState = AIState.idle;
+                }
+
 
                 break;
 
@@ -168,7 +215,9 @@ public class Slime : Battler
 
 
 
-        }   
+        }
+
+        
  }
         
     //Co-routine for handling attack (toggling of hitbox and Battler States)

@@ -39,27 +39,8 @@ public class PlayerControl : Battler
     private float timeUntilNextFire;
     private float timeUntilNextDash;
 
-    //Player attributes
-    /* These are inherited from Battler
-     * 
-    public float health;
-    public float maxHealth;
-    public float stamina;
-    public float maxStamina;
-    public float dexterity;
-     */
-
-
-    //Player components
-    /* Inherited from Battler
-    private Animator animator; 
-    private Rigidbody2D rb;
-    private AudioSource[] aud;
-    */
-
     //Point at which projectiles are fire from
     private Transform firePoint;
-
 
     /* Variables concerning the ranged attack functions
      * These variables will be adjusted by weapons/level system.
@@ -137,7 +118,7 @@ public class PlayerControl : Battler
         if (health <= 0)
         {
             currentState = BattlerState.dead;
-            //Die();
+            Die();
         }
 
         if (stamina < 100f)
@@ -206,6 +187,10 @@ public class PlayerControl : Battler
         // is really messy and unorganized. If you are reading this,
         // this is not fixed yet.
 
+        /* I've read this, how different is it from the implementation in battler
+         * ChangeAnim that is. - Matt
+         */
+
         movement = Vector2.zero;
         // Input
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -265,65 +250,9 @@ public class PlayerControl : Battler
         return new Vector3(0, 0, temp - 90);
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        
-        if (other.gameObject.CompareTag("Enemy") && currentState != BattlerState.hitStun)
-        {
-            //This will be changed to where it gets the damage from the
-            // hitbox rather than from the baseAttack of the enemy.
-            if (health - other.gameObject.GetComponentInParent<Battler>().baseAttack <= 0)
-            {
-                TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
-                Die();
-            }
-            TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
-             
-             //* Need to use component in parent to utilize this script. Otherwise
-             //* we need to add a knockback/damage script to the hitboxes of the enemy entity as well
-             //* rather than having it all on the single enemy object.
-             
-            if (currentState != BattlerState.dead)
-            {
-                //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-               // Destroy(combatEffect, 0.35f);
-                Knockback(other.transform);
-                StartCoroutine(KnockCo(rb));
-            }
-        }
-        
-        /*
-        if (other.gameObject.CompareTag("Potion"))
-        {
-            GameObject healEffect = Instantiate(healEffectPrefab, transform.position, Quaternion.identity);
-            Heal(other.gameObject.GetComponentInParent<Consumable>().hpRestore);
-            Destroy(healEffect, 0.5f);
-        }
-        */
-    }
-
-    //Double check and make sure that isKinematic does not break
-    //the playercontrol script if inherited from Battler
-    new void Knockback(Transform tr)
-    {
-        if (rb != null)
-        {
-            currentState = BattlerState.hitStun;
-            Vector2 difference = transform.position - tr.position;
-            difference = difference.normalized * 4.0f;
-            rb.AddForce(difference, ForceMode2D.Impulse);
-        }
-    }
-    private IEnumerator KnockCo(Rigidbody2D rb)
-    {
-        if (rb != null)
-        {
-            yield return new WaitForSeconds(0.4f);
-            rb.velocity = Vector2.zero;
-            currentState = BattlerState.idle;
-        }
-    }
-
+    /* Currently unused, I believe intent was to use in addition
+     * to potions. This could be programmed into the batter onTrigger
+     */
     void Heal(float hp)
     {
         health += hp;
@@ -333,6 +262,7 @@ public class PlayerControl : Battler
         }
     }
 
+    //Die override Okay
     new void Die()
     {
         rb.velocity = Vector2.zero; //Unsure whether neceessary

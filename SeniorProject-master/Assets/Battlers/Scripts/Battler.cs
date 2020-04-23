@@ -21,11 +21,14 @@ public enum BattlerState
  *
  * Any entity that fights will inherit from this parent class
  * All battler must have : a RigidBody2D, an Animator, a Sprite Collider, and Sprite Renderer
+ * and a child object called Hurtbox which contains a Hurtbox script
  *
  * The current Battler Model considers the following Variables {health, stamina, movement speed, dexterity }
  * Current Assumptions Stamina regeneration is not considered and is fixed
  *
- * Each Battler can have 1:M hitboxes 
+ * Each Battler can have 1:M hitboxes
+ * Each Battler Must have 1 BoxCollider2D Hurtbox
+ * 
  */
 
 public class Battler : MonoBehaviour
@@ -87,8 +90,8 @@ public class Battler : MonoBehaviour
         }
     }
 
-    //determine if the Battler will take damage
-    private void OnTriggerEnter2D(Collider2D collision)
+    //the hurtbox was collided with (this is called from a child's hurtbox script)
+    public void OnHurtboxCollision(Collider2D collision)
     {
         //check if collider is of tag hitbox
         if (collision.gameObject.tag == "Hitbox")
@@ -97,20 +100,22 @@ public class Battler : MonoBehaviour
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
 
             //is the attacker in an attack state?
-            if (attacker.GetBattlerState() == BattlerState.attack)
+            if (attacker.GetBattlerState() == BattlerState.attack && currentState != BattlerState.hitStun)
             {
                 //deal damage (from parent class)
                 /* Concern: If we have enemies that will consist of
                  * multiple hitboxes, wouldn't it be better to get the damage value
                  * of the attacks from the hitboxes themselves so they don't all deal
                  * the same amount of damage. -Victor
+                 *
+                 * If we want to give different hitboxes different damage, that
+                 * would make sense. I figured we were just considering flat damage
+                 *
                  */
                 TakeDamage(attacker.GetDamage());
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)
                 {
-                    //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-                    //Destroy(combatEffect, 0.35f);
                     Knockback(attacker.transform);
                     StartCoroutine(KnockCo());
                 }
@@ -119,12 +124,12 @@ public class Battler : MonoBehaviour
     }
 
 
+
     //perform knockback as a result of this Battler being attacked by another
     public void Knockback(Transform tr)
     {
         if (rb != null)
         {
-            rb.isKinematic = false;
             currentState = BattlerState.hitStun;
             Vector2 difference = transform.position - tr.position;
             difference = difference.normalized * 5.0f;
@@ -137,10 +142,9 @@ public class Battler : MonoBehaviour
     {
         if (rb != null)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.4f);
             rb.velocity = Vector2.zero;
             currentState = BattlerState.idle;
-            rb.isKinematic = true;
         }
     }
 
@@ -150,12 +154,15 @@ public class Battler : MonoBehaviour
      * death animations. One way around this is figureing out how to
      * get the time for animations. Otherwise, Die() should be part of
      * the enemy or player's individual scripts.
+     *
+     * I think Die should just be ovveridden whenever an implementation has
+     * a specific animation of sound, in addition update() is overwritten
+     * to call the overwritten Die() function with a check
+     * that health is 0
+     *
      */
     public void Die()
     {
-        //currentState = BattlerState.dead;
-        //rb.velocity = Vector2.zero;
-        //animator.SetTrigger("Dead");
         Destroy(this.gameObject, 0f);
     }
 
