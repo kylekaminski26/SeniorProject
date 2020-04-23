@@ -328,8 +328,8 @@ MonoBehaviour:
   chaseDistance: 0
   waypoint: {fileID: 7940196410648704177, guid: 4a748215d02f2dc4c95ff5db51329e41,
     type: 3}
-  searchTime: 0
-  searchRange: 0
+  searchTime: 25
+  searchRange: 2
   currentAIState: 0
   previousAIState: 0
   attackerTargetDistance: 0
