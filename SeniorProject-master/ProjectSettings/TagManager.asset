@@ -12,6 +12,8 @@ TagManager:
   - player_projectile
   - Enemy
   - Potion
+  - Hitbox
+  - StatsMenu
   layers:
   - Default
   - TransparentFX
