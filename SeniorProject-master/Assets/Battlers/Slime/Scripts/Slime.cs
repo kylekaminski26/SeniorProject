@@ -105,7 +105,7 @@ public class Slime : Battler
 
     void Update()
     {
-        base.Update();
+        
 
         //did the battler die?
         if (health <= 0 && currentState != BattlerState.dead)
@@ -118,6 +118,8 @@ public class Slime : Battler
         {
             Think();
         }
+
+        base.Update();
     }
 
 

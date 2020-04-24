@@ -110,14 +110,16 @@ public class Battler : MonoBehaviour
         {
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
-           
-            TakeDamage(attacker.GetDamage());
-            //start knockback (these are from the parent)
-            if (currentState != BattlerState.dead)
-            {
-                Knockback(attacker.transform);
-                StartCoroutine(KnockCo());
-            }
+            if (attacker.currentState != BattlerState.dead) { 
+
+                TakeDamage(attacker.GetDamage());
+                //start knockback (these are from the parent)
+                if (currentState != BattlerState.dead)
+                {
+                    Knockback(attacker.transform);
+                    StartCoroutine(KnockCo());
+                }
+             }
 
         }
     }
@@ -175,7 +177,8 @@ public class Battler : MonoBehaviour
      */
     public void Die()
     {
-        Destroy(this.gameObject, 0f);
+        //Destroy(this.gameObject, 0f);
+        this.gameObject.SetActive(false);
     }
 
     //All Battlers can take damage

@@ -80,7 +80,7 @@ public class PlayerControl : Battler
         maxHealth = health = 100f;
         maxStamina = stamina = 100f;
         dexterity = .05f;
-        vitality = .05f;
+        vitality = .005f;
 
         projectileSpeed = 10f;
         projectileDamage = 1f;
@@ -106,10 +106,10 @@ public class PlayerControl : Battler
 
     void Update()
     {
-        base.Update();
+        
 
         //did the battler die? (it irks me this need be here)
-        if (health <= 0 && currentState != BattlerState.dead)
+        if (health <= 0)//&& currentState != BattlerState.dead)
         {
             currentState = BattlerState.dead;
             Die(); 
@@ -140,7 +140,9 @@ public class PlayerControl : Battler
             InitiateDash();
         }
 
-        
+        base.Update();
+
+
 
 
         //Will change the way this timer works for consistency
@@ -274,29 +276,24 @@ public class PlayerControl : Battler
         BoxCollider2D[] bc2d = GetComponents<BoxCollider2D>();
         AudioSource deathAudio = aud[0];
         deathAudio.Play();
+        
         foreach (BoxCollider2D col in bc2d)
         {
             col.enabled = false;
         }
+        
         StartCoroutine(DeadCo());
     }
 
+    //override okay
     private IEnumerator DeadCo()
     {
         yield return new WaitForSeconds(0.75f);
         this.gameObject.SetActive(false);
-        SceneManager.LoadScene("Menu");
+
     }
 
-    /*
-    void StaminaRegen()
-    {
-        stamina += (10f * dexterity) * Time.deltaTime;
-    }
-    */
-
-
-
+    //what is this for?
     void DecreaseStamina(float num, bool timedDecrease)
     // timeDecrease: To remove stamina over time. This decreases the total stamina
     // by delta time to even out the decrease. Set true if you need this.
