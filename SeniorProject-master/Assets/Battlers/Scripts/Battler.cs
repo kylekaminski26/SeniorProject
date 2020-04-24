@@ -77,6 +77,7 @@ public class Battler : MonoBehaviour
 
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        aud = GetComponentsInChildren<AudioSource>();
 
         lastAttackTime = -1;
     }
@@ -87,6 +88,12 @@ public class Battler : MonoBehaviour
     //Health Regen? (Vitality)
     protected void Update()
     {
+        if (health <= 0)//&& currentState != BattlerState.dead)
+        {
+            currentState = BattlerState.dead;
+            Die();
+        }
+
         //stamina regen
         if (stamina < maxStamina)
         {
@@ -106,7 +113,8 @@ public class Battler : MonoBehaviour
     public void OnHurtboxCollision(Collider2D collision)
     {
         //check if collider is of tag hitbox
-        if (collision.gameObject.tag == "Hitbox")
+  
+        if (collision.gameObject.CompareTag("Hitbox"))
         {
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
@@ -121,6 +129,27 @@ public class Battler : MonoBehaviour
                 }
              }
 
+        }
+    }
+
+    protected void DecreaseStamina(float num, bool timedDecrease)
+    // timeDecrease: To remove stamina over time. This decreases the total stamina
+    // by delta time to even out the decrease. Set true if you need this.
+    {
+        if (timedDecrease)
+        {
+            stamina -= num * Time.deltaTime;
+
+        }
+        else
+        {
+            stamina -= num;
+
+        }
+
+        if (stamina < 0f)
+        {
+            stamina = 0f;
         }
     }
 
@@ -162,23 +191,23 @@ public class Battler : MonoBehaviour
         }
     }
 
-    //All battlers can die!
-    /* Personally, I do not want to have the Die() funtion as a part
-     * of the battler script as enemies and players have various
-     * death animations. One way around this is figureing out how to
-     * get the time for animations. Otherwise, Die() should be part of
-     * the enemy or player's individual scripts.
-     *
-     * I think Die should just be ovveridden whenever an implementation has
-     * a specific animation of sound, in addition update() is overwritten
-     * to call the overwritten Die() function with a check
-     * that health is 0
-     *
-     */
-    public void Die()
+    //Die override Okay
+    void Die()
     {
-        //Destroy(this.gameObject, 0f);
+        rb.velocity = Vector2.zero; //Unsure whether neceessary
+        animator.SetTrigger("Dead");
+        rb.isKinematic = false; //will not move if hit during death animation
+        AudioSource deathAudio = aud[0]; //0=death audio 
+        deathAudio.Play();
+        StartCoroutine(DeadCo());
+    }
+
+    //override okay
+    private IEnumerator DeadCo()
+    {
+        yield return new WaitForSeconds(0.75f);
         this.gameObject.SetActive(false);
+
     }
 
     //All Battlers can take damage
@@ -248,6 +277,7 @@ public class Battler : MonoBehaviour
         }
     }
 
+    /* Is this ever used?
     public void MoveAndAnimate(Vector3 moveVector, bool toward)
     {
         float direction = 1f;
@@ -258,7 +288,9 @@ public class Battler : MonoBehaviour
         ChangeAnim(newPos - transform.position);
         rb.MovePosition(newPos);
     }
+    */
 
+    
     public void PlayAudio(int index, float startTime, float endTime)
     {
         AudioSource audio = aud[index];
@@ -266,4 +298,5 @@ public class Battler : MonoBehaviour
         audio.Play();
         audio.SetScheduledEndTime(AudioSettings.dspTime + (endTime - startTime));
     }
+    
 }

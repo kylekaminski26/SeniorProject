@@ -105,21 +105,13 @@ public class Slime : Battler
 
     void Update()
     {
-        
-
-        //did the battler die?
-        if (health <= 0 && currentState != BattlerState.dead)
-        {
-            currentState = BattlerState.dead;
-            Die(); //does this call the parent of the child?
-        }
+        base.Update();
 
         if (target != null)
         {
             Think();
         }
 
-        base.Update();
     }
 
 
@@ -532,6 +524,7 @@ public class Slime : Battler
         return statList;
     }
 
+    //to do remove this an adjust player hitboxes with hitbox tag
     void OnTriggerEnter2D(Collider2D other)
     {
 
@@ -539,11 +532,13 @@ public class Slime : Battler
         {
             //This will be changed to where it gets the damage from the
             // hitbox rather than from the baseAttack of the enemy.
+            /*
             if (health - other.gameObject.GetComponentInParent<Battler>().baseAttack <= 0)
             {
                 TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
                 Die();
             }
+            */
             TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
 
             //* Need to use component in parent to utilize this script. Otherwise
@@ -559,13 +554,5 @@ public class Slime : Battler
             }
         }
     }
-
-    /*
-    void StaminaRegen()
-    {
-        stamina += (.25f * dexterity) * Time.deltaTime;
-    }
-    */
-
 
 }

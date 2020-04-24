@@ -334,7 +334,7 @@ public class GameController : MonoBehaviour
         winnerShowcase = true;
         yield return new WaitForSeconds(.2f);
         winnerShowcase = false;
-        s.Die();
+        s.health = 0;
 
         //if slimes remain, pick 2 to battle
         if (slimeVectors.Count != 0)

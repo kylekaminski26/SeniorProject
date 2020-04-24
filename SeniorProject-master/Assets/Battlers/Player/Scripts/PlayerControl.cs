@@ -20,11 +20,6 @@ public class PlayerControl : Battler
     public GameObject projectilePrefab;
     public GameObject dashEffectPrefab;
 
-    /* Inherited by Battler
-    public GameObject hitEffectPrefab;
-    public GameObject healEffectPrefab;
-    */
-
     /* Timers
      * In general, these are hard coded. We hope to be able to
      * get the values from the animator rather than hard coding it.
@@ -39,8 +34,7 @@ public class PlayerControl : Battler
     private float timeUntilNextFire;
     private float timeUntilNextDash;
 
-    //Point at which projectiles are fire from
-    private Transform firePoint;
+   
 
     /* Variables concerning the ranged attack functions
      * These variables will be adjusted by weapons/level system.
@@ -48,6 +42,8 @@ public class PlayerControl : Battler
     private float projectileSpeed;
     private float fireRate;
     private float projectileDamage;
+    //Point at which projectiles are fire from
+    private Transform firePoint;
 
     /* Variables concerning movement
      * For sprint/dash, we may only have one in the final project.
@@ -55,17 +51,11 @@ public class PlayerControl : Battler
      * on having these values be modified during the game.
      * 
      */
-    //private float movementSpeed; Inherited by Battler
+   
     private Vector2 movement;
-    private bool isTired;
-    private float sprintMultiplier;
     private float dashTime;
     private float dashMultiplier;
 
-    /* Varaibles concerning melee attacks.
-     * Inherited from Battler
-       private float baseAttack;
-     */
     private float attackRate;
 
 
@@ -73,9 +63,6 @@ public class PlayerControl : Battler
     {
         currentState = BattlerState.idle;
         firePoint = GetComponent<Transform>(); //Center of player
-        animator = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody2D>();
-        aud = GetComponentsInChildren<AudioSource>();
 
         maxHealth = health = 100f;
         maxStamina = stamina = 100f;
@@ -92,12 +79,10 @@ public class PlayerControl : Battler
         baseAttack = 1f;
 
         movementSpeed = 5.0f;
-        sprintMultiplier = 1.5f;
         dashTime = 0.05f;
         timeUntilNextDash = 0.0f;
         dashMultiplier = 3f;
         movement = Vector2.zero;
-        isTired = false;
 
         //Defaults for the animator once the game starts
         animator.SetFloat("Horizontal", 0.0f);
@@ -106,15 +91,7 @@ public class PlayerControl : Battler
 
     void Update()
     {
-        
-
-        //did the battler die? (it irks me this need be here)
-        if (health <= 0)//&& currentState != BattlerState.dead)
-        {
-            currentState = BattlerState.dead;
-            Die(); 
-        }
-
+        base.Update();
 
         // Tried as a void function. Was throwing errors. IDK why. If you can do it better, by all means.
         lastAttackTime = UpdateTimers(lastAttackTime);
@@ -126,10 +103,6 @@ public class PlayerControl : Battler
             Debug.Log("Left Click");
         }
 
-
-        if (isTired && stamina > 30f)
-            isTired = false;
-
         if ((Input.GetButtonDown("Fire1") && (lastAttackTime == 0f && stamina > 30f))
             && (currentState != BattlerState.hitStun || currentState != BattlerState.dead))
         {
@@ -140,34 +113,12 @@ public class PlayerControl : Battler
             InitiateDash();
         }
 
-        base.Update();
-
-
-
-
         //Will change the way this timer works for consistency
         /*
         if ((Input.GetButtonDown("Fire2") && (timeUntilNextFire == 0f)) 
             && (currentState != BattlerState.hitStun || currentState != BattlerState.dead))
         {
             RangedAttack();
-        }
-        */
-
-        /* To answer Matt's question: When the sprint button is pressed,
-         * we want the character to move faster, both the position and
-         * the animation. Once it is pressed, the speed at which the animator
-         * runs will be increased. However, the else statement is needed to 
-         * change the animator speed back if the sprint button is not being
-         * pressed.
-        
-        if ((Input.GetKey(KeyCode.LeftShift) && !isTired) && currentState == BattlerState.walk)
-        {
-            animator.speed = sprintMultiplier;
-        }
-        else
-        {
-            animator.speed = 1.0f;
         }
         */
     }
@@ -189,13 +140,6 @@ public class PlayerControl : Battler
 
     void Move()
     {
-        //Added ChangeAnim, however, it turns out that this code
-        // is really messy and unorganized. If you are reading this,
-        // this is not fixed yet.
-
-        /* I've read this, how different is it from the implementation in battler
-         * ChangeAnim that is. - Matt
-         */
 
         movement = Vector2.zero;
         // Input
@@ -215,22 +159,8 @@ public class PlayerControl : Battler
 
         // Movement
         movement.Normalize();
-        /* Probably will replace sprinting with dashing
-         
-        else if ((Input.GetKey(KeyCode.LeftShift) && !isTired) && currentState == PlayerState.walk)
-        {
-            rb.MovePosition(rb.position + movement * (movementSpeed * sprintMultiplier) * Time.fixedDeltaTime);
-            DecreaseStamina(40f, true);
-            if(stamina == 0f)
-            {
-                isTired = true;
-            }
-        }
-        */
-        //else
-        //{
         rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
-        //}
+
     }
 
     void Shoot()
@@ -247,6 +177,7 @@ public class PlayerControl : Battler
         Destroy(projectile, 1.0f);
     }
 
+    //this is for shooting ..
     Vector3 ChooseDirection()
     // Used to rotate sprites according to direction of movement
     // Used for certain effects and instantiating projectiles
@@ -255,74 +186,8 @@ public class PlayerControl : Battler
         float temp = Mathf.Atan2(animator.GetFloat("Vertical"), animator.GetFloat("Horizontal")) * Mathf.Rad2Deg;
         return new Vector3(0, 0, temp - 90);
     }
-
-    /* Currently unused, I believe intent was to use in addition
-     * to potions. This could be programmed into the batter onTrigger
-     */
-    void Heal(float hp)
-    {
-        health += hp;
-        if (health > maxHealth)
-        {
-            health = maxHealth;
-        }
-    }
-
-    //Die override Okay
-    new void Die()
-    {
-        rb.velocity = Vector2.zero; //Unsure whether neceessary
-        animator.SetTrigger("Dead");
-        BoxCollider2D[] bc2d = GetComponents<BoxCollider2D>();
-        AudioSource deathAudio = aud[0];
-        deathAudio.Play();
-        
-        foreach (BoxCollider2D col in bc2d)
-        {
-            col.enabled = false;
-        }
-        
-        StartCoroutine(DeadCo());
-    }
-
-    //override okay
-    private IEnumerator DeadCo()
-    {
-        yield return new WaitForSeconds(0.75f);
-        this.gameObject.SetActive(false);
-
-    }
-
-    //what is this for?
-    void DecreaseStamina(float num, bool timedDecrease)
-    // timeDecrease: To remove stamina over time. This decreases the total stamina
-    // by delta time to even out the decrease. Set true if you need this.
-    {
-        if (timedDecrease)
-        {
-            stamina -= num * Time.deltaTime;
-
-        }
-        else
-        {
-            stamina -= num;
-
-        }
-
-        if (stamina < 0f)
-        {
-            stamina = 0f;
-        }
-    }
-
-
-    new void PlayAudio(int index, float startTime, float endTime)
-    {
-        AudioSource audio = aud[index];
-        audio.time = startTime;
-        audio.Play();
-        audio.SetScheduledEndTime(AudioSettings.dspTime + (endTime - startTime));
-    }
+    
+   
 
     void MeleeAttack()
     {
@@ -334,16 +199,18 @@ public class PlayerControl : Battler
         currentState = BattlerState.idle;
     }
 
+    /*
     void RangedAttack()
     {
-        /* Note: the float value represents the time of the animation. 
-         * Hopefully it will be replaced rather than hard coded.
-         */
+        // Note: the float value represents the time of the animation. 
+         / Hopefully it will be replaced rather than hard coded.
+         //
         timeUntilNextFire = fireRate;
         animator.SetTrigger("Shooting");
         currentState = BattlerState.attack;
         Invoke("Shoot", 0.375f);
     }
+    */
 
     float UpdateTimers(float timer)
     {
