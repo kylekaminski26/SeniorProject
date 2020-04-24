@@ -77,9 +77,10 @@ public class PlayerControl : Battler
         rb = GetComponent<Rigidbody2D>();
         aud = GetComponentsInChildren<AudioSource>();
 
-        maxHealth = health = 20f;
+        maxHealth = health = 100f;
         maxStamina = stamina = 100f;
-        dexterity = 1f;
+        dexterity = .05f;
+        vitality = .05f;
 
         projectileSpeed = 10f;
         projectileDamage = 1f;
@@ -105,6 +106,16 @@ public class PlayerControl : Battler
 
     void Update()
     {
+        base.Update();
+
+        //did the battler die? (it irks me this need be here)
+        if (health <= 0 && currentState != BattlerState.dead)
+        {
+            currentState = BattlerState.dead;
+            Die(); 
+        }
+
+
         // Tried as a void function. Was throwing errors. IDK why. If you can do it better, by all means.
         lastAttackTime = UpdateTimers(lastAttackTime);
         timeUntilNextFire = UpdateTimers(timeUntilNextFire);
@@ -115,16 +126,6 @@ public class PlayerControl : Battler
             Debug.Log("Left Click");
         }
 
-        if (health <= 0 && currentState != BattlerState.dead)
-        {
-            currentState = BattlerState.dead;
-            Die();
-        }
-
-        if (stamina < 100f)
-        {
-            StaminaRegen();
-        }
 
         if (isTired && stamina > 30f)
             isTired = false;
@@ -138,6 +139,9 @@ public class PlayerControl : Battler
         {
             InitiateDash();
         }
+
+        
+
 
         //Will change the way this timer works for consistency
         /*
@@ -284,10 +288,15 @@ public class PlayerControl : Battler
         SceneManager.LoadScene("Menu");
     }
 
+    /*
     void StaminaRegen()
     {
         stamina += (10f * dexterity) * Time.deltaTime;
     }
+    */
+
+
+
     void DecreaseStamina(float num, bool timedDecrease)
     // timeDecrease: To remove stamina over time. This decreases the total stamina
     // by delta time to even out the decrease. Set true if you need this.
@@ -308,6 +317,8 @@ public class PlayerControl : Battler
             stamina = 0f;
         }
     }
+
+
     new void PlayAudio(int index, float startTime, float endTime)
     {
         AudioSource audio = aud[index];

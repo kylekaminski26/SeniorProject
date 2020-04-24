@@ -56,6 +56,12 @@ public class Slime : Battler
     void Awake()
     {
         base.Awake();
+
+        dexterity = .05f;
+        vitality = .01f;
+        movementSpeed = 8f;
+
+
         //initialize child specific variables
         chaseRadius = 5f;
 
@@ -67,6 +73,8 @@ public class Slime : Battler
         Path = GetComponent<Pathfinding.AIPath>();
         DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
         AIPatrol = GetComponent<Pathfinding.Patrol>();
+
+        Path.maxSpeed = movementSpeed;
 
         currentAIState = AIState.idle;
         previousAIState = AIState.start;
@@ -95,18 +103,23 @@ public class Slime : Battler
 
     }
 
-    void FixedUpdate()
+    void Update()
     {
+        base.Update();
+
+        //did the battler die?
+        if (health <= 0 && currentState != BattlerState.dead)
+        {
+            currentState = BattlerState.dead;
+            Die(); //does this call the parent of the child?
+        }
+
         if (target != null)
         {
             Think();
         }
-
-        if (stamina < 100f)
-        {
-            StaminaRegen();
-        }
     }
+
 
    
     void Think()
@@ -466,7 +479,7 @@ public class Slime : Battler
     {
         
         Hitbox.enabled = true;
-        stamina -= 3;
+        stamina -= (.05f * 50) + (.10f * baseAttack); //3; where 50 = globalMaxBaseAttack 
         currentState = BattlerState.attack;
         yield return new WaitForSeconds(0.2f);
         Hitbox.enabled = false;
@@ -545,10 +558,12 @@ public class Slime : Battler
         }
     }
 
+    /*
     void StaminaRegen()
     {
         stamina += (.25f * dexterity) * Time.deltaTime;
     }
+    */
 
 
 }

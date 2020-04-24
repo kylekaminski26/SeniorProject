@@ -38,7 +38,8 @@ public class Battler : MonoBehaviour
     public float maxStamina;
     public float baseAttack;
     public float movementSpeed;
-    public float dexterity;
+    public float dexterity; //rate of stamina regen (effectively controls attack rate) --> [0,1]
+    public float vitality; //rate of health regen
     //consider maxMovement Speed (buffs may allow speed beyond max for fixed time)
 
     //State attributes
@@ -65,11 +66,12 @@ public class Battler : MonoBehaviour
      */
     protected void Awake()
     {
-        maxHealth = health = 10f;
-        maxStamina = stamina = 6f;
-        baseAttack = 4f;
+        maxHealth = health = 25f;
+        maxStamina = stamina = 25f;
+        baseAttack = 15f;
         movementSpeed = 2f;
-        dexterity = 1f; //lower is better (for now)
+        dexterity = .1f;
+        vitality = .1f;
 
         currentState = BattlerState.idle;
 
@@ -81,13 +83,23 @@ public class Battler : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    //Stamina Regen? (Dex)
+    //Health Regen? (Vitality)
+    protected void Update()
     {
-        //did the battler die?
-        if (health == 0)
+        //stamina regen
+        if (stamina < maxStamina)
         {
-            Die();
+            StaminaRegen(dexterity);
         }
+
+        //health regen
+        if (health < maxHealth)
+        {
+            HealthRegen(vitality);
+        }
+
+
     }
 
     //the hurtbox was collided with (this is called from a child's hurtbox script)
@@ -98,31 +110,31 @@ public class Battler : MonoBehaviour
         {
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
-
-            //is the attacker in an attack state?
-            if (attacker.GetBattlerState() == BattlerState.attack && currentState != BattlerState.hitStun)
+           
+            TakeDamage(attacker.GetDamage());
+            //start knockback (these are from the parent)
+            if (currentState != BattlerState.dead)
             {
-                //deal damage (from parent class)
-                /* Concern: If we have enemies that will consist of
-                 * multiple hitboxes, wouldn't it be better to get the damage value
-                 * of the attacks from the hitboxes themselves so they don't all deal
-                 * the same amount of damage. -Victor
-                 *
-                 * If we want to give different hitboxes different damage, that
-                 * would make sense. I figured we were just considering flat damage
-                 *
-                 */
-                TakeDamage(attacker.GetDamage());
-                //start knockback (these are from the parent)
-                if (currentState != BattlerState.dead)
-                {
-                    Knockback(attacker.transform);
-                    StartCoroutine(KnockCo());
-                }
+                Knockback(attacker.transform);
+                StartCoroutine(KnockCo());
             }
+
         }
     }
 
+    //Regenerate the Battler's stamina
+    //Based on a percentage of there dexterity
+    //This is should be called every frame in update or fixedUpdate
+    void StaminaRegen(float dexPercentage)
+    {
+        stamina += (dexPercentage * maxStamina) * Time.deltaTime;
+    }
+
+    //Regenerate the Battler's Health
+    void HealthRegen(float healthPercentage)
+    {
+        health += (healthPercentage * maxHealth) * Time.deltaTime;
+    }
 
 
     //perform knockback as a result of this Battler being attacked by another

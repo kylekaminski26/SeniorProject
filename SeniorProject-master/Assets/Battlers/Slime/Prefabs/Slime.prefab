@@ -316,6 +316,7 @@ MonoBehaviour:
   baseAttack: 0
   movementSpeed: 0
   dexterity: 0
+  vitality: 0
   stamina: 0
   health: 0
   lastAttackTime: 0
@@ -407,7 +408,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: -0.55}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.9
 --- !u!1001 &3485484534584827621
 PrefabInstance:
   m_ObjectHideFlags: 0
