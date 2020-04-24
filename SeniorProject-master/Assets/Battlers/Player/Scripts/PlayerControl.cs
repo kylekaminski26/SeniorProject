@@ -48,6 +48,8 @@ public class PlayerControl : Battler
     private float projectileSpeed;
     private float fireRate;
     private float projectileDamage;
+    public float maxAmmo;
+    public float currentAmmo;
 
     /* Variables concerning movement
      * For sprint/dash, we may only have one in the final project.
@@ -89,6 +91,8 @@ public class PlayerControl : Battler
         attackRate = 0.375f;
         lastAttackTime = 0.0f;
         baseAttack = 1f;
+
+        maxAmmo = currentAmmo = 6f;
 
         movementSpeed = 5.0f;
         sprintMultiplier = 1.5f;

@@ -12,38 +12,40 @@ public class StatsMenu : MonoBehaviour
     public GameObject statsScreen;
     public GameObject button;
     private GameObject player;
-    private GameObject healthStamBars;
+   
 
     public Text attackVal;
     public Text stamVal;
     public Text dexVal;
     public Text healthVal;
-    private float health;
-    private float stamina;
+    public Text ammoVals;
+    
 
     private void Start()
     {
         player = GameObject.FindWithTag("Player");
-        healthStamBars = GameObject.FindWithTag("HealthStamBars");
+        
     }
     // Update is called once per frame
     void Update()
     {
+        ammoVals.text = player.GetComponent<PlayerControl>().currentAmmo + "/" +
+            player.GetComponent<PlayerControl>().maxAmmo;
         if (Input.GetKeyDown(KeyCode.K) )
         {
             if (statsOpen)
             {
-                closeStats();
+                CloseStats();
             }
             else
             {
-                setStats();
-                showStats();
+                SetStats();
+                ShowStats();
             }
         }
     }
 
-    public void setStats()
+    public void SetStats()
     {
         attackVal.text = ": " + player.GetComponent<PlayerControl>().baseAttack;
         stamVal.text = ": " + player.GetComponent<PlayerControl>().maxStamina;
@@ -51,13 +53,13 @@ public class StatsMenu : MonoBehaviour
         healthVal.text = ": " + player.GetComponent<PlayerControl>().maxHealth;
     }
 
-    public void showStats()
+    public void ShowStats()
     {
         statsScreen.SetActive(true);
         statsOpen = true;
     }
 
-    public void closeStats()
+    public void CloseStats()
     {
         statsScreen.SetActive(false);
         statsOpen = false;
