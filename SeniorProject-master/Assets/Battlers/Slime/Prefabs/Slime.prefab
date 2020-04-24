@@ -325,11 +325,12 @@ MonoBehaviour:
   aud: []
   effects: []
   target: {fileID: 0}
-  chasePosition: {x: 0, y: 0, z: 0}
-  chaseDistance: 2
+  chaseDistance: 3.5
+  fleeTime: 10
+  fleeRange: 8
   waypoint: {fileID: 7940196410648704177, guid: 4a748215d02f2dc4c95ff5db51329e41,
     type: 3}
-  searchTime: 25
+  searchTime: 15
   searchRange: 2
   currentAIState: 0
   previousAIState: 0

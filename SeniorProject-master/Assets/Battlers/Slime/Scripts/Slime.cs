@@ -29,6 +29,8 @@ public class Slime : Battler
     //TG
     private GameObject chaseTarget;
     [SerializeField] private float chaseDistance; //The distance in which the enemy will try to maintain from the player during chase
+    [SerializeField] private float fleeTime;
+    [SerializeField] private float fleeRange;
     [SerializeField] private GameObject waypoint;
 
     private GameObject[] patrolPointArray = new GameObject[4];//Must be the same size declared in the Patrol script attached to enemy
@@ -37,6 +39,7 @@ public class Slime : Battler
     [SerializeField] private float searchRange;//The range in which the enemy will search for the player
 
     private bool bIsSearching;
+    private bool bIsFleeing;
     private bool bIsCounting;
 
     private Pathfinding.AIPath Path; //used to toggle movement and search restraints
@@ -78,6 +81,7 @@ public class Slime : Battler
         //TG
         //I am not searching on instantiation
         bIsSearching = false;
+        bIsFleeing = false;
         bIsCounting = false;
 
         //Create chase waypoint
@@ -96,6 +100,11 @@ public class Slime : Battler
         if (target != null)
         {
             Think();
+        }
+
+        if (stamina < 100f)
+        {
+            StaminaRegen();
         }
     }
 
@@ -155,6 +164,18 @@ public class Slime : Battler
         if (currentAIState != AIState.patrol && previousAIState == AIState.patrol)
         {
             AIPatrol.enabled = false;
+            Path.enabled = false;
+        }
+        
+        if (currentAIState != AIState.approach && previousAIState == AIState.approach)
+        {
+            DestinationSetter.enabled = false;
+            Path.enabled = false;
+        }
+
+        if (currentAIState != AIState.flee && previousAIState == AIState.flee)
+        {
+            DestinationSetter.enabled = false;
             Path.enabled = false;
         }
 
@@ -238,7 +259,6 @@ public class Slime : Battler
                 {
                     currentState = BattlerState.walk;
                     DestinationSetter.enabled = true;
-                    DestinationSetter.target = target;
                     Path.enabled = true;
                     previousAIState = AIState.chase;
                     currentState = BattlerState.walk;
@@ -250,8 +270,18 @@ public class Slime : Battler
                 DestinationSetter.target = chaseTarget.transform;
 
                 //If I am able to attack, then approach
-                
+                if(stamina >= 3)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.approach;
+                }
 
+                //If I am too damaged, I will flee
+                if (health <= maxHealth / 5)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.flee;
+                }
 
                 //The target is no longer in visual range. Search for them | TG
                 if (attackerTargetDistance > chaseRadius)
@@ -333,15 +363,14 @@ public class Slime : Battler
                 //Count down until I give up the search
                 if(bIsCounting == false)
                 {
-                    StartCoroutine(searchForTime());
+                    StartCoroutine(doForTime(searchTime));
                 }
 
                 break;
 
 
-            //TODO Create approach state TG
+            //Create approach state TG
             case AIState.approach:
-                //TODO Complete approach state
                 //Is this a self transition to chase or from another node?
                 if (previousAIState != AIState.approach)
                 {
@@ -351,6 +380,20 @@ public class Slime : Battler
                     Path.enabled = true;
                     previousAIState = AIState.approach;
                     currentState = BattlerState.walk;
+                }
+
+                //The target is no longer in visual range. Search for them | TG
+                if (attackerTargetDistance > chaseRadius)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.sleuth;
+                }
+
+                //If I am too damaged, then flee
+                if(health <= maxHealth/5)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.flee;
                 }
 
                 //should have a constraints in here for available stamina,
@@ -363,7 +406,6 @@ public class Slime : Battler
                     previousAIState = currentAIState;
                     currentAIState = AIState.attack;
                 }
-
 
                 break;
 
@@ -378,15 +420,44 @@ public class Slime : Battler
 
                 //TG
             case AIState.flee:
-                //TODO Complete flee state
                 //When health is low, Flee to a patrol point
                 //and resume a patrol after X amount of time
+                //Is this a self transition to chase or from another node?
+                if (previousAIState != AIState.flee)
+                {
+                    bIsFleeing = true;
+                    bIsCounting = false;
 
+                    currentState = BattlerState.walk;
+                    DestinationSetter.enabled = true;
+                    Path.enabled = true;
+                    previousAIState = AIState.flee;
+                    currentState = BattlerState.walk;
+                }
+
+                //If the target is within visual range (That's why we're here), then
+                //chase them from (chaseDistance) units away
+                chaseTarget.transform.position = gameObject.transform.position - TargetDirection * (fleeRange);
+                DestinationSetter.target = chaseTarget.transform;
+
+                if (bIsFleeing == false)
+                {
+                    previousAIState = AIState.flee;
+                    currentAIState = AIState.idle;
+
+                    DestinationSetter.enabled = false;
+
+                }
+
+                //Count down until I give up the search
+                if (bIsCounting == false)
+                {
+                    StartCoroutine(doForTime(fleeTime));
+                }
 
                 break;
 
         }
-
         
  }
         
@@ -395,6 +466,7 @@ public class Slime : Battler
     {
         
         Hitbox.enabled = true;
+        stamina -= 3;
         currentState = BattlerState.attack;
         yield return new WaitForSeconds(0.2f);
         Hitbox.enabled = false;
@@ -403,15 +475,15 @@ public class Slime : Battler
     }
 
     //TG
-    public IEnumerator searchForTime()
+    public IEnumerator doForTime(float time)
     {
         bIsCounting = true;
 
-        yield return new WaitForSeconds(searchTime);
+        yield return new WaitForSeconds(time);
         //After X seconds I am no longer searching for the target
+        bIsFleeing = false;
         bIsSearching = false;
     }
-
 
     void changeAnim(Vector2 direction)
     {
@@ -425,14 +497,12 @@ public class Slime : Battler
         }
     }
 
-  
     //Accessors and Mutators
     public void SetTarget(Transform tr)
     {
         //change the transform
         target = tr;
     }
-   
 
     public List<float> GetStats()
     {
@@ -447,5 +517,38 @@ public class Slime : Battler
         return statList;
     }
 
-    
+    void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.gameObject.CompareTag("player_attack") && currentState != BattlerState.hitStun)
+        {
+            //This will be changed to where it gets the damage from the
+            // hitbox rather than from the baseAttack of the enemy.
+            if (health - other.gameObject.GetComponentInParent<Battler>().baseAttack <= 0)
+            {
+                TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
+                Die();
+            }
+            TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
+
+            //* Need to use component in parent to utilize this script. Otherwise
+            //* we need to add a knockback/damage script to the hitboxes of the enemy entity as well
+            //* rather than having it all on the single enemy object.
+
+            if (currentState != BattlerState.dead)
+            {
+                //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
+                // Destroy(combatEffect, 0.35f);
+                Knockback(other.transform);
+                StartCoroutine(KnockCo());
+            }
+        }
+    }
+
+    void StaminaRegen()
+    {
+        stamina += (.25f * dexterity) * Time.deltaTime;
+    }
+
+
 }
