@@ -115,7 +115,7 @@ public class PlayerControl : Battler
             Debug.Log("Left Click");
         }
 
-        if (health <= 0)
+        if (health <= 0 && currentState != BattlerState.dead)
         {
             currentState = BattlerState.dead;
             Die();

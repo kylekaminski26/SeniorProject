@@ -10,6 +10,7 @@ public enum AIState
     chase,
     sleuth,
     flee,
+    approach,
     attack,
     start
 }
@@ -25,6 +26,8 @@ public class Slime : Battler
     private BoxCollider2D targetHurtbox;
     private Random random;
 
+    //TG
+    private GameObject chaseTarget;
     [SerializeField] private float chaseDistance; //The distance in which the enemy will try to maintain from the player during chase
     [SerializeField] private GameObject waypoint;
 
@@ -72,9 +75,13 @@ public class Slime : Battler
         
         targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
+        //TG
         //I am not searching on instantiation
         bIsSearching = false;
         bIsCounting = false;
+
+        //Create chase waypoint
+        chaseTarget = Instantiate(waypoint, gameObject.transform.position, new Quaternion());
 
         //Create patrol waypoints
         patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
@@ -144,6 +151,7 @@ public class Slime : Battler
             Path.enabled = false;
         }
 
+        //TG
         if (currentAIState != AIState.patrol && previousAIState == AIState.patrol)
         {
             AIPatrol.enabled = false;
@@ -180,7 +188,7 @@ public class Slime : Battler
                         currentAIState = AIState.chase;
                     }
 
-                    //If the target is not in visual range and I am NOT currently looking for them
+                    //If the target is not in visual range and I am NOT currently looking for them | TG
                     //Then Patrol
                     if ((attackerTargetDistance > chaseRadius) && currentAIState != AIState.sleuth)
                     {
@@ -193,7 +201,7 @@ public class Slime : Battler
                 break;
 
 
-            case AIState.patrol: //Patrol state
+            case AIState.patrol: //Patrol state TG
                 //  Enable patrol script with the created waypoints
                 //  Can Switch to chase
 
@@ -236,39 +244,21 @@ public class Slime : Battler
                     currentState = BattlerState.walk;
                 }
 
-                //TODO Refine the implementation of Fixed Chase Distance
-                //Chasing Should ALWAYS be from a fixed distance away from the target
+                //If the target is within visual range (That's why we're here), then
+                //chase them from (chaseDistance) units away
+                chaseTarget.transform.position = gameObject.transform.position + TargetDirection *(attackerTargetDistance - chaseDistance);
+                DestinationSetter.target = chaseTarget.transform;
 
-                //If the distance from the enemy to the target is less than the given chase distance
-                if (((target.position - gameObject.transform.position).magnitude) < chaseDistance)
-                {
-                    //idle to let player to make distance (Could change target position to self at the time)
-                    DestinationSetter.target = gameObject.transform;
-                }
-                else
-                {
-                    //Continue to chase (if melee)
-                    //or Attack (if ranged)
-                    DestinationSetter.target = target;
-                }
+                //If I am able to attack, then approach
+                
 
-                //Is the target no longer in range?
-                if (attackerTargetDistance >= chaseRadius)
+
+                //The target is no longer in visual range. Search for them | TG
+                if (attackerTargetDistance > chaseRadius)
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.sleuth;
-                }
-
-                //should have a constraints in here for available stamina,
-                //flat attack wait mininum
-                //and attack rate delay based on dexterity
-                //touch distance is the smallest possible distance without an intersection
-                //of hit box and hurtbox
-                if (attackerTargetDistance < touchDistance)
-                {
-                    previousAIState = currentAIState;
-                    currentAIState = AIState.attack;
-                }
+                }                
 
                 //was I hit?
                 if (currentState == BattlerState.hitStun)
@@ -280,7 +270,7 @@ public class Slime : Battler
                 break;
 
 
-            case AIState.sleuth: //Sleuth state
+            case AIState.sleuth: //Sleuth state TG
                 //Can switch to patrol or chase
 
                 //Am I already searching?
@@ -349,8 +339,33 @@ public class Slime : Battler
                 break;
 
 
-                //TODO Create approach state
-            
+            //TODO Create approach state TG
+            case AIState.approach:
+                //TODO Complete approach state
+                //Is this a self transition to chase or from another node?
+                if (previousAIState != AIState.approach)
+                {
+                    currentState = BattlerState.walk;
+                    DestinationSetter.enabled = true;
+                    DestinationSetter.target = target;
+                    Path.enabled = true;
+                    previousAIState = AIState.approach;
+                    currentState = BattlerState.walk;
+                }
+
+                //should have a constraints in here for available stamina,
+                //flat attack wait mininum
+                //and attack rate delay based on dexterity
+                //touch distance is the smallest possible distance without an intersection
+                //of hit box and hurtbox
+                if (attackerTargetDistance < touchDistance)
+                {
+                    previousAIState = currentAIState;
+                    currentAIState = AIState.attack;
+                }
+
+
+                break;
 
 
             case AIState.attack: //Attack state
@@ -361,7 +376,7 @@ public class Slime : Battler
 
                 break;
 
-
+                //TG
             case AIState.flee:
                 //TODO Complete flee state
                 //When health is low, Flee to a patrol point
@@ -387,6 +402,7 @@ public class Slime : Battler
         
     }
 
+    //TG
     public IEnumerator searchForTime()
     {
         bIsCounting = true;
@@ -431,31 +447,5 @@ public class Slime : Battler
         return statList;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-
-        if (other.gameObject.CompareTag("player_attack") && currentState != BattlerState.hitStun)
-        {
-            //This will be changed to where it gets the damage from the
-            // hitbox rather than from the baseAttack of the enemy.
-            if (health - other.gameObject.GetComponentInParent<Battler>().baseAttack <= 0)
-            {
-                TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
-                Die();
-            }
-            TakeDamage(other.gameObject.GetComponentInParent<Battler>().baseAttack);
-
-            //* Need to use component in parent to utilize this script. Otherwise
-            //* we need to add a knockback/damage script to the hitboxes of the enemy entity as well
-            //* rather than having it all on the single enemy object.
-
-            if (currentState != BattlerState.dead)
-            {
-                //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-                // Destroy(combatEffect, 0.35f);
-                Knockback(other.transform);
-                StartCoroutine(KnockCo());
-            }
-        }
-    }
+    
 }
