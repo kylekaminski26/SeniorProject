@@ -20,11 +20,13 @@ public enum AIState
 
 public class Slime : Battler
 {
-    private float chaseRadius; //Vision Range of Battler
+    private float visionRadius; //Vision Range of Battler
     public Transform target; //Target of the Battler
 
-
-    private BoxCollider2D Hitbox;
+    //concerning the implementation of generic hitboxes
+    public Vector2 direction;
+    private BoxCollider2D effectiveHitbox;
+    private List<BoxCollider2D> Hitboxes;
 
     private BoxCollider2D targetHurtbox;
     private Random random;
@@ -54,6 +56,8 @@ public class Slime : Battler
 
     public float attackerTargetDistance = 0;
 
+    
+
    
 
 
@@ -67,11 +71,18 @@ public class Slime : Battler
 
 
         //initialize child specific variables
-        chaseRadius = 5f;
+        visionRadius = 5f;
 
-        Hitbox = GetComponentInChildren<BoxCollider2D>();
-        Hitbox.enabled = false;
-
+        //get references to all attatched hitboxes and set the default
+        Hitboxes = new List<BoxCollider2D>();
+        Transform[] ts = GetComponentsInChildren<Transform>();
+        foreach (Transform t in ts)
+        {
+            if (t.CompareTag("Hitbox")) {
+                Hitboxes.Add(t.GetComponent<BoxCollider2D>());
+            }
+        }
+        effectiveHitbox = Hitboxes[0];
 
         Path = GetComponent<Pathfinding.AIPath>();
         DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
@@ -115,6 +126,9 @@ public class Slime : Battler
             Think();
         }
 
+        direction = (Vector2) (Vector3.Normalize(rb.velocity));
+        setEffectiveHitbox();
+
     }
 
 
@@ -127,7 +141,7 @@ public class Slime : Battler
 
 
         //center of my hitbox
-        Vector3 attackerHitboxCenter = (Vector3)Hitbox.transform.position + (Vector3)Hitbox.offset;
+        Vector3 attackerHitboxCenter = (Vector3)effectiveHitbox.transform.position + (Vector3)effectiveHitbox.offset;
 
         //center of target's hurtbox
         Vector3 targetHurtboxCenter = (Vector3)targetHurtbox.transform.position + (Vector3)targetHurtbox.offset;//(Vector3)targetHurtbox.bounds.center;
@@ -135,11 +149,11 @@ public class Slime : Battler
         //minimal dimension of target's hurtbox(needs to be boxcollider2D)
         float minDim = (targetHurtbox.size.x < targetHurtbox.size.y) ? targetHurtbox.size.x : targetHurtbox.size.y;
 
-        //minimal dimension of my hitbox
-        float attackerMinDim = (Hitbox.size.x < Hitbox.size.y) ? Hitbox.size.x : Hitbox.size.y;
+        //minimal dimension of my effectivehitbox
+        float attackerMinDim = (effectiveHitbox.size.x < effectiveHitbox.size.y) ? effectiveHitbox.size.x : effectiveHitbox.size.y;
 
         //note that the if the the distance between the center points is the radius + the mininal dimension
-        //it will guarentee you are inside the hitbox
+        //it will guarentee you are inside the effectivehitbox
 
 
         //distance between centers
@@ -150,10 +164,10 @@ public class Slime : Battler
         Vector3 TargetDirection = Vector3.Normalize(targetHurtboxCenter - attackerHitboxCenter);
 
         //How far inside the targets hurtbox do we want to be?
-        //aim to have atleast half of your hitbox in them
+        //aim to have atleast half of your effectivehitbox in them
         float penetration = attackerMinDim/4; 
 
-        //the vector that points from the attacker's hitbox to the targets hurtbox
+        //the vector that points from the attacker's effectivehitbox to the targets hurtbox
         Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
 
         float touchDistance = attackerMinDim/2 + minDim/2; //the smallest distance the colliders can
@@ -214,7 +228,7 @@ public class Slime : Battler
                     }
 
                     //Is the target in visible range?
-                    if (attackerTargetDistance <= chaseRadius)
+                    if (attackerTargetDistance <= visionRadius)
                     {
                         previousAIState = currentAIState;
                         currentAIState = AIState.chase;
@@ -222,7 +236,7 @@ public class Slime : Battler
 
                     //If the target is not in visual range and I am NOT currently looking for them | TG
                     //Then Patrol
-                    if ((attackerTargetDistance > chaseRadius) && currentAIState != AIState.sleuth)
+                    if ((attackerTargetDistance > visionRadius) && currentAIState != AIState.sleuth)
                     {
                         previousAIState = currentAIState;
                         currentAIState = AIState.patrol;
@@ -254,7 +268,7 @@ public class Slime : Battler
                 }
 
                 //Is the target in visible range?
-                if (attackerTargetDistance <= chaseRadius)
+                if (attackerTargetDistance <= visionRadius)
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.chase;
@@ -295,7 +309,7 @@ public class Slime : Battler
                 }
 
                 //The target is no longer in visual range. Search for them | TG
-                if (attackerTargetDistance > chaseRadius)
+                if (attackerTargetDistance > visionRadius)
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.sleuth;
@@ -358,7 +372,7 @@ public class Slime : Battler
 
                 //Is the target in visible range?
                 //If yes, chase
-                if (attackerTargetDistance <= chaseRadius)
+                if (attackerTargetDistance <= visionRadius)
                 {
                     previousAIState = AIState.sleuth;
                     currentAIState = AIState.chase;
@@ -394,7 +408,7 @@ public class Slime : Battler
                 }
 
                 //The target is no longer in visual range. Search for them | TG
-                if (attackerTargetDistance > chaseRadius)
+                if (attackerTargetDistance > visionRadius)
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.sleuth;
@@ -471,16 +485,51 @@ public class Slime : Battler
         }
         
  }
+
+    //checks the movement direction of the brawler, and set the
+    //the effective hitbox to the hitbox that is closest to the direction
+    //of movement
+    public void setEffectiveHitbox()
+    {
+        if (Hitboxes.Count > 1)
+        {
+            //do stuff
+            int minNdx = 0;
+            float minAngle = 2 * Mathf.PI;
+            Vector3 hitboxPosition;
+            for (int i = 0; i < Hitboxes.Count; i++)
+            {
+                Hitboxes[i].enabled = true;
+                hitboxPosition = Hitboxes[i].transform.localPosition;
+                float angle = Mathf.Acos(Vector3.Dot(Vector3.Normalize(hitboxPosition),Vector3.Normalize(movementDirection)));
+                if (angle < minAngle) {
+                    minNdx = i;
+                    minAngle = angle;
+                }
+            }
+            effectiveHitbox = Hitboxes[minNdx];
+        }
         
-    //Co-routine for handling attack (toggling of hitbox and Battler States)
+        //otherwise default hitbox is tautological
+    }
+
+        
+    //Co-routine for handling attack (toggling of effectivehitbox and Battler States)
     public IEnumerator AttackCo()
     {
         
-        Hitbox.enabled = true;
+        effectiveHitbox.enabled = true;
         stamina -= (.05f * 50) + (.10f * baseAttack); //3; where 50 = globalMaxBaseAttack 
         currentState = BattlerState.attack;
         yield return new WaitForSeconds(0.2f);
-        Hitbox.enabled = false;
+        //disable all hitboxes after an attack ends
+        //since the effective hitbox may have been changed
+        //during the yield time of this coroutine
+        effectiveHitbox.enabled = false;
+        foreach(BoxCollider2D b in Hitboxes)
+        {
+            b.enabled = false;
+        }
         currentState = BattlerState.idle;
         
     }
@@ -523,7 +572,7 @@ public class Slime : Battler
         statList.Add(baseAttack);
         statList.Add(movementSpeed);
         statList.Add(dexterity);
-        statList.Add(chaseRadius);
+        statList.Add(visionRadius);
 
         return statList;
     }

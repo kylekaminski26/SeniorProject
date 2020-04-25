@@ -57,6 +57,10 @@ public class Battler : MonoBehaviour
     public float lastAttackTime;        //need this be here --Matt 4/25?
     public BattlerState currentState;
 
+    //movement direction
+    public Vector3 movementDirection;
+    public Vector3 lastTransformPosition;
+
     //prefab component references
     public Animator animator;
     public Rigidbody2D rb;
@@ -84,6 +88,11 @@ public class Battler : MonoBehaviour
         aud = GetComponentsInChildren<AudioSource>();
 
         lastAttackTime = -1;
+
+        //movement direction (Regardless of implementation of movement)
+        movementDirection = new Vector3(0,0,0);
+        lastTransformPosition = transform.position;
+
     }
 
 
@@ -108,8 +117,15 @@ public class Battler : MonoBehaviour
             HealthRegen(vitality);
         }
 
-
     }
+
+    protected void FixedUpdate()
+    {
+        //update movement Direction
+        movementDirection = transform.position - lastTransformPosition;
+        lastTransformPosition = transform.position;
+    }
+
 
     //the hurtbox was collided with (this is called from a child's hurtbox script)
     public void OnHurtboxCollision(Collider2D collision)

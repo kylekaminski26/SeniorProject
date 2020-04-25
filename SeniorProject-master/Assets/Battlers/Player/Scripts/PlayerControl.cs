@@ -125,6 +125,9 @@ public class PlayerControl : Battler
 
     void FixedUpdate()
     {
+
+        base.FixedUpdate();
+
         if (currentState == BattlerState.dash)
         {
             if (timeUntilNextDash == 0f)
