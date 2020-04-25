@@ -64,8 +64,8 @@ public class PlayerControl : Battler
         currentState = BattlerState.idle;
         firePoint = GetComponent<Transform>(); //Center of player
 
-        maxHealth = health = 100f;
-        maxStamina = stamina = 100f;
+        maxHealth = health = 1000f;
+        maxStamina = stamina = 1000f;
         dexterity = .05f;
         vitality = .005f;
 

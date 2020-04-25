@@ -142,8 +142,7 @@ public class Battler : MonoBehaviour
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)
                 {
-                    Knockback(attacker.transform);
-                    StartCoroutine(KnockCo());
+                    StartCoroutine(KnockCo(attacker.transform));
                 }
              }
 
@@ -185,25 +184,16 @@ public class Battler : MonoBehaviour
         health += (healthPercentage * maxHealth) * Time.deltaTime;
     }
 
-
-    //perform knockback as a result of this Battler being attacked by another
-    public void Knockback(Transform tr)
+    //Co-routine for handling the termination of knockback
+    public IEnumerator KnockCo(Transform tr)
     {
         if (rb != null)
         {
             currentState = BattlerState.hitStun;
             Vector2 difference = transform.position - tr.position;
-            difference = difference.normalized * 5.0f;
+            difference = difference.normalized * 8.0f;
             rb.AddForce(difference, ForceMode2D.Impulse);
-        }
-    }
-
-    //Co-routine for handling the termination of knockback
-    public IEnumerator KnockCo()
-    {
-        if (rb != null)
-        {
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(1f);
             rb.velocity = Vector2.zero;
             currentState = BattlerState.idle;
         }

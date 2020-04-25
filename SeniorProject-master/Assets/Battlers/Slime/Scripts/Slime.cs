@@ -24,7 +24,6 @@ public class Slime : Battler
     public Transform target; //Target of the Battler
 
     //concerning the implementation of generic hitboxes
-    public Vector2 direction;
     private BoxCollider2D effectiveHitbox;
     private List<BoxCollider2D> Hitboxes;
 
@@ -56,6 +55,7 @@ public class Slime : Battler
 
     public float attackerTargetDistance = 0;
 
+
     
 
    
@@ -80,8 +80,10 @@ public class Slime : Battler
         {
             if (t.CompareTag("Hitbox")) {
                 Hitboxes.Add(t.GetComponent<BoxCollider2D>());
+
             }
         }
+
         effectiveHitbox = Hitboxes[0];
 
         Path = GetComponent<Pathfinding.AIPath>();
@@ -122,12 +124,12 @@ public class Slime : Battler
         base.Update();
 
         if (target != null)
-        {
+        {   //cannot think if in hitstun or currently attacking
+            if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
             Think();
         }
-
-        direction = (Vector2) (Vector3.Normalize(rb.velocity));
         setEffectiveHitbox();
+
 
     }
 
@@ -165,7 +167,7 @@ public class Slime : Battler
 
         //How far inside the targets hurtbox do we want to be?
         //aim to have atleast half of your effectivehitbox in them
-        float penetration = attackerMinDim/4; 
+        float penetration = attackerMinDim/2; 
 
         //the vector that points from the attacker's effectivehitbox to the targets hurtbox
         Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
@@ -426,7 +428,7 @@ public class Slime : Battler
                 //and attack rate delay based on dexterity
                 //touch distance is the smallest possible distance without an intersection
                 //of hit box and hurtbox
-                if (attackerTargetDistance < touchDistance)
+                if (attackerTargetDistance < touchDistance && currentState != BattlerState.attack) //prevent from attacking to often
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.attack;
@@ -499,8 +501,7 @@ public class Slime : Battler
             Vector3 hitboxPosition;
             for (int i = 0; i < Hitboxes.Count; i++)
             {
-                Hitboxes[i].enabled = true;
-                hitboxPosition = Hitboxes[i].transform.localPosition;
+                hitboxPosition = Hitboxes[i].offset;
                 float angle = Mathf.Acos(Vector3.Dot(Vector3.Normalize(hitboxPosition),Vector3.Normalize(movementDirection)));
                 if (angle < minAngle) {
                     minNdx = i;
@@ -517,19 +518,15 @@ public class Slime : Battler
     //Co-routine for handling attack (toggling of effectivehitbox and Battler States)
     public IEnumerator AttackCo()
     {
-        
-        effectiveHitbox.enabled = true;
+        BoxCollider2D activeHitbox = effectiveHitbox;
+        activeHitbox.enabled = true;
         stamina -= (.05f * 50) + (.10f * baseAttack); //3; where 50 = globalMaxBaseAttack 
         currentState = BattlerState.attack;
         yield return new WaitForSeconds(0.2f);
         //disable all hitboxes after an attack ends
         //since the effective hitbox may have been changed
         //during the yield time of this coroutine
-        effectiveHitbox.enabled = false;
-        foreach(BoxCollider2D b in Hitboxes)
-        {
-            b.enabled = false;
-        }
+        activeHitbox.enabled = false;
         currentState = BattlerState.idle;
         
     }
@@ -602,8 +599,7 @@ public class Slime : Battler
             {
                 //GameObject combatEffect = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
                 // Destroy(combatEffect, 0.35f);
-                Knockback(other.transform);
-                StartCoroutine(KnockCo());
+                StartCoroutine(KnockCo(other.transform));
             }
         }
     }

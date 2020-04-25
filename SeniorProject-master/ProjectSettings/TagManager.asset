@@ -13,6 +13,7 @@ TagManager:
   - Potion
   - Hitbox
   - Projectile
+  - PseudoHitbox
   layers:
   - Default
   - TransparentFX
