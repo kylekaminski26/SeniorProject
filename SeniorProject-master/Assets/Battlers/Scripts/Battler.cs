@@ -191,9 +191,9 @@ public class Battler : MonoBehaviour
         {
             currentState = BattlerState.hitStun;
             Vector2 difference = transform.position - tr.position;
-            difference = difference.normalized * 8.0f;
+            difference = difference.normalized * 4.0f;
             rb.AddForce(difference, ForceMode2D.Impulse);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.6f);
             rb.velocity = Vector2.zero;
             currentState = BattlerState.idle;
         }
@@ -284,19 +284,6 @@ public class Battler : MonoBehaviour
             animator.SetBool("Moving", true);
         }
     }
-
-    /* Is this ever used?
-    public void MoveAndAnimate(Vector3 moveVector, bool toward)
-    {
-        float direction = 1f;
-        if (!toward)
-            direction = -1f;
-
-        Vector3 newPos = Vector3.MoveTowards(transform.position, moveVector, direction * movementSpeed * Time.deltaTime);
-        ChangeAnim(newPos - transform.position);
-        rb.MovePosition(newPos);
-    }
-    */
 
     
     public void PlayAudio(int index, float startTime, float endTime)

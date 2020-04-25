@@ -76,7 +76,7 @@ public class PlayerControl : Battler
 
         attackRate = 0.375f;
         lastAttackTime = 0.0f;
-        baseAttack = 1f;
+        baseAttack = 8f;
 
         movementSpeed = 5.0f;
         dashTime = 0.05f;
