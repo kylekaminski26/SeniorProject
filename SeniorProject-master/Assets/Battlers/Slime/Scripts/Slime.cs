@@ -20,9 +20,12 @@ public enum AIState
 
 public class Slime : Battler
 {
-    private float chaseRadius; //how far the slime can see
-    public Transform target; //the target of this Battler
-    private CircleCollider2D Hitbox; //should be generalized in parent (all Battlers have a list of hitboxes)
+    private float chaseRadius; //Vision Range of Battler
+    public Transform target; //Target of the Battler
+
+
+    private BoxCollider2D Hitbox;
+
     private BoxCollider2D targetHurtbox;
     private Random random;
 
@@ -51,6 +54,7 @@ public class Slime : Battler
 
     public float attackerTargetDistance = 0;
 
+   
 
 
     void Awake()
@@ -65,8 +69,7 @@ public class Slime : Battler
         //initialize child specific variables
         chaseRadius = 5f;
 
-        //Hitbox = GameObject.Find("Hitbox").GetComponent<CircleCollider2D>();
-        Hitbox = GetComponentInChildren<CircleCollider2D>();
+        Hitbox = GetComponentInChildren<BoxCollider2D>();
         Hitbox.enabled = false;
 
 
@@ -129,11 +132,11 @@ public class Slime : Battler
         //center of target's hurtbox
         Vector3 targetHurtboxCenter = (Vector3)targetHurtbox.transform.position + (Vector3)targetHurtbox.offset;//(Vector3)targetHurtbox.bounds.center;
 
-        //maximal dimension of target's hurtbox(needs to be boxcollider2D)
+        //minimal dimension of target's hurtbox(needs to be boxcollider2D)
         float minDim = (targetHurtbox.size.x < targetHurtbox.size.y) ? targetHurtbox.size.x : targetHurtbox.size.y;
 
-        //radius of my hitbox
-        float ra = Hitbox.radius;
+        //minimal dimension of my hitbox
+        float attackerMinDim = (Hitbox.size.x < Hitbox.size.y) ? Hitbox.size.x : Hitbox.size.y;
 
         //note that the if the the distance between the center points is the radius + the mininal dimension
         //it will guarentee you are inside the hitbox
@@ -148,12 +151,13 @@ public class Slime : Battler
 
         //How far inside the targets hurtbox do we want to be?
         //aim to have atleast half of your hitbox in them
-        float penetration = ra/2; 
+        float penetration = attackerMinDim/4; 
 
         //the vector that points from the attacker's hitbox to the targets hurtbox
         Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
 
-        float touchDistance = ra + minDim/2;
+        float touchDistance = attackerMinDim/2 + minDim/2; //the smallest distance the colliders can
+                                                           //be without touching each other
 
 
 

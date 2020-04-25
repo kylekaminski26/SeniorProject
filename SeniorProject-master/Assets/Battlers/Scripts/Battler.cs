@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 //State variables for Battler Constraints and animations
-//Hitstun and attack are used in enemy AI
 public enum BattlerState
 {
     idle,
@@ -14,20 +13,29 @@ public enum BattlerState
     dash
 }
 
-/*This class holds all of the common elements
- * between the player and the enemy
- * This includes initial battle variables,
- * states, and routines for recieving damage
+/*This class holds all of the common elements between the player and
+ * the enemies This includes initial battle variables, states, and common routines
  *
- * Any entity that fights will inherit from this parent class
- * All battler must have : a RigidBody2D, an Animator, a Sprite Collider, and Sprite Renderer
- * and a child object called Hurtbox which contains a Hurtbox script
+ * All battlers will be instantiated with the following attributes
+ * {maxHealth,maxStamina,baseAttack,movementSpeed,dexterity,vitality}
  *
- * The current Battler Model considers the following Variables {health, stamina, movement speed, dexterity }
- * Current Assumptions Stamina regeneration is not considered and is fixed
+ * Any battler entity must have the following
+ * RigidBody2D
+ * Animator
+ * Sprite Collider2D (pushbox)
+ * Sprite Renderer
+ * Audio Source
+ * A child object called Hurtbox (a sprite collider2D) with the Hurtbox script
+ * 
+ * Hitboxes and damage are programmed in the inheriting class and are not the
+ * responsibility of the battler, however all implementation of battler
+ * must attack under some constraints
  *
- * Each Battler can have 1:M hitboxes
- * Each Battler Must have 1 BoxCollider2D Hurtbox
+ * An attack corresponds to the temporary enabling of a hitbox,
+ * when a battler comes in contact with a collider called hitbox it takes
+ * damage from its owner.
+ *  --Matt 4/25
+ *
  * 
  */
 
@@ -38,31 +46,27 @@ public class Battler : MonoBehaviour
     public float maxStamina;
     public float baseAttack;
     public float movementSpeed;
-    public float dexterity; //rate of stamina regen (effectively controls attack rate) --> [0,1]
-    public float vitality; //rate of health regen
-    //consider maxMovement Speed (buffs may allow speed beyond max for fixed time)
+    public float dexterity; //percentage of max stamina regenerated per frame (effectively controls attack rate) --> [0,1]
+    public float vitality; //percentage of max health regenerated per frame --> [0,1]
 
     //State attributes
     public float stamina;
     public float health;
-    public float lastAttackTime;
+
+    //battler control variables
+    public float lastAttackTime;        //need this be here --Matt 4/25?
     public BattlerState currentState;
 
     //prefab component references
     public Animator animator;
     public Rigidbody2D rb;
     public AudioSource[] aud;
-    public GameObject[] effects;
+    //public GameObject[] effects; Not utilized ... --Matt 4/25
 
-    /* When a MonoBehaviour is initialized,there is a sequence of function calls
-     * that take place
-     * 1. Constructor
-     * 2. Awake
-     * 3. Start
+    /*
+     *  Initialize the battler with default values
      *
-     * In the game manager's start I initialize and set variables on the battlers,
-     * so its important that there default settings are set in awake and then
-     * overwritten in game manager's start
+     *
      */
     protected void Awake()
     {
@@ -83,12 +87,10 @@ public class Battler : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    //Stamina Regen? (Dex)
-    //Health Regen? (Vitality)
+    
     protected void Update()
     {
-        if (health <= 0)//&& currentState != BattlerState.dead)
+        if (health <= 0 && currentState != BattlerState.dead)
         {
             currentState = BattlerState.dead;
             Die();
@@ -191,7 +193,7 @@ public class Battler : MonoBehaviour
         }
     }
 
-    //Die override Okay
+    
     void Die()
     {
         rb.velocity = Vector2.zero; //Unsure whether neceessary
@@ -202,7 +204,7 @@ public class Battler : MonoBehaviour
         StartCoroutine(DeadCo());
     }
 
-    //override okay
+    
     private IEnumerator DeadCo()
     {
         yield return new WaitForSeconds(0.75f);
