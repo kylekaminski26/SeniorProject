@@ -9,9 +9,10 @@ TagManager:
   - RoomTemplate
   - player_attack
   - audio
-  - player_projectile
   - Enemy
   - Potion
+  - Hitbox
+  - Projectile
   layers:
   - Default
   - TransparentFX
