@@ -398,7 +398,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5680445972405675751}
   - component: {fileID: 5680445972405675750}
-  - component: {fileID: 5680445972405675753}
   - component: {fileID: 5680445972405675748}
   - component: {fileID: 7082724215151629064}
   - component: {fileID: 638463885452657544}
@@ -482,25 +481,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &5680445972405675753
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5680445972405675752}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 56f9dc6e027c32347b9ea63e50a081f8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!61 &5680445972405675748
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -669,7 +649,7 @@ MonoBehaviour:
   currentState: 0
   movementDirection: {x: 0, y: 0, z: 0}
   lastTransformPosition: {x: 0, y: 0, z: 0}
-  animator: {fileID: 5680445972405675753}
+  animator: {fileID: 0}
   rb: {fileID: 7082724215151629064}
   aud: []
   target: {fileID: 0}
