@@ -203,7 +203,7 @@ public class Battler : MonoBehaviour
     }
 
     
-    void Die()
+    protected void Die()
     {
         rb.velocity = Vector2.zero; //Unsure whether neceessary
         animator.SetTrigger("Dead");

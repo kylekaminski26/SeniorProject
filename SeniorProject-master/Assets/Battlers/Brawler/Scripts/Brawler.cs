@@ -129,7 +129,7 @@ public class Brawler : Battler
 
     }
 
-    void Update()
+    protected void Update()
     {
         base.Update();
 
