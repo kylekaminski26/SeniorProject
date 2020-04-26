@@ -567,7 +567,6 @@ public class Ranger : Battler
         Quaternion projectileRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, temp-90));
         
         GameObject arrow = Instantiate(projectile, transform.position, projectileRotation);
-
         Rigidbody2D arrowRB = arrow.GetComponent<Rigidbody2D>();
         
 

@@ -196,12 +196,8 @@ public class Battler : MonoBehaviour
             Vector2 difference = transform.position - tr.position;
             difference = difference.normalized * 4.0f;
             rb.AddForce(difference, ForceMode2D.Impulse);
-            yield return new WaitForSeconds(.2f);
-
-            //rb.velocity = Vector2.zero;
-            //Instead of reseting velocity, allow the knockback to
-            //be resolved by the physics (RGB2D)
-
+            yield return new WaitForSeconds(.6f);
+            rb.velocity = Vector2.zero;
             currentState = BattlerState.idle;
         }
     }
