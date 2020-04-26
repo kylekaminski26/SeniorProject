@@ -81,7 +81,7 @@ public class Ranger : Battler
 
         dexterity = .05f;
         vitality = .01f;
-        movementSpeed = 7f;
+        movementSpeed = 1f;
 
         //initialize child specific variables
         visionRadius = 8f;
