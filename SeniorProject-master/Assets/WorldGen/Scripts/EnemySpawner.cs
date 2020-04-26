@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     private GameManager gameManager;
+    private GameObject enemiesContainer;
 
     private int rand;
     private double random;
@@ -16,6 +17,7 @@ public class EnemySpawner : MonoBehaviour
     {
         Destroy(gameObject, waitTime);
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        enemiesContainer = GameObject.FindGameObjectWithTag("EnemiesContainer");
 
         //only generate enemies percentChance of times
         random = Random.Range(0.0f, 1.0f);
@@ -28,6 +30,7 @@ public class EnemySpawner : MonoBehaviour
     public void Spawn()
     {
         rand = Random.Range(0, gameManager.enemyList.Length);
-        Instantiate(gameManager.enemyList[rand], transform.position, Quaternion.identity);
+        GameObject b = Instantiate(gameManager.enemyList[rand], transform.position, Quaternion.identity);
+        b.transform.parent = enemiesContainer.transform;
     }
 }
