@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] enemyList;
 
+    public int killGoal = 5;
+
     //needs to be tied in scene
     public PlayerControl player;
 

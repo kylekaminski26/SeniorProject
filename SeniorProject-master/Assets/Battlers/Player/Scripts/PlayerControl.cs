@@ -58,6 +58,8 @@ public class PlayerControl : Battler
 
     private float attackRate;
 
+    public int killCount = 0;
+
 
     void Start()
     {

@@ -65,6 +65,8 @@ public class Battler : MonoBehaviour
     public Animator animator;
     public Rigidbody2D rb;
     public AudioSource[] aud;
+
+
     //public GameObject[] effects; Not utilized ... --Matt 4/25
 
     /*
@@ -139,8 +141,7 @@ public class Battler : MonoBehaviour
         {
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
-            if (attacker.currentState != BattlerState.dead) { 
-
+            if (attacker.currentState != BattlerState.dead) {
                 TakeDamage(attacker.GetDamage());
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)
@@ -218,6 +219,15 @@ public class Battler : MonoBehaviour
     {
         yield return new WaitForSeconds(0.75f);
         this.gameObject.SetActive(false);
+
+        //related to main game
+        //so we can track how many kills the player has
+        if (GameObject.Find("Player"))
+        {
+            PlayerControl player = GameObject.FindWithTag("Player").GetComponent<PlayerControl>();
+            player.killCount += 1;
+        }
+
 
     }
 
