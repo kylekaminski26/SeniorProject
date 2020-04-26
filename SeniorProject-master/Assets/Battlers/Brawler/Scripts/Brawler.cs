@@ -530,11 +530,17 @@ public class Brawler : Battler
     //Co-routine for handling attack (toggling of effectivehitbox and Battler States)
     public IEnumerator AttackCo()
     {
+        //buffer frames
+        currentState = BattlerState.attack;
+        yield return new WaitForSeconds(.2f); 
+
+        //Attack Frames
         BoxCollider2D activeHitbox = effectiveHitbox;
         activeHitbox.enabled = true;
         stamina -= (.05f * 50) + (.10f * baseAttack); //3; where 50 = globalMaxBaseAttack 
-        currentState = BattlerState.attack;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.3f);
+
+        //Ending Frames
         //disable all hitboxes after an attack ends
         //since the effective hitbox may have been changed
         //during the yield time of this coroutine

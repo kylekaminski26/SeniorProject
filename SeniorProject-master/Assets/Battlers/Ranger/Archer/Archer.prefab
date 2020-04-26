@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 4789195995120788351}
   - component: {fileID: 2345818486403947664}
   - component: {fileID: 7711521161578057942}
+  - component: {fileID: 9141513022250729051}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Enemy
@@ -665,3 +666,22 @@ MonoBehaviour:
   currentAIState: 0
   previousAIState: 0
   attackerTargetDistance: 0
+--- !u!95 &9141513022250729051
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5680445972405675752}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 56f9dc6e027c32347b9ea63e50a081f8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

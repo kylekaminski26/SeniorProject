@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
         {
             if (player.isActiveAndEnabled == false)
             {
+                Destroy(gameObject);
                 SceneManager.LoadScene("Menu");
             }
         }
