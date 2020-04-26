@@ -561,17 +561,21 @@ public class Ranger : Battler
         stamina -= (.05f * 50) + (.10f * baseAttack); // where 50 = globalMaxBaseAttack 
         currentState = BattlerState.attack;
 
-        Quaternion projectileRotation = Quaternion.Euler(targetHurtbox.transform.position - transform.position);
-        Vector2 temp = new Vector2(animator.GetFloat("Horizontal"), animator.GetFloat("Vertical"));
+        Vector3 targetDirection = target.position - transform.position;
 
-        GameObject arrow = Instantiate(projectile, gameObject.transform.position, projectileRotation);
+        float temp = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
+        Quaternion projectileRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, temp-90));
+        
+
+        GameObject arrow = Instantiate(projectile, transform.position, projectileRotation);
         Rigidbody2D arrowRB = arrow.GetComponent<Rigidbody2D>();
-        arrowRB.velocity = temp.normalized * 1;
+
+        arrowRB.velocity = (Vector2) Vector3.Normalize(target.position - transform.position) * 10.0f;
 
         animator.SetTrigger("Shooting");
 
         yield return new WaitForSeconds(0.2f);
-        
+        Destroy(arrow, 3.0f);
         currentState = BattlerState.idle;
 
     }
