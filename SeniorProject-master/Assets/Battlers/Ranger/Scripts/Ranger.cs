@@ -79,6 +79,8 @@ public class Ranger : Battler
     {
         base.Awake();
 
+        baseAttack = 10.0f;
+
         dexterity = .05f;
         vitality = .01f;
         movementSpeed = 1f;
@@ -566,15 +568,14 @@ public class Ranger : Battler
         float temp = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
         Quaternion projectileRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, temp-90));
         
-        GameObject arrow = Instantiate(projectile, transform.position, projectileRotation);
+        GameObject arrow = Instantiate(projectile, transform.position, projectileRotation, transform);
         Rigidbody2D arrowRB = arrow.GetComponent<Rigidbody2D>();
         
 
         arrowRB.velocity = (Vector2) Vector3.Normalize(target.position - transform.position) * 10.0f;
         animator.SetTrigger("Shooting");
 
-        yield return new WaitForSeconds(0.2f);
-        Destroy(arrow, 3.0f);
+        yield return new WaitForSeconds(0.5f);
         currentState = BattlerState.idle;
 
     }
