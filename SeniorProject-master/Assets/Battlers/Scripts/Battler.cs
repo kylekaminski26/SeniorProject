@@ -124,6 +124,9 @@ public class Battler : MonoBehaviour
         //update movement Direction
         movementDirection = transform.position - lastTransformPosition;
         lastTransformPosition = transform.position;
+
+        //Need this to animate when it is moving
+        ChangeAnim(movementDirection);
     }
 
 
