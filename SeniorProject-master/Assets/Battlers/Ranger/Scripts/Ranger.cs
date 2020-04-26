@@ -81,7 +81,7 @@ public class Ranger : Battler
 
         dexterity = .05f;
         vitality = .01f;
-        movementSpeed = 7f;
+        movementSpeed = 1f;
 
         //initialize child specific variables
         visionRadius = 8f;
@@ -566,12 +566,11 @@ public class Ranger : Battler
         float temp = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
         Quaternion projectileRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, temp-90));
         
-
         GameObject arrow = Instantiate(projectile, transform.position, projectileRotation);
         Rigidbody2D arrowRB = arrow.GetComponent<Rigidbody2D>();
+        
 
         arrowRB.velocity = (Vector2) Vector3.Normalize(target.position - transform.position) * 10.0f;
-
         animator.SetTrigger("Shooting");
 
         yield return new WaitForSeconds(0.2f);

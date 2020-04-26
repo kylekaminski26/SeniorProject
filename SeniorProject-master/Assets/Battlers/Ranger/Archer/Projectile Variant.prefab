@@ -1,5 +1,108 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4819651138568654131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6320781969360899597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2040f03efecc43d49a56bad461bdfd47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  maxStamina: 0
+  baseAttack: 0
+  movementSpeed: 0
+  dexterity: 0
+  vitality: 0
+  stamina: 0
+  health: 0
+  lastAttackTime: 0
+  currentState: 0
+  movementDirection: {x: 0, y: 0, z: 0}
+  lastTransformPosition: {x: 0, y: 0, z: 0}
+  animator: {fileID: 6282083825333390208}
+  rb: {fileID: 0}
+  aud: []
+--- !u!95 &6282083825333390208
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6320781969360899597}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &3112454087548066935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3373524094401905046}
+  - component: {fileID: 7989339282385751159}
+  m_Layer: 0
+  m_Name: Hurtbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3373524094401905046
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112454087548066935}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4428984181744894207}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &7989339282385751159
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112454087548066935}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.3125, y: 1.1875}
+    newSize: {x: 0.3125, y: 1.1875}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.19, y: 1.1875}
+  m_EdgeRadius: 0
 --- !u!1001 &1921677365778350162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7,6 +110,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1531407113563370983, guid: 3b0a521fd3762f841a04b880d1dd570d,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.19
+      objectReference: {fileID: 0}
     - target: {fileID: 2872666285418348717, guid: 3b0a521fd3762f841a04b880d1dd570d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -74,3 +182,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b0a521fd3762f841a04b880d1dd570d, type: 3}
+--- !u!1 &6320781969360899597 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5556534669846236767, guid: 3b0a521fd3762f841a04b880d1dd570d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1921677365778350162}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4428984181744894207 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2872666285418348717, guid: 3b0a521fd3762f841a04b880d1dd570d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1921677365778350162}
+  m_PrefabAsset: {fileID: 0}
