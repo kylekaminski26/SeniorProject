@@ -65,7 +65,12 @@ PrefabInstance:
     - target: {fileID: 5556534669846236767, guid: 3b0a521fd3762f841a04b880d1dd570d,
         type: 3}
       propertyPath: m_Name
-      value: Projectile
+      value: Projectile Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7677629499168489934, guid: 3b0a521fd3762f841a04b880d1dd570d,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b0a521fd3762f841a04b880d1dd570d, type: 3}

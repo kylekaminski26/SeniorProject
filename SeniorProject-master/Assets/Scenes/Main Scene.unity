@@ -756,6 +756,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3418207685476920122, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3418207685541418056, guid: be5671bb728c94c40997c492776a3914,
         type: 3}
       propertyPath: dashEffectPrefab
@@ -776,6 +781,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418207685541418166, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3418207685541418167, guid: be5671bb728c94c40997c492776a3914,
         type: 3}
@@ -832,6 +842,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3418207685975614776, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418207687037794542, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418207687237790335, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418207687239919718, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3418207687335593244, guid: be5671bb728c94c40997c492776a3914,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be5671bb728c94c40997c492776a3914, type: 3}
 --- !u!1001 &1535681551
@@ -841,6 +876,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1563568056944133994, guid: 28c7f564753232a4bb9afd1d5efe0d0f,
+        type: 3}
+      propertyPath: enemyList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1563568056944133994, guid: 28c7f564753232a4bb9afd1d5efe0d0f,
         type: 3}
       propertyPath: player

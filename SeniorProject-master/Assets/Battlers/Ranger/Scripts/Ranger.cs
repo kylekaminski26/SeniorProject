@@ -4,7 +4,7 @@ using UnityEngine;
 
 /*
 //State variables for AI thinking
-public enum AIState
+private enum AIState
 {
     idle,
     patrol,
@@ -20,7 +20,7 @@ public enum AIState
 //TO-Dos: Need to reconsider states in Battler, this construction utilizes two sets of states: Battler and AI
 //and it is confusing to make sense of
 
-public class Brawler : Battler
+public class Ranger : Battler
 {
     //State variables for AI thinking
     public enum AIState
@@ -39,19 +39,23 @@ public class Brawler : Battler
     private float visionRadius; //Vision Range of Battler
     public Transform target; //Target of the Battler
 
+    //Ranger does not use hitboxes
     //concerning the implementation of generic hitboxes
-    private BoxCollider2D effectiveHitbox;
-    private List<BoxCollider2D> Hitboxes;
+    //private BoxCollider2D effectiveHitbox;
+    //private List<BoxCollider2D> Hitboxes;
 
     private BoxCollider2D targetHurtbox;
     private Random random;
 
     //TG
+    private int layerMask = 1 << 10;
+
     private GameObject chaseTarget;
     [SerializeField] private float chaseDistance; //The distance in which the enemy will try to maintain from the player during chase
     [SerializeField] private float fleeTime;
     [SerializeField] private float fleeRange;
     [SerializeField] private GameObject waypoint;
+    [SerializeField] private GameObject projectile;
 
     private GameObject[] patrolPointArray = new GameObject[4];//Must be the same size declared in the Patrol script attached to enemy
     private GameObject[] searchPointArray = new GameObject[4];
@@ -77,11 +81,12 @@ public class Brawler : Battler
 
         dexterity = .05f;
         vitality = .01f;
-        movementSpeed = 5f;
+        movementSpeed = 7f;
 
         //initialize child specific variables
-        visionRadius = 5f;
+        visionRadius = 8f;
 
+        /* Ranger does not use hitboxes
         //get references to all attatched hitboxes and set the default
         Hitboxes = new List<BoxCollider2D>();
         Transform[] ts = GetComponentsInChildren<Transform>();
@@ -95,6 +100,7 @@ public class Brawler : Battler
         }
 
         effectiveHitbox = Hitboxes[0];
+        */
 
         Path = GetComponent<Pathfinding.AIPath>();
         DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
@@ -113,6 +119,9 @@ public class Brawler : Battler
         targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
         //TG
+        //Sets the ray cast to trigger when colliding with player hurtbox
+        layerMask = 1 << 10;
+
         //I am not searching on instantiation
         bIsSearching = false;
         bIsFleeing = false;
@@ -132,14 +141,14 @@ public class Brawler : Battler
     void Update()
     {
         base.Update();
-
+        
+        setRaycastDirection();
         if (target != null)
         {   //cannot think if in hitstun or currently attacking
             if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
                 Think();
         }
-        setEffectiveHitbox();
-
+        
 
     }
 
@@ -152,8 +161,8 @@ public class Brawler : Battler
         //////////////////////////////////////////////////
 
 
-        //center of my hitbox
-        Vector3 attackerHitboxCenter = (Vector3)effectiveHitbox.transform.position + (Vector3)effectiveHitbox.offset;
+        //center of myself
+        Vector3 attackerCenter = (Vector3)gameObject.transform.position;
 
         //center of target's hurtbox
         Vector3 targetHurtboxCenter = (Vector3)targetHurtbox.transform.position + (Vector3)targetHurtbox.offset;//(Vector3)targetHurtbox.bounds.center;
@@ -162,7 +171,7 @@ public class Brawler : Battler
         float minDim = (targetHurtbox.size.x < targetHurtbox.size.y) ? targetHurtbox.size.x : targetHurtbox.size.y;
 
         //minimal dimension of my effectivehitbox
-        float attackerMinDim = (effectiveHitbox.size.x < effectiveHitbox.size.y) ? effectiveHitbox.size.x : effectiveHitbox.size.y;
+        //float attackerMinDim = (effectiveHitbox.size.x < effectiveHitbox.size.y) ? effectiveHitbox.size.x : effectiveHitbox.size.y;
 
         //note that the if the the distance between the center points is the radius + the mininal dimension
         //it will guarentee you are inside the effectivehitbox
@@ -170,19 +179,19 @@ public class Brawler : Battler
 
         //distance between centers
         //remove from public when done
-        attackerTargetDistance = Vector3.Distance(attackerHitboxCenter, targetHurtboxCenter);
+        attackerTargetDistance = Vector3.Distance(attackerCenter, targetHurtboxCenter);
 
         //the unit vector pointing to target
-        Vector3 TargetDirection = Vector3.Normalize(targetHurtboxCenter - attackerHitboxCenter);
+        Vector3 TargetDirection = Vector3.Normalize(targetHurtboxCenter - attackerCenter);
 
         //How far inside the targets hurtbox do we want to be?
         //aim to have atleast half of your effectivehitbox in them
-        float penetration = attackerMinDim / 2;
+        //float penetration = attackerMinDim / 2;
 
         //the vector that points from the attacker's effectivehitbox to the targets hurtbox
-        Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
+        //Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
 
-        float touchDistance = attackerMinDim / 2 + minDim / 2; //the smallest distance the colliders can
+        //float touchDistance = attackerMinDim / 2 + minDim / 2; //the smallest distance the colliders can
                                                                //be without touching each other
 
 
@@ -204,11 +213,13 @@ public class Brawler : Battler
             Path.enabled = false;
         }
 
+        /*
         if (currentAIState != AIState.approach && previousAIState == AIState.approach)
         {
             DestinationSetter.enabled = false;
             Path.enabled = false;
         }
+        */
 
         if (currentAIState != AIState.flee && previousAIState == AIState.flee)
         {
@@ -306,12 +317,28 @@ public class Brawler : Battler
                 chaseTarget.transform.position = gameObject.transform.position + TargetDirection * (attackerTargetDistance - chaseDistance);
                 DestinationSetter.target = chaseTarget.transform;
 
-                //If I am able to attack, then approach
-                //Changed the cost of stamina to the calculated amount
-                if (stamina >= (.05f * 50) + (.10f * baseAttack))
+                //If I am able to attack, then attack
+                //Changed 3 to the calculated stamina cost of an attack
+                //AND the raycast hit the players hurtbox
+                if ((stamina >= (.05f * 50) + (.10f * baseAttack)) && (currentState != BattlerState.attack))
                 {
-                    previousAIState = currentAIState;
-                    currentAIState = AIState.approach;
+                    //Am I barely moving? and Does the ray intersect the player layer
+                    if ((Mathf.Abs(movementDirection.magnitude) < 0.001) && (Physics2D.Raycast(transform.position, (targetHurtbox.transform.position - transform.position).normalized, visionRadius, layerMask)))
+                    {
+                        previousAIState = currentAIState;
+                        currentAIState = AIState.attack;
+                    }
+                    else
+                    {
+                        // Does the ray intersect the player layer
+                        if (Physics2D.Raycast(transform.position, movementDirection.normalized, visionRadius, layerMask))
+                        {
+                            previousAIState = currentAIState;
+                            currentAIState = AIState.attack;
+                        }
+
+                    }
+
                 }
 
                 //If I am too damaged, I will flee
@@ -406,7 +433,7 @@ public class Brawler : Battler
 
                 break;
 
-
+                /* Rangers should NEVER approach the target since they can attack from a distance
             //Create approach state TG
             case AIState.approach:
                 //Is this a self transition to chase or from another node?
@@ -446,7 +473,7 @@ public class Brawler : Battler
                 }
 
                 break;
-
+                */
 
             case AIState.attack: //Attack state
 
@@ -499,46 +526,52 @@ public class Brawler : Battler
 
     }
 
-    //checks the movement direction of the brawler, and set the
-    //the effective hitbox to the hitbox that is closest to the direction
-    //of movement
-    public void setEffectiveHitbox()
+    public void setRaycastDirection()
     {
-        if (Hitboxes.Count > 1)
+       //Am I barely moviing?
+        if(Mathf.Abs(movementDirection.magnitude) < 0.001)
         {
-            //do stuff
-            int minNdx = 0;
-            float minAngle = 2 * Mathf.PI;
-            Vector3 hitboxPosition;
-            for (int i = 0; i < Hitboxes.Count; i++)
+            if (Physics2D.Raycast(transform.position, (targetHurtbox.transform.position - transform.position).normalized, visionRadius, layerMask))
             {
-                hitboxPosition = Hitboxes[i].offset;
-                float angle = Mathf.Acos(Vector3.Dot(Vector3.Normalize(hitboxPosition), Vector3.Normalize(movementDirection)));
-                if (angle < minAngle)
-                {
-                    minNdx = i;
-                    minAngle = angle;
-                }
+                Debug.DrawRay(transform.position, (targetHurtbox.transform.position - transform.position).normalized * visionRadius, Color.red);
             }
-            effectiveHitbox = Hitboxes[minNdx];
+            else
+            {
+                Debug.DrawRay(transform.position, (targetHurtbox.transform.position - transform.position).normalized * visionRadius, Color.white);
+            }
         }
-
-        //otherwise default hitbox is tautological
+        else
+        {
+            // Does the ray intersect the player layer
+            if (Physics2D.Raycast(transform.position, movementDirection.normalized, visionRadius, layerMask))
+            {
+                Debug.DrawRay(transform.position, movementDirection.normalized * visionRadius, Color.red);
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, movementDirection.normalized * visionRadius, Color.white);
+            }
+        }
     }
-
 
     //Co-routine for handling attack (toggling of effectivehitbox and Battler States)
     public IEnumerator AttackCo()
     {
-        BoxCollider2D activeHitbox = effectiveHitbox;
-        activeHitbox.enabled = true;
-        stamina -= (.05f * 50) + (.10f * baseAttack); //3; where 50 = globalMaxBaseAttack 
+        
+        stamina -= (.05f * 50) + (.10f * baseAttack); // where 50 = globalMaxBaseAttack 
         currentState = BattlerState.attack;
+
+        Quaternion projectileRotation = Quaternion.Euler(targetHurtbox.transform.position - transform.position);
+        Vector2 temp = new Vector2(animator.GetFloat("Horizontal"), animator.GetFloat("Vertical"));
+
+        GameObject arrow = Instantiate(projectile, gameObject.transform.position, projectileRotation);
+        Rigidbody2D arrowRB = arrow.GetComponent<Rigidbody2D>();
+        arrowRB.velocity = temp.normalized * 1;
+
+        animator.SetTrigger("Shooting");
+
         yield return new WaitForSeconds(0.2f);
-        //disable all hitboxes after an attack ends
-        //since the effective hitbox may have been changed
-        //during the yield time of this coroutine
-        activeHitbox.enabled = false;
+        
         currentState = BattlerState.idle;
 
     }

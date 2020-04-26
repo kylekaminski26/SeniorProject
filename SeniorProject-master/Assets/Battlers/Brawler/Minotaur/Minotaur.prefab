@@ -410,8 +410,8 @@ MonoBehaviour:
   currentState: 0
   movementDirection: {x: 0, y: 0, z: 0}
   lastTransformPosition: {x: 0, y: 0, z: 0}
-  animator: {fileID: 0}
-  rb: {fileID: 0}
+  animator: {fileID: 5808449398506813973}
+  rb: {fileID: 4211796050968675061}
   aud: []
   target: {fileID: 0}
   chaseDistance: 3

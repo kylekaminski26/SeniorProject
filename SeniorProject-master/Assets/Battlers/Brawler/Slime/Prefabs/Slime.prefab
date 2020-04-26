@@ -565,13 +565,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7773370190678450625}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   version: 2
-  radius: 0.13
+  radius: 0.18
   height: 1
   repathRate: 0.5
   canSearch: 1
@@ -647,7 +647,7 @@ MonoBehaviour:
   movementDirection: {x: 0, y: 0, z: 0}
   lastTransformPosition: {x: 0, y: 0, z: 0}
   animator: {fileID: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 7773370190678450650}
   aud: []
   target: {fileID: 0}
   chaseDistance: 3.5
