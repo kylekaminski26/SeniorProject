@@ -21,6 +21,9 @@ public class RoomTemplates : MonoBehaviour
 
     public List<GameObject> rooms;
 
+    public GameObject roomListContainer;
+    private GameObject entryRoomContainer;
+
     public int dungeonSize;
     public float waitTime;
     public bool exitSpawned = false;
@@ -30,7 +33,9 @@ public class RoomTemplates : MonoBehaviour
 
     private void Start()
     {
-        Instantiate(entryRoom, transform.position, Quaternion.identity);
+        roomListContainer = new GameObject("roomListContainer");
+        entryRoomContainer = Instantiate(entryRoom, transform.position, Quaternion.identity);
+        entryRoomContainer.transform.parent = roomListContainer.transform;
     }
 
     private void Update()
