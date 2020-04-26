@@ -133,10 +133,10 @@ public class Ranger : Battler
         chaseTarget = Instantiate(waypoint, gameObject.transform.position, new Quaternion());
 
         //Create patrol waypoints
-        patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
-        patrolPointArray[1] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y - 5f, 0), new Quaternion());
-        patrolPointArray[2] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
-        patrolPointArray[3] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y - 5f, 0), new Quaternion());
+        patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5.0f, gameObject.transform.position.y + 5.0f, 0), new Quaternion());
+        patrolPointArray[1] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5.0f, gameObject.transform.position.y + 5.0f, 0), new Quaternion());
+        patrolPointArray[2] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5.0f, gameObject.transform.position.y - 5.0f, 0), new Quaternion());
+        patrolPointArray[3] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5.0f, gameObject.transform.position.y - 5.0f, 0), new Quaternion());
 
     }
 
