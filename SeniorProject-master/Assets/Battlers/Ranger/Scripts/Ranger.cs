@@ -575,7 +575,7 @@ public class Ranger : Battler
         arrowRB.velocity = (Vector2) Vector3.Normalize(target.position - transform.position) * 10.0f;
         animator.SetTrigger("Shooting");
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.60f);
         currentState = BattlerState.idle;
 
     }
