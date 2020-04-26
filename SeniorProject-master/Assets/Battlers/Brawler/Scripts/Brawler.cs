@@ -63,7 +63,6 @@ public class Brawler : Battler
         vitality = .01f;
         movementSpeed = 5f;
 
-
         //initialize child specific variables
         visionRadius = 5f;
 
