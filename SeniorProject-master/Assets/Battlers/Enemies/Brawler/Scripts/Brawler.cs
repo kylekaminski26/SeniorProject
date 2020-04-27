@@ -32,7 +32,6 @@ public class Brawler : Enemy
     [SerializeField] private float searchTime;//How long this enemy will search for a target
     [SerializeField] private float searchRange;//The range in which the enemy will search for the player
 
-    private bool bHasDied;
     private bool bIsSearching;
     private bool bIsFleeing;
     private bool bIsCounting;
@@ -88,7 +87,6 @@ public class Brawler : Enemy
         targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
         //TG
-        bHasDied = false;
         //I am not searching on instantiation
         bIsSearching = false;
         bIsFleeing = false;
@@ -109,28 +107,14 @@ public class Brawler : Enemy
     {
         base.Update();
 
-        if (target != null)
+
+        if (target != null && currentState != BattlerState.dead)
         {   //cannot think if in hitstun or currently attacking
             if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
                 Think();
         }
         setEffectiveHitbox();
 
-
-        if (GetBattlerState() == BattlerState.dead && bHasDied != true)
-        {
-            DestinationSetter.enabled = false;
-            AIPatrol.enabled = false;
-            Path.enabled = false;
-
-            bHasDied = true;
-
-            Destroy(patrolPointArray[0]);
-            Destroy(patrolPointArray[1]);
-            Destroy(patrolPointArray[2]);
-            Destroy(patrolPointArray[3]);
-            Destroy(chaseTarget);
-        }
     }
 
 
@@ -206,8 +190,11 @@ public class Brawler : Enemy
             Path.enabled = false;
         }
 
-
-
+        if (currentState == BattlerState.dead)
+        {
+            previousAIState = AIState.dead;
+            currentAIState = AIState.dead;
+        }
 
 
         //////////////////////
@@ -321,7 +308,7 @@ public class Brawler : Enemy
                 //was I hit?
                 if (currentState == BattlerState.hitStun)
                 {
-                    previousAIState = AIState.chase;
+                    previousAIState = currentAIState;
                     currentAIState = AIState.idle;
                 }
 
@@ -485,6 +472,21 @@ public class Brawler : Enemy
 
                 break;
 
+            case AIState.dead:
+                AIPatrol.enabled = false;
+                DestinationSetter.enabled = false;
+                Path.enabled = false;
+
+                if(previousAIState != AIState.dead)
+                {
+                    Destroy(patrolPointArray[0]);
+                    Destroy(patrolPointArray[1]);
+                    Destroy(patrolPointArray[2]);
+                    Destroy(patrolPointArray[3]);
+                    Destroy(chaseTarget);
+                }
+
+                break;
         }
 
     }

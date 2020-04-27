@@ -17,6 +17,7 @@ public class Enemy : Battler
         flee,
         approach,
         attack,
+        dead,
         start
     }
 

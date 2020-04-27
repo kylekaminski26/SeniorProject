@@ -30,7 +30,6 @@ public class Ranger : Enemy
     [SerializeField] private float searchTime;//How long this enemy will search for a target
     [SerializeField] private float searchRange;//The range in which the enemy will search for the player
 
-    private bool bHasDied;
     private bool bIsSearching;
     private bool bIsFleeing;
     private bool bIsCounting;
@@ -78,7 +77,6 @@ public class Ranger : Enemy
         layerMask = 1 << 10;
 
 
-        bHasDied = false;
         //I am not searching on instantiation
         bIsSearching = false;
         bIsFleeing = false;
@@ -98,29 +96,13 @@ public class Ranger : Enemy
     void Update()
     {
         base.Update();
-        
+
         setRaycastDirection();
-        if (target != null)
+        if (target != null && currentState != BattlerState.dead)
         {   //cannot think if in hitstun or currently attacking
             if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
                 Think();
         }
-
-        if (GetBattlerState() == BattlerState.dead && bHasDied != true)
-        {
-            DestinationSetter.enabled = false;
-            AIPatrol.enabled = false;
-            Path.enabled = false;
-
-            bHasDied = true;
-
-            Destroy(patrolPointArray[0]);
-            Destroy(patrolPointArray[1]);
-            Destroy(patrolPointArray[2]);
-            Destroy(patrolPointArray[3]);
-            Destroy(chaseTarget);
-        }
-
 
     }
 
@@ -173,8 +155,13 @@ public class Ranger : Enemy
             DestinationSetter.enabled = false;
             Path.enabled = false;
         }
-
-
+        
+        if(currentState == BattlerState.dead)
+        {
+            previousAIState = currentAIState;
+            currentAIState = AIState.dead;
+        }
+        
 
 
 
@@ -423,6 +410,23 @@ public class Ranger : Enemy
                 if (bIsCounting == false)
                 {
                     StartCoroutine(doForTime(fleeTime));
+                }
+
+                break;
+
+
+            case AIState.dead:
+                AIPatrol.enabled = false;
+                DestinationSetter.enabled = false;
+                Path.enabled = false;
+
+                if(previousAIState != AIState.dead)
+                {
+                    Destroy(patrolPointArray[0]);
+                    Destroy(patrolPointArray[1]);
+                    Destroy(patrolPointArray[2]);
+                    Destroy(patrolPointArray[3]);
+                    Destroy(chaseTarget);
                 }
 
                 break;
