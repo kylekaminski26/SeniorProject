@@ -21,8 +21,7 @@ public class EndScene : MonoBehaviour
             int kills = gameManager.killGoal;
             if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().killCount > kills)
             {
-                gameManager.gameLevel++;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                gameManager.prepareNextLevel();
             }
             else
             {
