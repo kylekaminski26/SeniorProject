@@ -11,7 +11,7 @@ public class Arrow : MonoBehaviour
     {
         layerMask =1 << 9;
         hitBox = GetComponent<BoxCollider2D>();
-        Invoke("enableCollider", 0.5f);
+        Invoke("enableCollider", 0.1f);
         Destroy(gameObject, 3.0f);
     }
 

@@ -20,12 +20,19 @@ public class EnemySpawner : MonoBehaviour
         templates = GameObject.FindGameObjectWithTag("RoomTemplate").GetComponent<RoomTemplates>();
 
         Spawn();
+
     }
 
     public void Spawn()
     {
         rand = Random.Range(0, gameManager.enemyPrefabList.Length);
         GameObject enemy = Instantiate(gameManager.enemyPrefabList[rand], transform.position, Quaternion.identity);
+        Enemy enemyInstance = enemy.GetComponent<Enemy>();
+        Debug.Log("instanceVector count " + gameManager.instanceVectors.Count);
+        List<float> enemyData = gameManager.instanceVectors[Random.Range(0, gameManager.instanceVectors.Count)];
+        enemyInstance.SetStats(enemyData[0],enemyData[1],enemyData[2],enemyData[3],enemyData[4],enemyData[5]);
         enemy.transform.parent = templates.enemyListContainer.transform;
     }
+
+ 
 }

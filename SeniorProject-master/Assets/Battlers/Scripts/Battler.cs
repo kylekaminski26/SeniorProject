@@ -162,9 +162,11 @@ public class Battler : MonoBehaviour
   
         if (collision.gameObject.CompareTag("Hitbox"))
         {
+ 
+
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
-            if (attacker.currentState != BattlerState.dead) {
+            if (attacker.currentState != BattlerState.dead && attacker !=  this) { //you cant attack yourself
                 TakeDamage(attacker.GetDamage());
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)

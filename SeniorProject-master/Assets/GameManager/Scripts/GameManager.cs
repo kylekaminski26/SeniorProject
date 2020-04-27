@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] enemyPrefabList;
 
     public int killGoal = 5;
+    public static int MAX_KILLGOAL = 30;
 
     //needs to be tied in scene
     public PlayerControl player;
@@ -46,6 +47,21 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        //killGoal should be set locally, not from EndScene
+        if (gameLevel < 13)
+        {
+            killGoal = gameLevel * 2 + 4;
+        }
+        else {
+            killGoal = MAX_KILLGOAL;
+        }
+        killGoal = MAX_KILLGOAL;
+
+
+        //Generate random initializations for evolutionary algorithm
+        instanceVectors = new List<List<float>>();
+        generateInitialEnemyVectors();
+
         if (instance == null)
         {
             instance = this; // In first scene, make us the singleton.
@@ -58,20 +74,12 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //added by Matt
-    void Start()
-    {
-        //Generate random initializations for evolutionary algorithm
-        instanceVectors = new List<List<float>>();
-        generateIntialEnemyVectors();
-
-    }
 
 
 
     //generates as many random enemy vectors as the kill goal of
     //the first level
-    void generateIntialEnemyVectors()
+    void generateInitialEnemyVectors()
     {
         for (int k = 0; k < killGoal; k++)
         {
@@ -94,12 +102,30 @@ public class GameManager : MonoBehaviour
                 v[i] /= magnitude;
             }
 
+            //Level Density scales from (0,MAX_KILLCOUNT)
+            float rho = killGoal / MAX_KILLGOAL;
+
+
+            //Battler Constant Rangers
+            List<float> c = new List<float>() {
+                (rho)*Battler.MAX_MAXHEALTH - Battler.MIN_MAXHEALTH,
+                (rho)*Battler.MAX_MAXSTAMINA - Battler.MIN_MAXSTAMINA,
+                (rho)*Battler.MAX_BASEATTACK - Battler.MIN_BASEATTACK,
+                (rho)*Battler.MAX_MAXMOVEMENTSPEED - Battler.MIN_MAXMOVEMENTSPEED,
+                (rho)*Battler.MAX_DEXTERITY - Battler.MIN_DEXTERITY,
+                (rho)*Battler.MAX_VITALITY - Battler.MIN_VITALITY
+            };
+
+
+            //get the vector product of the (unit vector and the scaled ranges vector)
+            for (int i = 0; i < v.Count; i++)
+            {
+                v[i]*=c[i];
+            }
 
             //now V is a unit vector in the positive domain of a 6-sphere
             instanceVectors.Add(v);
         }
-      
-
 
     }
 
