@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     private GameManager gameManager;
+    private RoomTemplates templates;
 
     private int rand;
     private double random;
@@ -16,6 +17,7 @@ public class EnemySpawner : MonoBehaviour
         //Destroy spawner object after 'waitTime'
         Destroy(gameObject, waitTime);
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        templates = GameObject.FindGameObjectWithTag("RoomTemplate").GetComponent<RoomTemplates>();
 
         Spawn();
     }
@@ -24,6 +26,6 @@ public class EnemySpawner : MonoBehaviour
     {
         rand = Random.Range(0, gameManager.enemyList.Length);
         GameObject enemy = Instantiate(gameManager.enemyList[rand], transform.position, Quaternion.identity);
-        enemy.transform.parent = gameManager.enemyListContainer.transform;
+        enemy.transform.parent = templates.enemyListContainer.transform;
     }
 }

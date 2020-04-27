@@ -23,6 +23,10 @@ public class RoomTemplates : MonoBehaviour
 
     public GameObject roomListContainer;
     private GameObject entryRoomContainer;
+    public GameObject enemyListContainer;
+    public GameObject waypointListContainer;
+
+    private GameManager gameManager;
 
     public int dungeonSize;
     public float waitTime;
@@ -33,7 +37,14 @@ public class RoomTemplates : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+
+        enemyListContainer = new GameObject("enemyListContainer");
+        waypointListContainer = new GameObject("waypointListContainer");
+
         roomListContainer = new GameObject("roomListContainer");
+        calculateBoardSize();
+
         entryRoomContainer = Instantiate(entryRoom, transform.position, Quaternion.identity);
         entryRoomContainer.transform.parent = roomListContainer.transform;
     }
@@ -71,5 +82,12 @@ public class RoomTemplates : MonoBehaviour
 
         AstarPath.active.Scan();
         scannedBoard = true;
+    }
+
+    private void calculateBoardSize()
+    {
+        int level = gameManager.gameLevel;
+
+        dungeonSize = (int) (level * 1.5) + 8;
     }
 }
