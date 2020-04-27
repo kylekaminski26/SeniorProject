@@ -120,13 +120,13 @@ public class Battler : MonoBehaviour
         //stamina regen
         if (stamina < maxStamina)
         {
-            StaminaRegen(dexterity);
+            StaminaRegen();
         }
 
         //health regen
         if (health < maxHealth)
         {
-            HealthRegen(vitality);
+            HealthRegen();
         }
 
 
@@ -135,17 +135,19 @@ public class Battler : MonoBehaviour
 
     protected void FixedUpdate()
     {
+      
         //update movement Direction
         movementDirection = transform.position - lastTransformPosition;
         lastTransformPosition = transform.position;
 
         //Need this to animate when it is moving
         ChangeAnim(movementDirection);
+        
     }
 
 
     //the hurtbox was collided with (this is called from a child's hurtbox script)
-    public void OnHurtboxCollision(Collider2D collision)
+    public virtual void OnHurtboxCollision(Collider2D collision)
     {
         //check if collider is of tag hitbox
   
@@ -189,15 +191,15 @@ public class Battler : MonoBehaviour
     //Regenerate the Battler's stamina
     //Based on a percentage of there dexterity
     //This is should be called every frame in update or fixedUpdate
-    void StaminaRegen(float dexPercentage)
+    void StaminaRegen()
     {
-        stamina += (dexPercentage * maxStamina) * Time.deltaTime;
+        stamina += (dexterity * maxStamina) * Time.deltaTime;
     }
 
     //Regenerate the Battler's Health
-    void HealthRegen(float healthPercentage)
+    protected void HealthRegen()
     {
-        health += (healthPercentage * maxHealth) * Time.deltaTime;
+        health += (vitality * maxHealth) * Time.deltaTime;
     }
 
     //Co-routine for handling the termination of knockback
@@ -209,9 +211,13 @@ public class Battler : MonoBehaviour
             Vector2 difference = transform.position - tr.position;
             difference = difference.normalized * 4.0f;
             rb.AddForce(difference, ForceMode2D.Impulse);
-            yield return new WaitForSeconds(.6f);
+            yield return new WaitForSeconds(.2f);
             rb.velocity = Vector2.zero;
-            currentState = BattlerState.idle;
+            //knockback coroutine may reset the switch to death state
+            if (currentState != BattlerState.dead)
+            {
+                currentState = BattlerState.idle;
+            }
         }
     }
 
@@ -232,6 +238,7 @@ public class Battler : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
         this.gameObject.SetActive(false);
 
+        //fresh 'sghetti
         //related to main game
         //so we can track how many kills the player has
         if (GameObject.Find("Player"))

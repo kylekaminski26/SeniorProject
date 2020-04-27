@@ -242,4 +242,41 @@ public class PlayerControl : Battler
         currentState = BattlerState.dash;
         timeUntilNextDash = dashTime;
     }
+
+    //Overwritten in Player for enemy heuristics
+    //the hurtbox was collided with (this is called from a child's hurtbox script)
+    public override void OnHurtboxCollision(Collider2D collision)
+    {
+        //check if collider is of tag hitbox
+
+        if (collision.gameObject.CompareTag("Hitbox"))
+        {
+            //get the battler associated with the hit
+            Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
+            if (attacker.currentState != BattlerState.dead)
+            {
+                TakeDamage(attacker.GetDamage());
+                //start knockback (these are from the parent)
+                if (currentState != BattlerState.dead)
+                {
+                    StartCoroutine(KnockCo(attacker.transform));
+                }
+
+                //if I was attacked by an enemy then increment their damage dealt to player
+                //by there baseAttack
+                Debug.Log("eyyyy");
+                if (attacker as Enemy != null)
+                {
+                    ((Enemy)attacker).incrementDamageDealt();
+                }
+
+            }
+
+         
+
+
+        }
+    }
+
+
 }

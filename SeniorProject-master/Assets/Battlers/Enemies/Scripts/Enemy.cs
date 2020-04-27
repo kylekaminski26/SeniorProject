@@ -24,6 +24,11 @@ public class Enemy : Battler
     public Transform target; //Target of the Battler
     public BoxCollider2D targetHurtbox;
 
+    //variables concerning evolution heuristic
+    public float damageDealtToPlayer = 0; //adjusted in battler onHurtboxCollision 
+    public float healthRegenerated = 0; //internal
+
+
 
     public void Awake() {
 
@@ -37,7 +42,13 @@ public class Enemy : Battler
 
     public void Update()
     {
+        //before health regen
+        float healthDiff = (-1 * health);
+
         base.Update();
+
+        healthRegenerated += (healthDiff + health);
+        //after health regen
 
 
         //check if the player is above me, if the player is above me than swap
@@ -54,4 +65,10 @@ public class Enemy : Battler
         }
 
     }
+
+    //called in players onHurtBoxCollision
+    public void incrementDamageDealt() {
+        damageDealtToPlayer += baseAttack;
+    }
+
 }
