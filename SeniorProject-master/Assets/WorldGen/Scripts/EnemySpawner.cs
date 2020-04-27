@@ -24,8 +24,8 @@ public class EnemySpawner : MonoBehaviour
 
     public void Spawn()
     {
-        rand = Random.Range(0, gameManager.enemyList.Length);
-        GameObject enemy = Instantiate(gameManager.enemyList[rand], transform.position, Quaternion.identity);
+        rand = Random.Range(0, gameManager.enemyPrefabList.Length);
+        GameObject enemy = Instantiate(gameManager.enemyPrefabList[rand], transform.position, Quaternion.identity);
         enemy.transform.parent = templates.enemyListContainer.transform;
     }
 }

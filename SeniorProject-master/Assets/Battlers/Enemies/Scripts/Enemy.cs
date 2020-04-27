@@ -71,4 +71,11 @@ public class Enemy : Battler
         damageDealtToPlayer += baseAttack;
     }
 
+    //@precondition the enemy has died
+    //a heuristic of the enemies fitness
+    public float performanceHeuristic()
+    {
+        return (damageDealtToPlayer*2) + healthRegenerated;
+    }
+
 }

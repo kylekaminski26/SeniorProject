@@ -42,10 +42,19 @@ public enum BattlerState
 public class Battler : MonoBehaviour
 {
 
-    public static float MAX_MAXHEALTH = 50F;
-    public static float MAX_MAXSTAMINA = 100F;
-    public static float MAX_BASEATTACK = 100F;
-    public static float MAX_MAXMOVEMENTSPEED = 10F;
+    public static float MAX_MAXHEALTH = 50F; 
+    public static float MAX_MAXSTAMINA = 100F; 
+    public static float MAX_BASEATTACK = 100F; 
+    public static float MAX_MAXMOVEMENTSPEED = 10F; 
+    public static float MAX_DEXTERITY = .1f; 
+    public static float MAX_VITALITY = .1f; 
+
+    public static float MIN_MAXHEALTH = 5f;
+    public static float MIN_MAXSTAMINA = 10f;
+    public static float MIN_BASEATTACK = 2f;
+    public static float MIN_MAXMOVEMENTSPEED = 1f;
+    public static float MIN_DEXTERITY = .0001f;
+    public static float MIN_VITALITY = .0001f;
 
 
 
@@ -276,7 +285,7 @@ public class Battler : MonoBehaviour
     {
         currentState = state;
     }
-    public void SetStats(float maxHealth, float maxStamina, float baseAttack, float movementSpeed, float dexterity)
+    public void SetStats(float maxHealth, float maxStamina, float baseAttack, float movementSpeed, float dexterity,float vitality)
     {
         this.maxHealth = maxHealth;
         this.health = maxHealth;
@@ -285,6 +294,7 @@ public class Battler : MonoBehaviour
         this.baseAttack = baseAttack;
         this.movementSpeed = movementSpeed;
         this.dexterity = dexterity;
+        this.vitality = vitality;
     }
 
 
