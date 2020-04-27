@@ -33,6 +33,15 @@ public class Enemy : Battler
     public void Awake() {
 
         base.Awake();
+
+        //enemy defaults
+        maxHealth = Battler.MIN_MAXHEALTH;
+        maxStamina = Battler.MIN_MAXSTAMINA;
+        baseAttack = Battler.MIN_BASEATTACK;
+        dexterity = Battler.MIN_DEXTERITY;
+        vitality = Battler.MIN_VITALITY;
+        movementSpeed = Battler.MIN_MAXMOVEMENTSPEED;
+
         if (GameObject.Find("Player"))
         {
             target = GameObject.FindWithTag("Player").transform;

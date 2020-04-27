@@ -47,9 +47,6 @@ public class Brawler : Enemy
     {
         base.Awake();
 
-        dexterity = .05f;
-        vitality = .01f;
-        movementSpeed = 5f;
 
         //initialize child specific variables
         visionRadius = 5f;
@@ -517,7 +514,7 @@ public class Brawler : Enemy
         //Attack Frames
         BoxCollider2D activeHitbox = effectiveHitbox;
         activeHitbox.enabled = true;
-        stamina -= (.05f * 50) + (.10f * baseAttack); //3; where 50 = globalMaxBaseAttack 
+        stamina -= (.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); //3; where 50 = globalMaxBaseAttack 
         yield return new WaitForSeconds(0.3f);
 
         //Ending Frames

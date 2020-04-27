@@ -457,7 +457,7 @@ public class Ranger : Enemy
     public IEnumerator AttackCo()
     {
         
-        stamina -= (.05f * 50) + (.10f * baseAttack); // where 50 = globalMaxBaseAttack 
+        stamina -= (.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); 
         currentState = BattlerState.attack;
 
         Vector3 targetDirection = target.position - transform.position;

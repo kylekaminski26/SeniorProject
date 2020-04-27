@@ -57,6 +57,7 @@ public class PlayerControl : Battler
     private float dashMultiplier;
 
     private float attackRate;
+    private float dashCost;
 
     public int killCount = 0;
 
@@ -66,10 +67,10 @@ public class PlayerControl : Battler
         currentState = BattlerState.idle;
         firePoint = GetComponent<Transform>(); //Center of player
 
-        maxHealth = health = Battler.MAX_MAXHEALTH;
-        maxStamina = stamina = Battler.MAX_MAXSTAMINA;
-        dexterity = Battler.MAX_DEXTERITY;
-        vitality = Battler.MAX_VITALITY;
+        maxHealth = health = Battler.MAX_MAXHEALTH/4;
+        maxStamina = stamina = Battler.MAX_MAXSTAMINA/2;
+        dexterity = Battler.MAX_DEXTERITY/4;
+        vitality = Battler.MAX_VITALITY/4;
 
 
         projectileSpeed = 10f;
@@ -79,13 +80,15 @@ public class PlayerControl : Battler
 
         attackRate = 0.375f;
         lastAttackTime = 0.0f;
-        baseAttack = Battler.MAX_BASEATTACK;
+        baseAttack = Battler.MAX_BASEATTACK/10;
 
         movementSpeed = 5.0f;
         dashTime = 0.05f;
         timeUntilNextDash = 0.0f;
         dashMultiplier = 3f;
         movement = Vector2.zero;
+        dashCost = Battler.MIN_MAXSTAMINA/10;
+
 
         //Defaults for the animator once the game starts
         animator.SetFloat("Horizontal", 0.0f);
@@ -106,12 +109,12 @@ public class PlayerControl : Battler
             //Debug.Log("Left Click");
         }
 
-        if ((Input.GetButtonDown("Fire1") && (lastAttackTime == 0f && stamina > 30f))
+        if ((Input.GetButtonDown("Fire1") && (lastAttackTime == 0f && stamina > (.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack)))
             && (currentState != BattlerState.hitStun || currentState != BattlerState.dead))
         {
             MeleeAttack();
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift) && stamina >= 30f && timeUntilNextDash == 0f) //Will change from fire2 to a dash button
+        if (Input.GetKeyDown(KeyCode.LeftShift) && stamina >= dashCost && timeUntilNextDash == 0f) //Will change from fire2 to a dash button
         {
             InitiateDash();
         }
@@ -199,7 +202,7 @@ public class PlayerControl : Battler
     {
         lastAttackTime = attackRate;
         currentState = BattlerState.attack;
-        DecreaseStamina(30f, false);
+        DecreaseStamina((.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack), false); //STAMINA LOSS FORMULA (IN BRAWLER AND RANGER)
         animator.SetTrigger("Attacking");
         PlayAudio(1, 0.13f, 0.4f);
         currentState = BattlerState.idle;
@@ -238,7 +241,7 @@ public class PlayerControl : Battler
             Quaternion dashEffectRotation = Quaternion.Euler(ChooseDirection());
             GameObject dashEffect = Instantiate(dashEffectPrefab, transform.position, dashEffectRotation);
             Destroy(dashEffect, 0.229f);
-            DecreaseStamina(30f, false);
+            DecreaseStamina(dashCost, false);
         }
         currentState = BattlerState.dash;
         timeUntilNextDash = dashTime;
@@ -260,12 +263,12 @@ public class PlayerControl : Battler
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)
                 {
-                    StartCoroutine(KnockCo(attacker.transform));
+                    StartCoroutine(KnockCo(attacker.transform,attacker));
                 }
 
                 //if I was attacked by an enemy then increment their damage dealt to player
                 //by there baseAttack
-                Debug.Log("eyyyy");
+              
                 if (attacker as Enemy != null)
                 {
                     ((Enemy)attacker).incrementDamageDealt();

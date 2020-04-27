@@ -50,10 +50,10 @@ public class Battler : MonoBehaviour
     public static float MAX_VITALITY = .1f; 
 
     public static float MIN_MAXHEALTH = 10f;
-    public static float MIN_MAXSTAMINA = 20f;
+    public static float MIN_MAXSTAMINA = 50f;
     public static float MIN_BASEATTACK = 2f;
     public static float MIN_MAXMOVEMENTSPEED = 1f;
-    public static float MIN_DEXTERITY = .01f;
+    public static float MIN_DEXTERITY = .05f;
     public static float MIN_VITALITY = .0001f;
 
 
@@ -94,12 +94,12 @@ public class Battler : MonoBehaviour
      */
     protected void Awake()
     {
-        maxHealth = health = 25f;
-        maxStamina = stamina = 25f;
-        baseAttack = 15f;
-        movementSpeed = 2f;
-        dexterity = .1f;
-        vitality = .1f;
+        maxHealth = health = MIN_MAXHEALTH;
+        maxStamina = stamina = MIN_MAXSTAMINA;
+        baseAttack = MIN_BASEATTACK;
+        movementSpeed = MIN_MAXMOVEMENTSPEED;
+        dexterity = MIN_DEXTERITY;
+        vitality = MIN_VITALITY;
 
         currentState = BattlerState.idle;
 
@@ -171,7 +171,7 @@ public class Battler : MonoBehaviour
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)
                 {
-                    StartCoroutine(KnockCo(attacker.transform));
+                    StartCoroutine(KnockCo(attacker.transform,attacker));
                 }
              }
 
@@ -214,15 +214,15 @@ public class Battler : MonoBehaviour
     }
 
     //Co-routine for handling the termination of knockback
-    public IEnumerator KnockCo(Transform tr)
+    public IEnumerator KnockCo(Transform tr,Battler b)
     {
         if (rb != null)
         {
             currentState = BattlerState.hitStun;
             Vector2 difference = transform.position - tr.position;
-            difference = difference.normalized * 4.0f;
+            difference = difference.normalized * 3f*((b.baseAttack/Battler.MAX_BASEATTACK)+1);
             rb.AddForce(difference, ForceMode2D.Impulse);
-            yield return new WaitForSeconds(.2f);
+            yield return new WaitForSeconds(.4f);
             rb.velocity = Vector2.zero;
             //knockback coroutine may reset the switch to death state
             if (currentState != BattlerState.dead)
@@ -308,6 +308,7 @@ public class Battler : MonoBehaviour
         statList.Add(baseAttack);
         statList.Add(movementSpeed);
         statList.Add(dexterity);
+        statList.Add(vitality);
 
         return statList;
     }

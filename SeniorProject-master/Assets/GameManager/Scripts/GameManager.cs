@@ -65,8 +65,12 @@ public class GameManager : MonoBehaviour
     }
 
     //call this when ready to go to the next level
+    //adjusts level, adjusts killGoal
+    //adjusts enemy scaling
+    //does enemy evolution
     public void prepareNextLevel()
     {
+        
         gameLevel++;
 
         //Adjust the kill goal based on the level
@@ -81,6 +85,10 @@ public class GameManager : MonoBehaviour
 
         //adjust rho (enemy scaling)
         rho = killGoal / MAX_KILLGOAL;
+
+        NextGeneration();
+
+        player.killCount = 0;
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
@@ -144,40 +152,67 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //Since I am taking the top half of the winning population
-    //every mating process should produce 2 offspring, since
-    // Pop = winners + losers
-    // winners = pop /2
-    //offspring from winners = pop/2/2, so in order to return
-    //to the base population , each mating process should double
-    /*
-    private List<List<float>> NextGeneration(List<List<float>> winners)
+    //Find the top half of the current population
+    //Calculate how many new enemies need to be created to
+    //satisfy the kill quota of the next level
+    //So that the next generation is the top half of the previous
+    //plus the offspring produced to meet the quota
+    
+    private void NextGeneration()
     {
+        //get all the enemies that fought this level
+        List<List<float>> prime = new List<List<float>>();
+        //foreach (Enemey )
+        //sort the current generation based on heuristic
+        GameObject elc = GameObject.Find("enemyListContainer");
+        //get all battler game objects
+        Enemy[] es = elc.GetComponentsInChildren<Enemy>();
 
-        List<List<float>> winnersCopy = new List<List<float>>(winners);
-
-        while (winners.Count != 0)
-        {
-
-            //pick 2 slimes from the current generation and set them to the current
-            List<float> x = winners[Random.Range(0, winners.Count)]; //retuns int , if you pass integer arguemnts, type inferred
-
-            winners.Remove(x); //discard
-
-            List<float> y = winners[Random.Range(0, winners.Count)];
-
-            winners.Remove(y); //discard
-
-            List<float> offSpringA = Mate(x, y, globalConstraint);
-            List<float> offSpringB = Mate(x, y, globalConstraint);
-            winnersCopy.Add(offSpringA);
-            winnersCopy.Add(offSpringB);
-
+        //sort the enemies based on there heuristic
+        //highest to lowest
+        for (int i = 0; i < es.Length; i++) {
+            for (int j = es.Length-1; j > i; j--) {
+                if (es[j].performanceHeuristic() > es[j-1].performanceHeuristic()) {
+                    Enemy tmp = es[j - 1];
+                    es[j - 1] = es[j];
+                    es[j] = tmp;
+                }
+            }
         }
-        Debug.Log("new generation generated");
-        return winnersCopy;
+        //Get the previous killGoals number of required instance vectors
+        for (int i = 0; i < (killGoal-2) / 2; i++) {
+            prime.Add(es[i].GetStats());
+        }
+
+        //now this list is the top half of the previous generation,
+        //we wish to get to the next killGoal and we have half the previous
+        //we must generate (killGoal - prevKillGoal/2) offspring
+        Debug.Log("Wheat separated from Chaf"+prime.Count);
+
+        List<List<float>> offSpring = new List<List<float>>();
+        int k = 0;
+        while (k < (killGoal - (killGoal - 2) / 2)) {
+            //pick 2 random prime enemies
+            List<float> x = prime[Random.RandomRange(0, prime.Count - 1)];
+            List<float> y = prime[Random.RandomRange(0, prime.Count - 1)];
+            //produce offspring
+            offSpring.Add(Mate(x,y));
+            k++;
+        }
+
+        //add the offspring to the primes
+        k = 0;
+        while (k < offSpring.Count)
+        {
+            prime.Add(offSpring[k]);
+            k++;
+        }
+
+        //set the primes to the instanceVectors
+        instanceVectors = prime;
+
     }
-    */
+    
 
 
     //givent the vectors of two slimes, mate them together
@@ -186,11 +221,12 @@ public class GameManager : MonoBehaviour
     //find the distance between the attributes
     //generate a random number between -distance/2 and distance/2 
     //add this number to the midpoint to get the basis for next attribute
-    /*
-    private List<float> Mate(List<float> x, List<float> y, float p)
+    
+    private List<float> Mate(List<float> x, List<float> y)
     {
-        List<float> offSpring = new List<float>();
+        List<float> newborn = new List<float>();
 
+        
         for (int i = 0; i < x.Count; i++)
         {
             float midPoint = (x[i] + y[i]) / 2;
@@ -202,29 +238,29 @@ public class GameManager : MonoBehaviour
             {
                 result = .1f;
             }
-            offSpring.Add(result);
+            newborn.Add(result);
         }
 
 
         //ensure that the magnitude of the offspring is valid, by way of normalization
         //get magnitude of the vector
         float magnitude = 0;
-        for (int i = 0; i < offSpring.Count; i++)
+        for (int i = 0; i < newborn.Count; i++)
         {
-            magnitude += Mathf.Pow(offSpring[i], 2);
+            magnitude += Mathf.Pow(newborn[i], 2);
         }
         magnitude = Mathf.Sqrt(magnitude);
 
         //get the unit vector by dividing each compoenent by the magnitude (normalization)
         //and scaling it by the desired magnitude
-        for (int i = 0; i < offSpring.Count; i++)
+        for (int i = 0; i < newborn.Count; i++)
         {
-            offSpring[i] *= p / magnitude;
+            newborn[i] *= rho / magnitude;
         }
 
-        return offSpring;
+        return newborn;
     }
-    */
+    
 
 
 

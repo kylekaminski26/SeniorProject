@@ -29,7 +29,10 @@ public class EnemySpawner : MonoBehaviour
         GameObject enemy = Instantiate(gameManager.enemyPrefabList[rand], transform.position, Quaternion.identity);
         Enemy enemyInstance = enemy.GetComponent<Enemy>();
         Debug.Log("instanceVector count " + gameManager.instanceVectors.Count);
-        List<float> enemyData = gameManager.instanceVectors[Random.Range(0, gameManager.instanceVectors.Count)];
+        int ndx = Random.Range(0, gameManager.instanceVectors.Count);
+        List<float> enemyData = gameManager.instanceVectors[ndx];
+        //gameManager.instanceVectors.RemoveAt(ndx); cant guarentee all vectors will be used
+        //due to the nature of this implementation (but okay)
         enemyInstance.SetStats(enemyData[0],enemyData[1],enemyData[2],enemyData[3],enemyData[4],enemyData[5]);
         enemy.transform.parent = templates.enemyListContainer.transform;
     }
