@@ -5,13 +5,10 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     private int layerMask;
-    private BoxCollider2D hitBox;
     // Start is called before the first frame update
     void Awake()
     {
         layerMask =1 << 9;
-        hitBox = GetComponent<BoxCollider2D>();
-        Invoke("enableCollider", 0.1f);
         Destroy(gameObject, 3.0f);
     }
 
@@ -23,8 +20,4 @@ public class Arrow : MonoBehaviour
         }
     }
 
-    void enableCollider()
-    {
-        hitBox.enabled = true;
-    }
 }
