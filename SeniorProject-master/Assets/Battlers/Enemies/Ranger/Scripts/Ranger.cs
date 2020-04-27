@@ -12,11 +12,6 @@ public class Ranger : Enemy
     private float visionRadius; //Vision Range of Battler
     public Transform target; //Target of the Battler
 
-    //Ranger does not use hitboxes
-    //concerning the implementation of generic hitboxes
-    //private BoxCollider2D effectiveHitbox;
-    //private List<BoxCollider2D> Hitboxes;
-
     private BoxCollider2D targetHurtbox;
     private Random random;
 
@@ -35,6 +30,7 @@ public class Ranger : Enemy
     [SerializeField] private float searchTime;//How long this enemy will search for a target
     [SerializeField] private float searchRange;//The range in which the enemy will search for the player
 
+    private bool bHasDied;
     private bool bIsSearching;
     private bool bIsFleeing;
     private bool bIsCounting;
@@ -61,22 +57,6 @@ public class Ranger : Enemy
         //initialize child specific variables
         visionRadius = 8f;
 
-        /* Ranger does not use hitboxes
-        //get references to all attatched hitboxes and set the default
-        Hitboxes = new List<BoxCollider2D>();
-        Transform[] ts = GetComponentsInChildren<Transform>();
-        foreach (Transform t in ts)
-        {
-            if (t.CompareTag("Hitbox"))
-            {
-                Hitboxes.Add(t.GetComponent<BoxCollider2D>());
-
-            }
-        }
-
-        effectiveHitbox = Hitboxes[0];
-        */
-
         Path = GetComponent<Pathfinding.AIPath>();
         DestinationSetter = GetComponent<Pathfinding.AIDestinationSetter>();
         AIPatrol = GetComponent<Pathfinding.Patrol>();
@@ -97,6 +77,8 @@ public class Ranger : Enemy
         //Sets the ray cast to trigger when colliding with player hurtbox
         layerMask = 1 << 10;
 
+
+        bHasDied = false;
         //I am not searching on instantiation
         bIsSearching = false;
         bIsFleeing = false;
@@ -123,7 +105,22 @@ public class Ranger : Enemy
             if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
                 Think();
         }
-        
+
+        if (GetBattlerState() == BattlerState.dead && bHasDied != true)
+        {
+            DestinationSetter.enabled = false;
+            AIPatrol.enabled = false;
+            Path.enabled = false;
+
+            bHasDied = true;
+
+            Destroy(patrolPointArray[0]);
+            Destroy(patrolPointArray[1]);
+            Destroy(patrolPointArray[2]);
+            Destroy(patrolPointArray[3]);
+            Destroy(chaseTarget);
+        }
+
 
     }
 
@@ -145,30 +142,12 @@ public class Ranger : Enemy
         //minimal dimension of target's hurtbox(needs to be boxcollider2D)
         float minDim = (targetHurtbox.size.x < targetHurtbox.size.y) ? targetHurtbox.size.x : targetHurtbox.size.y;
 
-        //minimal dimension of my effectivehitbox
-        //float attackerMinDim = (effectiveHitbox.size.x < effectiveHitbox.size.y) ? effectiveHitbox.size.x : effectiveHitbox.size.y;
-
-        //note that the if the the distance between the center points is the radius + the mininal dimension
-        //it will guarentee you are inside the effectivehitbox
-
-
         //distance between centers
         //remove from public when done
         attackerTargetDistance = Vector3.Distance(attackerCenter, targetHurtboxCenter);
 
         //the unit vector pointing to target
         Vector3 TargetDirection = Vector3.Normalize(targetHurtboxCenter - attackerCenter);
-
-        //How far inside the targets hurtbox do we want to be?
-        //aim to have atleast half of your effectivehitbox in them
-        //float penetration = attackerMinDim / 2;
-
-        //the vector that points from the attacker's effectivehitbox to the targets hurtbox
-        //Vector3 TargetVector = TargetDirection * (attackerTargetDistance + penetration) + transform.position;
-
-        //float touchDistance = attackerMinDim / 2 + minDim / 2; //the smallest distance the colliders can
-                                                               //be without touching each other
-
 
 
         /////////////////////////////////////////////
@@ -188,13 +167,6 @@ public class Ranger : Enemy
             Path.enabled = false;
         }
 
-        /*
-        if (currentAIState != AIState.approach && previousAIState == AIState.approach)
-        {
-            DestinationSetter.enabled = false;
-            Path.enabled = false;
-        }
-        */
 
         if (currentAIState != AIState.flee && previousAIState == AIState.flee)
         {
@@ -407,48 +379,6 @@ public class Ranger : Enemy
                 }
 
                 break;
-
-                /* Rangers should NEVER approach the target since they can attack from a distance
-            //Create approach state TG
-            case AIState.approach:
-                //Is this a self transition to chase or from another node?
-                if (previousAIState != AIState.approach)
-                {
-                    currentState = BattlerState.walk;
-                    DestinationSetter.enabled = true;
-                    DestinationSetter.target = target;
-                    Path.enabled = true;
-                    previousAIState = AIState.approach;
-                    currentState = BattlerState.walk;
-                }
-
-                //The target is no longer in visual range. Search for them | TG
-                if (attackerTargetDistance > visionRadius)
-                {
-                    previousAIState = currentAIState;
-                    currentAIState = AIState.sleuth;
-                }
-
-                //If I am too damaged, then flee
-                if (health <= maxHealth / 5)
-                {
-                    previousAIState = currentAIState;
-                    currentAIState = AIState.flee;
-                }
-
-                //should have a constraints in here for available stamina,
-                //flat attack wait mininum
-                //and attack rate delay based on dexterity
-                //touch distance is the smallest possible distance without an intersection
-                //of hit box and hurtbox
-                if (attackerTargetDistance < touchDistance && currentState != BattlerState.attack) //prevent from attacking to often
-                {
-                    previousAIState = currentAIState;
-                    currentAIState = AIState.attack;
-                }
-
-                break;
-                */
 
             case AIState.attack: //Attack state
 

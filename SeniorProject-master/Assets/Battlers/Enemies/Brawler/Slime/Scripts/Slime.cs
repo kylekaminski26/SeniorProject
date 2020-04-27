@@ -32,11 +32,12 @@ public class Slime : Brawler
             if (Random.RandomRange(0, 100) == 1) {
                 while (count < 2)
                 {
-                    Instantiate(babySlime,
-                            new Vector3(gameObject.transform.position.x + Random.Range(-1.0f, 1.0f),
+                    Instantiate(    babySlime,
+                                    new Vector3(gameObject.transform.position.x + Random.Range(-1.0f, 1.0f),
                                             gameObject.transform.position.y + Random.Range(-1.0f, 1.0f),
                                             0.0f),
-                               gameObject.transform.rotation);
+                                    gameObject.transform.rotation,
+                                    GameObject.Find("enemyListContainer").transform);
                     
                     count++;
                 }
