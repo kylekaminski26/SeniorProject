@@ -73,6 +73,7 @@ public class Battler : MonoBehaviour
     public Animator animator;
     public Rigidbody2D rb;
     public AudioSource[] aud;
+    public SpriteRenderer sr;
 
 
     //public GameObject[] effects; Not utilized ... --Matt 4/25
@@ -96,6 +97,7 @@ public class Battler : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         aud = GetComponentsInChildren<AudioSource>();
+        sr = GetComponent<SpriteRenderer>();
 
         lastAttackTime = -1;
 
@@ -126,6 +128,8 @@ public class Battler : MonoBehaviour
         {
             HealthRegen(vitality);
         }
+
+
 
     }
 
