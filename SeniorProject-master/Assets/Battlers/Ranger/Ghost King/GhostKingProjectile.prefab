@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1321070045614844475}
   - component: {fileID: 9091866947102486295}
   - component: {fileID: 803753597571120937}
-  - component: {fileID: 8101677006311219720}
+  - component: {fileID: 9002116256986578478}
   m_Layer: 0
   m_Name: GhostKingProjectile
   m_TagString: Hitbox
@@ -249,7 +249,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8101677006311219720
+--- !u!114 &9002116256986578478
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,6 +258,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1321070045614844474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17394f214cc774a4fa77a3ac35b653f9, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b248f79d7042ad4a9e98f21a01b5cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
