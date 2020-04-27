@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EndScene : MonoBehaviour
 {
     private GameManager gameManager;
+    public Text enoughKills;
 
     private void Start()
     {
         gameManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();
+        enoughKills = GameObject.FindGameObjectWithTag("EnoughKills").GetComponent<Text>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -21,6 +24,10 @@ public class EndScene : MonoBehaviour
                 gameManager.gameLevel++;
                 gameManager.killGoal = gameManager.gameLevel / 2;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+            else
+            {
+                enoughKills.gameObject.GetComponent<Animator>().SetTrigger("Active");
             }
         }
     }

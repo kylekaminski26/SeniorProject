@@ -15,6 +15,7 @@ TagManager:
   - Projectile
   - PseudoHitbox
   - EnemiesContainer
+  - EnoughKills
   layers:
   - Default
   - TransparentFX
