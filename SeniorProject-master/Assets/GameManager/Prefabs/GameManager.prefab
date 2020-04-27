@@ -48,5 +48,6 @@ MonoBehaviour:
   - {fileID: 5808449398506813970, guid: 7bce4a80a33dc314fb5e223ed022ef76, type: 3}
   - {fileID: 7773370190678450625, guid: 54f64e7f99d544409881d76008970726, type: 3}
   - {fileID: 5680445972405675752, guid: 26613982291a8a04aabc51bfd53e6694, type: 3}
+  - {fileID: 3926739552708066056, guid: dca9932cbc08fb24e93711d7d21f6791, type: 3}
   killGoal: 0
   player: {fileID: 0}
