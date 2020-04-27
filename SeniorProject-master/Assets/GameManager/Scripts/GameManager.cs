@@ -10,19 +10,11 @@ public class GameManager : MonoBehaviour
     public int gameLevel = 1;
 
     public GameObject[] enemyList;
-    public GameObject enemyListContainer;
-    public GameObject waypointListContainer;
 
     public int killGoal = 5;
 
     //needs to be tied in scene
     public PlayerControl player;
-
-    public void Start()
-    {
-        enemyListContainer = new GameObject("enemyListContainer");
-        waypointListContainer = new GameObject("waypointListContainer");
-    }
 
     private void Update()
     {
