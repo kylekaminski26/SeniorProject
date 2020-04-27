@@ -49,10 +49,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         //Generate random initializations for evolutionary algorithm
+        killGoal = 6;
         rho = killGoal / MAX_KILLGOAL;
         instanceVectors = new List<List<float>>();
         generateInitialEnemyVectors();
-        killGoal = 6;
+        
 
         if (instance == null)
         {
@@ -126,8 +127,15 @@ public class GameManager : MonoBehaviour
             //get the vector product of the (unit vector and the scaled ranges vector)
             for (int i = 0; i < v.Count; i++)
             {
-                v[i]*=c[i];
+                v[i]*=c[i] ;
             }
+
+            v[0] += Battler.MIN_MAXHEALTH;
+            v[1] += Battler.MIN_MAXSTAMINA;
+            v[2] += Battler.MIN_BASEATTACK;
+            v[3] += Battler.MIN_MAXMOVEMENTSPEED;
+            v[4] += Battler.MIN_DEXTERITY;
+            v[5] += Battler.MIN_VITALITY;
 
             //now V is a unit vector in the positive domain of a 6-sphere
             instanceVectors.Add(v);
