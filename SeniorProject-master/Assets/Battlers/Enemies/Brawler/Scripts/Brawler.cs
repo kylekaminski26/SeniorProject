@@ -2,39 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
-//State variables for AI thinking
-public enum AIState
-{
-    idle,
-    patrol,
-    chase,
-    sleuth,
-    flee,
-    approach,
-    attack,
-    start
-}
-*/
+
 
 //TO-Dos: Need to reconsider states in Battler, this construction utilizes two sets of states: Battler and AI
 //and it is confusing to make sense of
 
-public class Brawler : Battler
+public class Brawler : Enemy
 {
-    //State variables for AI thinking
-    public enum AIState
-    {
-        idle,
-        patrol,
-        chase,
-        sleuth,
-        flee,
-        approach,
-        attack,
-        start
-    }
-
 
     private float visionRadius; //Vision Range of Battler
     public Transform target; //Target of the Battler
