@@ -11,13 +11,11 @@ public class Brawler : Enemy
 {
 
     private float visionRadius; //Vision Range of Battler
-    public Transform target; //Target of the Battler
 
     //concerning the implementation of generic hitboxes
     private BoxCollider2D effectiveHitbox;
     private List<BoxCollider2D> Hitboxes;
 
-    private BoxCollider2D targetHurtbox;
     private Random random;
 
     //TG
@@ -64,7 +62,6 @@ public class Brawler : Enemy
             if (t.CompareTag("Hitbox"))
             {
                 Hitboxes.Add(t.GetComponent<BoxCollider2D>());
-
             }
         }
 
@@ -78,13 +75,6 @@ public class Brawler : Enemy
 
         currentAIState = AIState.idle;
         previousAIState = AIState.start;
-
-        if (GameObject.Find("Player"))
-        {
-            target = GameObject.FindWithTag("Player").transform;
-        }
-
-        targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
         //TG
         //I am not searching on instantiation
@@ -107,14 +97,12 @@ public class Brawler : Enemy
     {
         base.Update();
 
-
         if (target != null && currentState != BattlerState.dead)
         {   //cannot think if in hitstun or currently attacking
             if (currentState != BattlerState.attack && currentState != BattlerState.hitStun)
                 Think();
         }
         setEffectiveHitbox();
-
     }
 
 

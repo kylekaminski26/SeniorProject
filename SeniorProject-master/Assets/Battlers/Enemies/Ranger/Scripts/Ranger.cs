@@ -10,9 +10,6 @@ public class Ranger : Enemy
 {
 
     private float visionRadius; //Vision Range of Battler
-    public Transform target; //Target of the Battler
-
-    private BoxCollider2D targetHurtbox;
     private Random random;
 
     //TG
@@ -64,13 +61,6 @@ public class Ranger : Enemy
 
         currentAIState = AIState.idle;
         previousAIState = AIState.start;
-
-        if (GameObject.Find("Player"))
-        {
-            target = GameObject.FindWithTag("Player").transform;
-        }
-
-        targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
         //TG
         //Sets the ray cast to trigger when colliding with player hurtbox

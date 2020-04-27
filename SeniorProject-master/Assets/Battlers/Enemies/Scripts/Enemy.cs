@@ -21,8 +21,8 @@ public class Enemy : Battler
         start
     }
 
-    private bool playerExist = false;
-
+    public Transform target; //Target of the Battler
+    public BoxCollider2D targetHurtbox;
 
 
     public void Awake() {
@@ -30,7 +30,8 @@ public class Enemy : Battler
         base.Awake();
         if (GameObject.Find("Player"))
         {
-            playerExist = true;
+            target = GameObject.FindWithTag("Player").transform;
+            targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
         }
     }
 
@@ -41,7 +42,7 @@ public class Enemy : Battler
 
         //check if the player is above me, if the player is above me than swap
         //my order in layer
-        if (playerExist) {
+        if (GameObject.Find("Player") && (target != null && currentState != BattlerState.dead)) {
             GameObject p = GameObject.Find("Player");
             if (p.transform.position.y > transform.position.y)
             {
