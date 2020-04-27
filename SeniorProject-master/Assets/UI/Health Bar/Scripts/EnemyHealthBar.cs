@@ -5,7 +5,6 @@ using UnityEngine;
 public class EnemyHealthBar : MonoBehaviour
 {
     private Battler enemy;
-    private float globalMaxHealth;
 
     //Curse you Unity for not allowing use to have pivot points for sprites!
 
@@ -18,14 +17,12 @@ public class EnemyHealthBar : MonoBehaviour
         enemy = GetComponentInParent<Battler>();
         healthBarFillPivot = transform.GetChild(0).GetChild(0).GetChild(0);
         healthBarScalePivot = transform.GetChild(0);
-        globalMaxHealth = enemy.maxHealth; //temporary variable since there is no global constant yet
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        float globalMaxHealth = Battler.MAX_MAXHEALTH;
         float fillScaleFactor = enemy.health / enemy.maxHealth;
         float healthBarScaleFactor = enemy.maxHealth / globalMaxHealth;
 
