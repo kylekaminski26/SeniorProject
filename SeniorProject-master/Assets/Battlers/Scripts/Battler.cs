@@ -41,6 +41,14 @@ public enum BattlerState
 
 public class Battler : MonoBehaviour
 {
+
+    public static float MAX_MAXHEALTH = 50F;
+    public static float MAX_MAXSTAMINA = 100F;
+    public static float MAX_BASEATTACK = 100F;
+    public static float MAX_MAXMOVEMENTSPEED = 10F;
+
+
+
     //Battling Attributes 
     public float maxHealth;
     public float maxStamina;
