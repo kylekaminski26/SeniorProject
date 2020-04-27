@@ -19,6 +19,7 @@ public class EndScene : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().killCount > kills)
             {
                 gameManager.gameLevel++;
+                gameManager.killGoal = gameManager.gameLevel / 2;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }

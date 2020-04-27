@@ -102,7 +102,7 @@ public class PlayerControl : Battler
 
         if (Input.GetButtonDown("Fire1"))
         {
-            Debug.Log("Left Click");
+            //Debug.Log("Left Click");
         }
 
         if ((Input.GetButtonDown("Fire1") && (lastAttackTime == 0f && stamina > 30f))

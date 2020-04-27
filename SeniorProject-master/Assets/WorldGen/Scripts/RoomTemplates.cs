@@ -29,6 +29,7 @@ public class RoomTemplates : MonoBehaviour
     private GameManager gameManager;
 
     public int dungeonSize;
+    private int maxDungeonSize = 25;
     public float waitTime;
     public bool exitSpawned = false;
 
@@ -88,6 +89,11 @@ public class RoomTemplates : MonoBehaviour
     {
         int level = gameManager.gameLevel;
 
-        dungeonSize = (int) (level * 1.5) + 8;
+        dungeonSize = (int) (level * 1.5) + 5;
+
+        if (dungeonSize > maxDungeonSize)
+        {
+            dungeonSize = maxDungeonSize;
+        }
     }
 }

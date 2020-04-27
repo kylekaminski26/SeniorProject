@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-
         if (instance == null)
         {
             instance = this; // In first scene, make us the singleton.
