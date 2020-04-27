@@ -14,8 +14,13 @@ public class EndScene : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            gameManager.gameLevel++;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //Get the kill goal
+            int kills = gameManager.killGoal;
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>().killCount > kills)
+            {
+                gameManager.gameLevel++;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
     }
 }

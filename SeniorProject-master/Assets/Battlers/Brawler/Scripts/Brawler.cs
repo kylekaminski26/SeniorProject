@@ -119,13 +119,13 @@ public class Brawler : Battler
         bIsCounting = false;
 
         //Create chase waypoint
-        chaseTarget = Instantiate(waypoint, gameObject.transform.position, new Quaternion());
+        chaseTarget = Instantiate(waypoint, gameObject.transform.position, new Quaternion(), GameObject.Find("waypointListContainer").transform);
 
         //Create patrol waypoints
-        patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
-        patrolPointArray[1] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y - 5f, 0), new Quaternion());
-        patrolPointArray[2] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y + 5f, 0), new Quaternion());
-        patrolPointArray[3] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y - 5f, 0), new Quaternion());
+        patrolPointArray[0] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y + 5f, 0), new Quaternion(), GameObject.Find("waypointListContainer").transform);
+        patrolPointArray[1] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x + 5f, gameObject.transform.position.y - 5f, 0), new Quaternion(), GameObject.Find("waypointListContainer").transform);
+        patrolPointArray[2] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y + 5f, 0), new Quaternion(), GameObject.Find("waypointListContainer").transform);
+        patrolPointArray[3] = Instantiate(waypoint, new Vector3(gameObject.transform.position.x - 5f, gameObject.transform.position.y - 5f, 0), new Quaternion(), GameObject.Find("waypointListContainer").transform);
 
     }
 
