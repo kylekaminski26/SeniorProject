@@ -32,6 +32,7 @@ public class Brawler : Enemy
     [SerializeField] private float searchTime;//How long this enemy will search for a target
     [SerializeField] private float searchRange;//The range in which the enemy will search for the player
 
+    private bool bHasDied;
     private bool bIsSearching;
     private bool bIsFleeing;
     private bool bIsCounting;
@@ -87,6 +88,7 @@ public class Brawler : Enemy
         targetHurtbox = target.Find("Hurtbox").GetComponent<BoxCollider2D>();
 
         //TG
+        bHasDied = false;
         //I am not searching on instantiation
         bIsSearching = false;
         bIsFleeing = false;
@@ -115,6 +117,20 @@ public class Brawler : Enemy
         setEffectiveHitbox();
 
 
+        if (GetBattlerState() == BattlerState.dead && bHasDied != true)
+        {
+            DestinationSetter.enabled = false;
+            AIPatrol.enabled = false;
+            Path.enabled = false;
+
+            bHasDied = true;
+
+            Destroy(patrolPointArray[0]);
+            Destroy(patrolPointArray[1]);
+            Destroy(patrolPointArray[2]);
+            Destroy(patrolPointArray[3]);
+            Destroy(chaseTarget);
+        }
     }
 
 
