@@ -8,7 +8,7 @@ public class GhostBolt : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        layerMask = 1 << 10;
+        layerMask = 1 << 9;
         Destroy(gameObject, 3.0f);
     }
 
