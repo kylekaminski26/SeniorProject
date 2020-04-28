@@ -471,7 +471,7 @@ public class Ranger : Enemy
         
 
         arrowRB.velocity = (Vector2) Vector3.Normalize(target.position - transform.position) * 10.0f;
-        animator.SetTrigger("Shooting");
+        animator.SetTrigger("Attack 1");
 
         yield return new WaitForSeconds(fireRate);
         currentState = BattlerState.idle;

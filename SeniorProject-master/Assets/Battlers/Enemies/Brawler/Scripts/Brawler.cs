@@ -9,8 +9,8 @@ using UnityEngine;
 
 public class Brawler : Enemy
 {
-
     private float visionRadius; //Vision Range of Battler
+
 
     //concerning the implementation of generic hitboxes
     private BoxCollider2D effectiveHitbox;
@@ -514,6 +514,7 @@ public class Brawler : Enemy
         //Attack Frames
         BoxCollider2D activeHitbox = effectiveHitbox;
         activeHitbox.enabled = true;
+        animator.SetTrigger("Attack 1");
         stamina -= (.005f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); //3; where 50 = globalMaxBaseAttack 
         yield return new WaitForSeconds(0.3f);
 
