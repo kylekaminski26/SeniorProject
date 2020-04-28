@@ -670,6 +670,9 @@ MonoBehaviour:
   aud: []
   sr: {fileID: 0}
   target: {fileID: 0}
+  targetHurtbox: {fileID: 0}
+  damageDealtToPlayer: 0
+  healthRegenerated: 0
   chaseDistance: 3.5
   fleeTime: 10
   fleeRange: 8
@@ -829,6 +832,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7773370190678450646}
     m_Modifications:
+    - target: {fileID: 4903406614127266850, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.952
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903406614127266850, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4903406614258300860, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
         type: 3}
       propertyPath: m_Name
@@ -837,7 +850,7 @@ PrefabInstance:
     - target: {fileID: 4903406614258300861, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.69
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 4903406614258300861, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
         type: 3}
@@ -892,17 +905,22 @@ PrefabInstance:
     - target: {fileID: 4903406614258300861, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.7425605
+      value: 1.0206
       objectReference: {fileID: 0}
     - target: {fileID: 4903406614258300861, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.4989767
+      value: 1.0206
       objectReference: {fileID: 0}
     - target: {fileID: 4903406614258300861, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.4989767
+      value: 1.0206
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903406615164397252, guid: 46f4623faaacefa4fbbe5c3efddc8c86,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.04
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46f4623faaacefa4fbbe5c3efddc8c86, type: 3}
