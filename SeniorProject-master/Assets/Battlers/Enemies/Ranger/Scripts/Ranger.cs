@@ -16,7 +16,6 @@ public class Ranger : Enemy
     private int layerMask = 1 << 10;
 
     private GameObject chaseTarget;
-    [SerializeField] private float fireRate;
     [SerializeField] private float chaseDistance; //The distance in which the enemy will try to maintain from the player during chase
     [SerializeField] private float fleeTime;
     [SerializeField] private float fleeRange;
@@ -473,7 +472,7 @@ public class Ranger : Enemy
         arrowRB.velocity = (Vector2) Vector3.Normalize(target.position - transform.position) * 10.0f;
         animator.SetTrigger("Attack 1");
 
-        yield return new WaitForSeconds(fireRate);
+        yield return new WaitForSeconds(0.60f);
         currentState = BattlerState.idle;
 
     }
