@@ -67,7 +67,7 @@ public class PlayerControl : Battler
         currentState = BattlerState.idle;
         firePoint = GetComponent<Transform>(); //Center of player
 
-        maxHealth = health = Battler.MAX_MAXHEALTH/4;
+        maxHealth = health = Battler.MAX_MAXHEALTH/8;
         maxStamina = stamina = Battler.MAX_MAXSTAMINA/2;
         dexterity = Battler.MAX_DEXTERITY/4;
         vitality = Battler.MAX_VITALITY/4;
@@ -80,7 +80,7 @@ public class PlayerControl : Battler
 
         attackRate = 0.375f;
         lastAttackTime = 0.0f;
-        baseAttack = Battler.MAX_BASEATTACK/10;
+        baseAttack = Battler.MAX_BASEATTACK/20;
 
         movementSpeed = 5.0f;
         dashTime = 0.05f;
