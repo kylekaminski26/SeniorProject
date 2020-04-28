@@ -50,4 +50,5 @@ MonoBehaviour:
   - {fileID: 5680445972405675752, guid: 26613982291a8a04aabc51bfd53e6694, type: 3}
   - {fileID: 3926739552708066056, guid: dca9932cbc08fb24e93711d7d21f6791, type: 3}
   killGoal: 0
+  rho: 0
   player: {fileID: 0}
