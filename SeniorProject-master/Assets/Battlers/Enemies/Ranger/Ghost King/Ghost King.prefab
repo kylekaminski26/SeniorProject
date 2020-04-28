@@ -44,7 +44,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e557d5187380e7f41b31ceef6aef4e5d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -140,7 +140,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 929438efe1e59614b9db203f41b2df4e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -626,7 +626,11 @@ MonoBehaviour:
   animator: {fileID: 3926739552708066059}
   rb: {fileID: 4293462772126897873}
   aud: []
+  sr: {fileID: 0}
   target: {fileID: 0}
+  targetHurtbox: {fileID: 0}
+  damageDealtToPlayer: 0
+  healthRegenerated: 0
   chaseDistance: 6
   fleeTime: 2
   fleeRange: 2
