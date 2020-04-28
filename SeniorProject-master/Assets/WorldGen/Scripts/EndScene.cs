@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class EndScene : MonoBehaviour
 {
     private GameManager gameManager;
-    public Text enoughKills;
+    private Text enoughKills;
 
     private void Start()
     {

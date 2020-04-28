@@ -12,19 +12,20 @@ public class StatsMenu : MonoBehaviour
     public GameObject statsScreen;
     public GameObject button;
     private GameObject player;
-    private GameObject healthStamBars;
+    
 
     public Text attackVal;
     public Text stamVal;
     public Text dexVal;
     public Text healthVal;
-    private float health;
-    private float stamina;
+    public Text moveSpeed;
+    public Text vitalityVal;
+    
 
     private void Start()
     {
         player = GameObject.FindWithTag("Player");
-        healthStamBars = GameObject.FindWithTag("HealthStamBars");
+        
     }
     // Update is called once per frame
     void Update()
@@ -49,6 +50,10 @@ public class StatsMenu : MonoBehaviour
         stamVal.text = ": " + player.GetComponent<PlayerControl>().maxStamina;
         dexVal.text = ": " + player.GetComponent<PlayerControl>().dexterity;
         healthVal.text = ": " + player.GetComponent<PlayerControl>().maxHealth;
+        moveSpeed.text = ": " + player.GetComponent<PlayerControl>().movementSpeed;
+        vitalityVal.text = ": " + player.GetComponent<PlayerControl>().vitality;
+
+
     }
 
     public void showStats()
