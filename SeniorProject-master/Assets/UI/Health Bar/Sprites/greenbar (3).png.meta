@@ -6,7 +6,7 @@ TextureImporter:
       213: -2202427465334744498
     second: greenbar (3)_0
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 10
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -45,7 +45,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 48
@@ -60,7 +60,6 @@ TextureImporter:
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -93,13 +92,13 @@ TextureImporter:
       name: greenbar (3)_0
       rect:
         serializedVersion: 2
-        x: 18
+        x: 10
         y: 83
-        width: 100
+        width: 108
         height: 10
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 1, y: 3, z: 2, w: 1}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0

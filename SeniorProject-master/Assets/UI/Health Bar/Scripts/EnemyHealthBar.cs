@@ -5,46 +5,33 @@ using UnityEngine;
 public class EnemyHealthBar : MonoBehaviour
 {
     private Battler enemy;
-
-    //Curse you Unity for not allowing use to have pivot points for sprites!
-
-    private Transform healthBarFillPivot; //Position where we scale the fill in the right direction
-    private Transform healthBarScalePivot; // Scales the entire health bar without moving it out of place.
+    private Transform  healthBarFill; //Technically the pivot, but it works.
 
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
         enemy = GetComponentInParent<Battler>();
-        healthBarFillPivot = transform.GetChild(0).GetChild(0).GetChild(0);
-        healthBarScalePivot = transform.GetChild(0);
+        healthBarFill = transform.GetChild(0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        float globalMaxHealth = Battler.MAX_MAXHEALTH;
-        float fillScaleFactor = enemy.health / enemy.maxHealth;
-        float healthBarScaleFactor = enemy.maxHealth / globalMaxHealth;
+        float scaleFactor = enemy.health / enemy.maxHealth;
 
-        //Heard you liked GetChild calls, so I put a GetChild call within a GetChild call and did it again 
-        //so you can get a sprite renderer that is a child of another sprite renderer so you can enable/disable
-
-        // Yes, I should've just made an array of sprite renderers from all components. Yes, I didn't do it. Why? IDK.
-        if (fillScaleFactor == 1)
+        //We should probably have it to where we get all the sprite renderers, put them into
+        // an array, and disable/enable all of the them. But do we really need an array of 2 objects.
+        if (scaleFactor == 1)
         {
-            GetComponent<SpriteRenderer>().enabled = false; //Disables icon
-            transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().enabled = false; //Disables background;
-            transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().enabled = false; //Disables fill;
-
+            GetComponent<SpriteRenderer>().enabled = false;
+            transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
         }
         else
         {
-            GetComponent<SpriteRenderer>().enabled = true; //Enables icon
-            transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().enabled = true; //Enables background;
-            transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().enabled = true; //Enables fill;
+            GetComponent<SpriteRenderer>().enabled = true;
+            transform.GetChild(0).GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
         }
 
-        healthBarFillPivot.transform.localScale = new Vector3(fillScaleFactor, 1, 1);
-        healthBarScalePivot.transform.localScale = new Vector3(healthBarScaleFactor, 1, 1);
+        healthBarFill.transform.localScale = new Vector3(scaleFactor, 1, 1);
     }
 }

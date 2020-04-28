@@ -42,23 +42,16 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
-        //Debug.Log("Loading menu...");
-	    Time.timeScale = 1f;
-	    gameIsPaused = false;
+        Debug.Log("Loading menu...");
+	Time.timeScale = 1f;
+	gameIsPaused = false;
         SceneManager.LoadScene("Menu");
     }
 
     public void QuitGame()
     {
-        //Debug.Log("Quitting game...");
-        #if UNITY_EDITOR
-            // Application.Quit() does not work in the editor so
-            // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-             Application.Quit();
-        #endif
+        Debug.Log("Quitting game...");
     }
 
-
+    
 }

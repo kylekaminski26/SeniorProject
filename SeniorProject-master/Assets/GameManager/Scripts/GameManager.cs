@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
     //the first level
     void generateInitialEnemyVectors()
     {
-        Debug.Log("hgjhjkjhkjhkj"+killGoal);
+        Debug.Log("KillGoal: "+killGoal);
         for (int k = 0; k < killGoal; k++)
         {
             List<float> v = new List<float>(){
