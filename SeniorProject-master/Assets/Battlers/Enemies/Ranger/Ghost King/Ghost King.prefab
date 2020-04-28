@@ -631,6 +631,7 @@ MonoBehaviour:
   targetHurtbox: {fileID: 0}
   damageDealtToPlayer: 0
   healthRegenerated: 0
+  fireRate: 0.1
   chaseDistance: 6
   fleeTime: 2
   fleeRange: 2
