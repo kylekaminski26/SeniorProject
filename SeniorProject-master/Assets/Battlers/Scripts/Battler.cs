@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 //State variables for Battler Constraints and animations
-//Hitstun and attack are used in enemy AI
 public enum BattlerState
 {
     idle,
@@ -14,156 +13,252 @@ public enum BattlerState
     dash
 }
 
-/*This class holds all of the common elements
- * between the player and the enemy
- * This includes initial battle variables,
- * states, and routines for recieving damage
+/*This class holds all of the common elements between the player and
+ * the enemies This includes initial battle variables, states, and common routines
  *
- * Any entity that fights will inherit from this parent class
- * All battler must have : a RigidBody2D, an Animator, a Sprite Collider, and Sprite Renderer
- * and a child object called Hurtbox which contains a Hurtbox script
+ * All battlers will be instantiated with the following attributes
+ * {maxHealth,maxStamina,baseAttack,movementSpeed,dexterity,vitality}
  *
- * The current Battler Model considers the following Variables {health, stamina, movement speed, dexterity }
- * Current Assumptions Stamina regeneration is not considered and is fixed
+ * Any battler entity must have the following
+ * RigidBody2D
+ * Animator
+ * Sprite Collider2D (pushbox)
+ * Sprite Renderer
+ * Audio Source
+ * A child object called Hurtbox (a sprite collider2D) with the Hurtbox script
+ * 
+ * Hitboxes and damage are programmed in the inheriting class and are not the
+ * responsibility of the battler, however all implementation of battler
+ * must attack under some constraints
  *
- * Each Battler can have 1:M hitboxes
- * Each Battler Must have 1 BoxCollider2D Hurtbox
+ * An attack corresponds to the temporary enabling of a hitbox,
+ * when a battler comes in contact with a collider called hitbox it takes
+ * damage from its owner.
+ *  --Matt 4/25
+ *
  * 
  */
 
 public class Battler : MonoBehaviour
 {
+
+    public static float MAX_MAXHEALTH = 50F; 
+    public static float MAX_MAXSTAMINA = 100F; 
+    public static float MAX_BASEATTACK = 30F; 
+    public static float MAX_MAXMOVEMENTSPEED = 10F; 
+    public static float MAX_DEXTERITY = .1f; 
+    public static float MAX_VITALITY = .1f; 
+
+    public static float MIN_MAXHEALTH = 15f;
+    public static float MIN_MAXSTAMINA = 50f;
+    public static float MIN_BASEATTACK = 3f;
+    public static float MIN_MAXMOVEMENTSPEED = 2f;
+    public static float MIN_DEXTERITY = .05f;
+    public static float MIN_VITALITY = .0001f;
+
+
+
     //Battling Attributes 
     public float maxHealth;
     public float maxStamina;
     public float baseAttack;
     public float movementSpeed;
-    public float dexterity;
-    //consider maxMovement Speed (buffs may allow speed beyond max for fixed time)
+    public float dexterity; //percentage of max stamina regenerated per frame (effectively controls attack rate) --> [0,1]
+    public float vitality; //percentage of max health regenerated per frame --> [0,1]
 
     //State attributes
     public float stamina;
     public float health;
-    public float lastAttackTime;
+
+    //battler control variables
+    public float lastAttackTime;        //need this be here --Matt 4/25?
     public BattlerState currentState;
+
+    //movement direction
+    public Vector3 movementDirection;
+    public Vector3 lastTransformPosition;
 
     //prefab component references
     public Animator animator;
     public Rigidbody2D rb;
     public AudioSource[] aud;
-    public GameObject[] effects;
+    public SpriteRenderer sr;
 
-    /* When a MonoBehaviour is initialized,there is a sequence of function calls
-     * that take place
-     * 1. Constructor
-     * 2. Awake
-     * 3. Start
+
+    //public GameObject[] effects; Not utilized ... --Matt 4/25
+
+    /*
+     *  Initialize the battler with default values
      *
-     * In the game manager's start I initialize and set variables on the battlers,
-     * so its important that there default settings are set in awake and then
-     * overwritten in game manager's start
+     *
      */
     protected void Awake()
     {
-        maxHealth = health = 10f;
-        maxStamina = stamina = 6f;
-        baseAttack = 4f;
-        movementSpeed = 2f;
-        dexterity = 1f; //lower is better (for now)
+        maxHealth = health = MIN_MAXHEALTH;
+        maxStamina = stamina = MIN_MAXSTAMINA;
+        baseAttack = MIN_BASEATTACK;
+        movementSpeed = MIN_MAXMOVEMENTSPEED;
+        dexterity = MIN_DEXTERITY;
+        vitality = MIN_VITALITY;
 
         currentState = BattlerState.idle;
 
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        aud = GetComponentsInChildren<AudioSource>();
+        sr = GetComponent<SpriteRenderer>();
 
         lastAttackTime = -1;
+
+        //movement direction (Regardless of implementation of movement)
+        movementDirection = new Vector3(0,0,0);
+        lastTransformPosition = transform.position;
+
     }
 
 
-    // Update is called once per frame
-    void Update()
+    
+    protected void Update()
     {
-        //did the battler die?
-        if (health == 0)
+        if (health <= 0 && currentState != BattlerState.dead)
         {
+            currentState = BattlerState.dead;
             Die();
         }
+
+        //stamina regen
+        if (stamina < maxStamina)
+        {
+            StaminaRegen();
+        }
+
+        //health regen
+        if (health < maxHealth)
+        {
+            HealthRegen();
+        }
+
+
+
     }
 
+    protected void FixedUpdate()
+    {
+      
+        //update movement Direction
+        movementDirection = transform.position - lastTransformPosition;
+        lastTransformPosition = transform.position;
+
+        //Need this to animate when it is moving
+        ChangeAnim(movementDirection);
+        
+    }
+
+
     //the hurtbox was collided with (this is called from a child's hurtbox script)
-    public void OnHurtboxCollision(Collider2D collision)
+    public virtual void OnHurtboxCollision(Collider2D collision)
     {
         //check if collider is of tag hitbox
-        if (collision.gameObject.tag == "Hitbox")
+  
+        if (collision.gameObject.CompareTag("Hitbox"))
         {
+ 
+
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
-
-            //is the attacker in an attack state?
-            if (attacker.GetBattlerState() == BattlerState.attack && currentState != BattlerState.hitStun)
-            {
-                //deal damage (from parent class)
-                /* Concern: If we have enemies that will consist of
-                 * multiple hitboxes, wouldn't it be better to get the damage value
-                 * of the attacks from the hitboxes themselves so they don't all deal
-                 * the same amount of damage. -Victor
-                 *
-                 * If we want to give different hitboxes different damage, that
-                 * would make sense. I figured we were just considering flat damage
-                 *
-                 */
+            if (attacker.currentState != BattlerState.dead && attacker !=  this) { //you cant attack yourself
                 TakeDamage(attacker.GetDamage());
                 //start knockback (these are from the parent)
                 if (currentState != BattlerState.dead)
                 {
-                    Knockback(attacker.transform);
-                    StartCoroutine(KnockCo());
+                    StartCoroutine(KnockCo(attacker.transform,attacker));
                 }
-            }
+             }
+
         }
     }
 
+    protected void DecreaseStamina(float num, bool timedDecrease)
+    // timeDecrease: To remove stamina over time. This decreases the total stamina
+    // by delta time to even out the decrease. Set true if you need this.
+    {
+        if (timedDecrease)
+        {
+            stamina -= num * Time.deltaTime;
 
+        }
+        else
+        {
+            stamina -= num;
 
-    //perform knockback as a result of this Battler being attacked by another
-    public void Knockback(Transform tr)
+        }
+
+        if (stamina < 0f)
+        {
+            stamina = 0f;
+        }
+    }
+
+    //Regenerate the Battler's stamina
+    //Based on a percentage of there dexterity
+    //This is should be called every frame in update or fixedUpdate
+    void StaminaRegen()
+    {
+        stamina += (dexterity * maxStamina) * Time.deltaTime;
+    }
+
+    //Regenerate the Battler's Health
+    protected void HealthRegen()
+    {
+        health += (vitality * maxHealth) * Time.deltaTime;
+    }
+
+    //Co-routine for handling the termination of knockback
+    public IEnumerator KnockCo(Transform tr,Battler b)
     {
         if (rb != null)
         {
             currentState = BattlerState.hitStun;
             Vector2 difference = transform.position - tr.position;
-            difference = difference.normalized * 5.0f;
+            difference = difference.normalized * 3f*((b.baseAttack/Battler.MAX_BASEATTACK)+1);
             rb.AddForce(difference, ForceMode2D.Impulse);
-        }
-    }
-
-    //Co-routine for handling the termination of knockback
-    public IEnumerator KnockCo()
-    {
-        if (rb != null)
-        {
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(.4f);
             rb.velocity = Vector2.zero;
-            currentState = BattlerState.idle;
+            //knockback coroutine may reset the switch to death state
+            if (currentState != BattlerState.dead)
+            {
+                currentState = BattlerState.idle;
+            }
         }
     }
 
-    //All battlers can die!
-    /* Personally, I do not want to have the Die() funtion as a part
-     * of the battler script as enemies and players have various
-     * death animations. One way around this is figureing out how to
-     * get the time for animations. Otherwise, Die() should be part of
-     * the enemy or player's individual scripts.
-     *
-     * I think Die should just be ovveridden whenever an implementation has
-     * a specific animation of sound, in addition update() is overwritten
-     * to call the overwritten Die() function with a check
-     * that health is 0
-     *
-     */
-    public void Die()
+    
+    protected void Die()
     {
-        Destroy(this.gameObject, 0f);
+        rb.velocity = Vector2.zero; //Unsure whether neceessary
+        animator.SetTrigger("Dead");
+        rb.isKinematic = false; //will not move if hit during death animation
+        AudioSource deathAudio = aud[0]; //0=death audio 
+        deathAudio.Play();
+        StartCoroutine(DeadCo());
+    }
+
+    
+    private IEnumerator DeadCo()
+    {
+        yield return new WaitForSeconds(0.75f);
+        this.gameObject.SetActive(false);
+
+        //fresh 'sghetti
+        //related to main game
+        //so we can track how many kills the player has
+        if (GameObject.Find("Player"))
+        {
+            PlayerControl player = GameObject.FindWithTag("Player").GetComponent<PlayerControl>();
+            player.killCount += 1;
+        }
+
+
     }
 
     //All Battlers can take damage
@@ -192,7 +287,7 @@ public class Battler : MonoBehaviour
     {
         currentState = state;
     }
-    public void SetStats(float maxHealth, float maxStamina, float baseAttack, float movementSpeed, float dexterity)
+    public void SetStats(float maxHealth, float maxStamina, float baseAttack, float movementSpeed, float dexterity,float vitality)
     {
         this.maxHealth = maxHealth;
         this.health = maxHealth;
@@ -201,6 +296,7 @@ public class Battler : MonoBehaviour
         this.baseAttack = baseAttack;
         this.movementSpeed = movementSpeed;
         this.dexterity = dexterity;
+        this.vitality = vitality;
     }
 
 
@@ -212,6 +308,7 @@ public class Battler : MonoBehaviour
         statList.Add(baseAttack);
         statList.Add(movementSpeed);
         statList.Add(dexterity);
+        statList.Add(vitality);
 
         return statList;
     }
@@ -233,17 +330,7 @@ public class Battler : MonoBehaviour
         }
     }
 
-    public void MoveAndAnimate(Vector3 moveVector, bool toward)
-    {
-        float direction = 1f;
-        if (!toward)
-            direction = -1f;
-
-        Vector3 newPos = Vector3.MoveTowards(transform.position, moveVector, direction * movementSpeed * Time.deltaTime);
-        ChangeAnim(newPos - transform.position);
-        rb.MovePosition(newPos);
-    }
-
+    
     public void PlayAudio(int index, float startTime, float endTime)
     {
         AudioSource audio = aud[index];
@@ -251,4 +338,5 @@ public class Battler : MonoBehaviour
         audio.Play();
         audio.SetScheduledEndTime(AudioSettings.dspTime + (endTime - startTime));
     }
+    
 }

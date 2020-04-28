@@ -9,11 +9,13 @@ TagManager:
   - RoomTemplate
   - player_attack
   - audio
-  - player_projectile
   - Enemy
   - Potion
   - Hitbox
-  - StatsMenu
+  - Projectile
+  - PseudoHitbox
+  - EnemiesContainer
+  - EnoughKills
   layers:
   - Default
   - TransparentFX
@@ -25,7 +27,7 @@ TagManager:
   - 
   - Blocking Layer
   - Obstacle
-  - 
+  - Player
   - 
   - 
   - 

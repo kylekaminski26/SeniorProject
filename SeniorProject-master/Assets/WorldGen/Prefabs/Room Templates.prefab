@@ -93,8 +93,9 @@ MonoBehaviour:
   endOverlay: {fileID: 545407480033233968, guid: c5def5e22cb3ae943850a3540959a217,
     type: 3}
   rooms: []
-  dungeonSize: 8
-  waitTime: 2
+  roomListContainer: {fileID: 0}
+  dungeonSize: 0
+  waitTime: 1.5
   exitSpawned: 0
   maxX: 0
   minX: 0

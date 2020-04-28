@@ -13,10 +13,13 @@ public class RoomSpawner : MonoBehaviour
     private bool spawned = false;
     public float waitTime = 5f;
 
+    private GameObject room;
+
     private void Start()
     {
         Destroy(gameObject, waitTime);
         templates = GameObject.FindGameObjectWithTag("RoomTemplate").GetComponent<RoomTemplates>();
+        transform.parent = templates.roomListContainer.transform;
         Invoke("Spawn", 0.2f);
     }
 
@@ -54,25 +57,29 @@ public class RoomSpawner : MonoBehaviour
         {
             // Need to spawn a room with a BOTTOM door
             rand = Random.Range(0, templates.bottomRooms.Length);
-            Instantiate(templates.bottomRooms[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.bottomRooms[rand], transform.position, Quaternion.identity);
+            setParent();
         }
         else if (openingDirection == 2)
         {
             // Need to spawn a room with a TOP door
             rand = Random.Range(0, templates.topRooms.Length);
-            Instantiate(templates.topRooms[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.topRooms[rand], transform.position, Quaternion.identity);
+            setParent();
         }
         else if (openingDirection == 3)
         {
             // Need to spawn a room with a LEFT door
             rand = Random.Range(0, templates.leftRooms.Length);
-            Instantiate(templates.leftRooms[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.leftRooms[rand], transform.position, Quaternion.identity);
+            setParent();
         }
         else if (openingDirection == 4)
         {
             // Need to spawn a room with a RIGHT door
             rand = Random.Range(0, templates.rightRooms.Length);
-            Instantiate(templates.rightRooms[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.rightRooms[rand], transform.position, Quaternion.identity);
+            setParent();
         }
     }
 
@@ -82,32 +89,41 @@ public class RoomSpawner : MonoBehaviour
         {
             // Need to spawn a room with a BOTTOM door
             rand = Random.Range(0, templates.bottomRoomsEnd.Length);
-            Instantiate(templates.bottomRoomsEnd[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.bottomRoomsEnd[rand], transform.position, Quaternion.identity);
+            setParent();
         }
         else if (openingDirection == 2)
         {
             // Need to spawn a room with a TOP door
             rand = Random.Range(0, templates.topRoomsEnd.Length);
-            Instantiate(templates.topRoomsEnd[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.topRoomsEnd[rand], transform.position, Quaternion.identity);
+            setParent();
         }
         else if (openingDirection == 3)
         {
             // Need to spawn a room with a LEFT door
             rand = Random.Range(0, templates.leftRoomsEnd.Length);
-            Instantiate(templates.leftRoomsEnd[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.leftRoomsEnd[rand], transform.position, Quaternion.identity);
+            setParent();
         }
         else if (openingDirection == 4)
         {
             // Need to spawn a room with a RIGHT door
             rand = Random.Range(0, templates.rightRoomsEnd.Length);
-            Instantiate(templates.rightRoomsEnd[rand], transform.position, Quaternion.identity);
+            room = Instantiate(templates.rightRoomsEnd[rand], transform.position, Quaternion.identity);
+            setParent();
         }
+    }
+
+    private void setParent()
+    {
+        room.transform.parent = templates.roomListContainer.transform;
     }
 
     public void SpawnOverlays()
     {
         //don't generate overlay in the spawn room
-        if(templates.rooms.Count > 1)
+        if(!(transform.position.x == 0 && transform.position.y == 0))
         {
             rand = Random.Range(0, templates.overlays.Length);
             Instantiate(templates.overlays[rand], transform.position, Quaternion.identity);
@@ -126,8 +142,10 @@ public class RoomSpawner : MonoBehaviour
         {
             if (collision.GetComponent<RoomSpawner>().spawned == false && spawned == false)
             {
-                Instantiate(templates.entryRoom, transform.position, Quaternion.identity);
+                room = Instantiate(templates.entryRoom, transform.position, Quaternion.identity);
                 Destroy(gameObject);
+                setParent();
+                SpawnOverlays();
             }
             spawned = true;
         }
