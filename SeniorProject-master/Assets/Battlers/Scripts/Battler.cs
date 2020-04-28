@@ -44,15 +44,15 @@ public class Battler : MonoBehaviour
 
     public static float MAX_MAXHEALTH = 50F; 
     public static float MAX_MAXSTAMINA = 100F; 
-    public static float MAX_BASEATTACK = 100F; 
+    public static float MAX_BASEATTACK = 30F; 
     public static float MAX_MAXMOVEMENTSPEED = 10F; 
     public static float MAX_DEXTERITY = .1f; 
     public static float MAX_VITALITY = .1f; 
 
-    public static float MIN_MAXHEALTH = 10f;
+    public static float MIN_MAXHEALTH = 15f;
     public static float MIN_MAXSTAMINA = 50f;
-    public static float MIN_BASEATTACK = 2f;
-    public static float MIN_MAXMOVEMENTSPEED = 1f;
+    public static float MIN_BASEATTACK = 3f;
+    public static float MIN_MAXMOVEMENTSPEED = 2f;
     public static float MIN_DEXTERITY = .05f;
     public static float MIN_VITALITY = .0001f;
 

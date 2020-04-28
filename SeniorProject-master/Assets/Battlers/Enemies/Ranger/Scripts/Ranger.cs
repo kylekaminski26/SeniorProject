@@ -244,7 +244,7 @@ public class Ranger : Enemy
                 //If I am able to attack, then attack
                 //Changed 3 to the calculated stamina cost of an attack
                 //AND the raycast hit the players hurtbox
-                if ((stamina >= (.05f * 50) + (.10f * baseAttack)) && (currentState != BattlerState.attack))
+                if ((stamina >= (.005f * 50) + (.10f * baseAttack)) && (currentState != BattlerState.attack))
                 {
                     //Am I barely moving? and Does the ray intersect the player layer
                     if ((Mathf.Abs(movementDirection.magnitude) < 0.001) && (Physics2D.Raycast(transform.position, (targetHurtbox.transform.position - transform.position).normalized, visionRadius, layerMask)))
@@ -457,7 +457,7 @@ public class Ranger : Enemy
     public IEnumerator AttackCo()
     {
         
-        stamina -= (.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); 
+        stamina -= (.005f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); 
         currentState = BattlerState.attack;
 
         Vector3 targetDirection = target.position - transform.position;

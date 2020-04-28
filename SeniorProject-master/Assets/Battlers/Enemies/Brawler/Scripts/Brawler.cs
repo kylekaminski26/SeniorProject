@@ -270,7 +270,7 @@ public class Brawler : Enemy
 
                 //If I am able to attack, then approach
                 //Changed the cost of stamina to the calculated amount
-                if (stamina >= (.05f * 50) + (.10f * baseAttack))
+                if (stamina >= (.005f * 50) + (.10f * baseAttack))
                 {
                     previousAIState = currentAIState;
                     currentAIState = AIState.approach;
@@ -514,7 +514,7 @@ public class Brawler : Enemy
         //Attack Frames
         BoxCollider2D activeHitbox = effectiveHitbox;
         activeHitbox.enabled = true;
-        stamina -= (.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); //3; where 50 = globalMaxBaseAttack 
+        stamina -= (.005f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); //3; where 50 = globalMaxBaseAttack 
         yield return new WaitForSeconds(0.3f);
 
         //Ending Frames

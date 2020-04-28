@@ -69,7 +69,7 @@ public class PlayerControl : Battler
 
         maxHealth = health = Battler.MAX_MAXHEALTH/8;
         maxStamina = stamina = Battler.MAX_MAXSTAMINA/2;
-        dexterity = Battler.MAX_DEXTERITY/4;
+        dexterity = Battler.MAX_DEXTERITY/3;
         vitality = Battler.MAX_VITALITY/4;
 
 
@@ -109,7 +109,7 @@ public class PlayerControl : Battler
             //Debug.Log("Left Click");
         }
 
-        if ((Input.GetButtonDown("Fire1") && (lastAttackTime == 0f && stamina > (.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack)))
+        if ((Input.GetButtonDown("Fire1") && (lastAttackTime == 0f && stamina > (.005f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack)))
             && (currentState != BattlerState.hitStun || currentState != BattlerState.dead))
         {
             MeleeAttack();
@@ -202,7 +202,7 @@ public class PlayerControl : Battler
     {
         lastAttackTime = attackRate;
         currentState = BattlerState.attack;
-        DecreaseStamina((.05f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack), false); //STAMINA LOSS FORMULA (IN BRAWLER AND RANGER)
+        DecreaseStamina((.05f * Battler.MAX_MAXSTAMINA) + (.005f * baseAttack), false); //STAMINA LOSS FORMULA (IN BRAWLER AND RANGER)
         animator.SetTrigger("Attacking");
         PlayAudio(1, 0.13f, 0.4f);
         currentState = BattlerState.idle;

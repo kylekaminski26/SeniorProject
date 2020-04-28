@@ -13,7 +13,7 @@ public class Slime : Brawler
 
         if (health < (.30) * maxHealth) {
             if (Random.RandomRange(0, 100) == 1) {
-                while (count < Random.RandomRange(1,6))
+                while (count < Random.RandomRange(1,20))
                 {
                     Enemy e = (Instantiate(    babySlime,
                                     new Vector3(gameObject.transform.position.x + Random.Range(-1.0f, 1.0f),
@@ -21,7 +21,7 @@ public class Slime : Brawler
                                             0.0f),
                                     gameObject.transform.rotation,
                                     GameObject.Find("enemyListContainer").transform)).GetComponent<Enemy>();
-                    e.SetStats(.5f*maxHealth,maxStamina,baseAttack*.3f,3*movementSpeed,dexterity*1.5f,vitality);
+                    e.SetStats(.5f*maxHealth,maxStamina,baseAttack*.3f,10*movementSpeed,dexterity*1.5f,vitality);
                     count++;
                 }
             }
