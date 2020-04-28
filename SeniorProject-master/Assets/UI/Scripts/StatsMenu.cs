@@ -12,7 +12,7 @@ public class StatsMenu : MonoBehaviour
     public GameObject statsScreen;
     public GameObject button;
     private GameObject player;
-    private GameObject healthStamBars;
+    
 
     public Text attackVal;
     public Text stamVal;
@@ -25,7 +25,7 @@ public class StatsMenu : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindWithTag("Player");
-        healthStamBars = GameObject.FindWithTag("HealthStamBars");
+        
     }
     // Update is called once per frame
     void Update()
