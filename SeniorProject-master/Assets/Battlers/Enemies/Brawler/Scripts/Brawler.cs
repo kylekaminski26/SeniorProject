@@ -4,18 +4,15 @@ using UnityEngine;
 
 
 
-//TO-Dos: Need to reconsider states in Battler, this construction utilizes two sets of states: Battler and AI
-//and it is confusing to make sense of
-
+/*
+    A Brawler is any type of enemy implementation that only has melee hitboxes.
+    The brawler script should be added to any enemy that only has melee moves.
+*/
 public class Brawler : Enemy
 {
     private float visionRadius; //Vision Range of Battler
-
-
-    //concerning the implementation of generic hitboxes
     private BoxCollider2D effectiveHitbox;
     private List<BoxCollider2D> Hitboxes;
-
     private Random random;
 
     //TG
@@ -46,8 +43,6 @@ public class Brawler : Enemy
     void Awake()
     {
         base.Awake();
-
-
         //initialize child specific variables
         visionRadius = 5f;
 
@@ -115,7 +110,7 @@ public class Brawler : Enemy
         Vector3 attackerHitboxCenter = (Vector3)effectiveHitbox.transform.position + (Vector3)effectiveHitbox.offset;
 
         //center of target's hurtbox
-        Vector3 targetHurtboxCenter = (Vector3)targetHurtbox.transform.position + (Vector3)targetHurtbox.offset;//(Vector3)targetHurtbox.bounds.center;
+        Vector3 targetHurtboxCenter = (Vector3)targetHurtbox.transform.position + (Vector3)targetHurtbox.offset;
 
         //minimal dimension of target's hurtbox(needs to be boxcollider2D)
         float minDim = (targetHurtbox.size.x < targetHurtbox.size.y) ? targetHurtbox.size.x : targetHurtbox.size.y;
@@ -476,14 +471,13 @@ public class Brawler : Enemy
 
     }
 
-    //checks the movement direction of the brawler, and set the
+    //checks the movement direction of the brawler, and sets the
     //the effective hitbox to the hitbox that is closest to the direction
-    //of movement
+    //of movement based off of linear algebra
     public void setEffectiveHitbox()
     {
         if (Hitboxes.Count > 1)
         {
-            //do stuff
             int minNdx = 0;
             float minAngle = 2 * Mathf.PI;
             Vector3 hitboxPosition;
@@ -515,7 +509,7 @@ public class Brawler : Enemy
         BoxCollider2D activeHitbox = effectiveHitbox;
         activeHitbox.enabled = true;
         animator.SetTrigger("Attack 1");
-        stamina -= (.005f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); //3; where 50 = globalMaxBaseAttack 
+        stamina -= (.005f * Battler.MAX_MAXSTAMINA) + (.05f * baseAttack); 
         yield return new WaitForSeconds(0.3f);
 
         //Ending Frames

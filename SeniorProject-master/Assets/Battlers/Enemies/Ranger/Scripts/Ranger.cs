@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-//TO-Dos: Need to reconsider states in Battler, this construction utilizes two sets of states: Battler and AI
-//and it is confusing to make sense of
+/*
+    A ranger is an enemy instance that only has ranged attacks, thus 
+    a ranger must be accompanied by a projectile script to carry out 
+    an attack
+*/
 
 public class Ranger : Enemy
 {

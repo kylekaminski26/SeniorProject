@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/**
+    The Enemy class servers as the base class for all enemy instances.
+    It contains fucntionality that relates enemy battlers to the player.
+*/
 public class Enemy : Battler
 {
-    //Awake and Update help define specific interactions between
-    //enemies and players, such as order in layer
-
+    
     //State variables for AI thinking
     public enum AIState
     {
@@ -29,7 +30,7 @@ public class Enemy : Battler
     public float healthRegenerated = 0; //internal
 
 
-
+    //This Awake() is overwritten so that enemies can locate the player
     public void Awake() {
 
         base.Awake();
@@ -51,14 +52,9 @@ public class Enemy : Battler
 
     public void Update()
     {
-        //before health regen
         float healthDiff = (-1 * health);
-
         base.Update();
-
         healthRegenerated += (healthDiff + health);
-        //after health regen
-
 
         //check if the player is above me, if the player is above me than swap
         //my order in layer

@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/*
+    This hurtbox script should be attatched to the hurtbox of every battler.
+    It provides a convenient way to determine whether an attack has occured,
+    and transmitting who the attack is from
+*/
 
 public class Hurtbox : MonoBehaviour
 {

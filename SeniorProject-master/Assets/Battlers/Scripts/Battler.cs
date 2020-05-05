@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-//State variables for Battler Constraints and animations
 public enum BattlerState
 {
     idle,
@@ -13,7 +12,7 @@ public enum BattlerState
     dash
 }
 
-/*This class holds all of the common elements between the player and
+/* This class holds all of the common elements between the player and
  * the enemies This includes initial battle variables, states, and common routines
  *
  * All battlers will be instantiated with the following attributes
@@ -28,7 +27,7 @@ public enum BattlerState
  * A child object called Hurtbox (a sprite collider2D) with the Hurtbox script
  * 
  * Hitboxes and damage are programmed in the inheriting class and are not the
- * responsibility of the battler, however all implementation of battler
+ * responsibility of the battler, however all implementations of battler
  * must attack under some constraints
  *
  * An attack corresponds to the temporary enabling of a hitbox,
@@ -41,7 +40,7 @@ public enum BattlerState
 
 public class Battler : MonoBehaviour
 {
-
+    //Class constants
     public static float MAX_MAXHEALTH = 50F; 
     public static float MAX_MAXSTAMINA = 100F; 
     public static float MAX_BASEATTACK = 30F; 
@@ -57,7 +56,6 @@ public class Battler : MonoBehaviour
     public static float MIN_VITALITY = .0001f;
 
 
-
     //Battling Attributes 
     public float maxHealth;
     public float maxStamina;
@@ -71,7 +69,7 @@ public class Battler : MonoBehaviour
     public float health;
 
     //battler control variables
-    public float lastAttackTime;        //need this be here --Matt 4/25?
+    public float lastAttackTime;     
     public BattlerState currentState;
 
     //movement direction
@@ -85,13 +83,8 @@ public class Battler : MonoBehaviour
     public SpriteRenderer sr;
 
 
-    //public GameObject[] effects; Not utilized ... --Matt 4/25
 
-    /*
-     *  Initialize the battler with default values
-     *
-     *
-     */
+    //Initialize the battler with default values
     protected void Awake()
     {
         maxHealth = health = MIN_MAXHEALTH;
@@ -158,12 +151,8 @@ public class Battler : MonoBehaviour
     //the hurtbox was collided with (this is called from a child's hurtbox script)
     public virtual void OnHurtboxCollision(Collider2D collision)
     {
-        //check if collider is of tag hitbox
-  
         if (collision.gameObject.CompareTag("Hitbox"))
         {
- 
-
             //get the battler associated with the hit
             Battler attacker = (Battler)collision.transform.parent.gameObject.GetComponent<Battler>();
             if (attacker.currentState != BattlerState.dead && attacker !=  this) { //you cant attack yourself
@@ -178,9 +167,10 @@ public class Battler : MonoBehaviour
         }
     }
 
-    protected void DecreaseStamina(float num, bool timedDecrease)
+
     // timeDecrease: To remove stamina over time. This decreases the total stamina
     // by delta time to even out the decrease. Set true if you need this.
+    protected void DecreaseStamina(float num, bool timedDecrease)
     {
         if (timedDecrease)
         {
@@ -199,15 +189,12 @@ public class Battler : MonoBehaviour
         }
     }
 
-    //Regenerate the Battler's stamina
-    //Based on a percentage of there dexterity
-    //This is should be called every frame in update or fixedUpdate
+
     void StaminaRegen()
     {
         stamina += (dexterity * maxStamina) * Time.deltaTime;
     }
 
-    //Regenerate the Battler's Health
     protected void HealthRegen()
     {
         health += (vitality * maxHealth) * Time.deltaTime;
@@ -261,7 +248,6 @@ public class Battler : MonoBehaviour
 
     }
 
-    //All Battlers can take damage
     public void TakeDamage(float dmg)
     {
         health -= dmg;
@@ -271,13 +257,11 @@ public class Battler : MonoBehaviour
         }
     }
 
-    //How much damage (All things considered this battler deals
     public float GetDamage()
     {
         return baseAttack;
     }
 
-    //get the battler's state
     public BattlerState GetBattlerState()
     {
         return currentState;
