@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class StatsMenu : MonoBehaviour
 {
+    //This script is used for the Stats menu in the main game's UI.
+    //It is responsible for showing, hiding, and loading the stats menu
+    //with proper values from the player.
 
     public bool statsOpen = false;
 
@@ -24,12 +27,14 @@ public class StatsMenu : MonoBehaviour
 
     private void Start()
     {
+        //Locate the player object in the game.
         player = GameObject.FindWithTag("Player");
         
     }
     // Update is called once per frame
     void Update()
     {
+        //"K" button will open/close stats menu, based on bool statsOpen
         if (Input.GetKeyDown(KeyCode.K) )
         {
             if (statsOpen)
@@ -44,6 +49,8 @@ public class StatsMenu : MonoBehaviour
         }
     }
 
+    //Gets the stat values from the player object and loads the
+    //stats menu with these values.
     public void setStats()
     {
         attackVal.text = ": " + player.GetComponent<PlayerControl>().baseAttack;
@@ -55,13 +62,13 @@ public class StatsMenu : MonoBehaviour
 
 
     }
-
+    //Opens stats menu
     public void showStats()
     {
         statsScreen.SetActive(true);
         statsOpen = true;
     }
-
+    //Closes stats menu
     public void closeStats()
     {
         statsScreen.SetActive(false);
