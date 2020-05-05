@@ -2,30 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+/*
+    The Game Manager class holds necessary information for the progression of the game.
+    It facilitates the loading of the next level, carries out the evolutionary process for enemies,
+    and updates the kill goal.
+    
+    Enemy Evolution: All enemies are battlers and thus have the 7 battler attributes.
+    These attributes exist within certain ranges, and we can generate attribute values as percentages
+    of these maxes. The evolution algorithm below is the systematic way of generating dynamic unit vectors
+    from a 7 dimensional hyperspace. The direction of these vectors correspond to a list of floats varying in magnitude.
+    The unit vectors get scaled by the scaling factor rho as the game progresses to allow the enemies a chance to create
+    offspring near the max values.
 
+    First random unit vectors are created and scaled by the default rho value.
+    Then after the completion of a level, there is a minimum number of enemies which 
+    I can rank by there performance against the player. Then I take a fixed amount of the best 
+    enemies of that level and have them mate with each other. Finally the offspring and the best parents 
+    are added together to compose the next generation.
+*/
 public class GameManager : MonoBehaviour
 {
     static GameManager instance; //used to make this GameObject a singleton
-
     public int gameLevel = 1;
-
     public GameObject[] enemyPrefabList;
-
     public int killGoal;
     public static int MAX_KILLGOAL = 30;
-    public float rho; 
+    public float rho;  //rho is the scale factor for enemies, as the game approaches maximum difficulty rho reaches its limit
 
     //needs to be tied in scene
     public PlayerControl player;
 
-    //variables concerning evo debugging
+    //variables concerning evolution
     public List<List<float>> instanceVectors; 
 
 
 
     private void Update()
     {
-        if (player != null) //player has dead
+        if (player != null) //player has died
         {
             if (player.isActiveAndEnabled == false)
             {
@@ -34,8 +48,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-
-        //why is this in update? - Matt
         if (player == null)
         {
             //get player reference
@@ -46,6 +58,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
     void Awake()
     {
         //Generate random initializations for evolutionary algorithm
@@ -67,7 +80,7 @@ public class GameManager : MonoBehaviour
     //call this when ready to go to the next level
     //adjusts level, adjusts killGoal
     //adjusts enemy scaling
-    //does enemy evolution
+    //invokes enemy evolution
     public void prepareNextLevel()
     {
         
@@ -85,11 +98,8 @@ public class GameManager : MonoBehaviour
 
         //adjust rho (enemy scaling)
         rho = killGoal / MAX_KILLGOAL;
-
         NextGeneration();
-
         player.killCount = 0;
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
 
@@ -121,7 +131,7 @@ public class GameManager : MonoBehaviour
                 v[i] /= magnitude;
             }
 
-            //Battler Constant Rangers
+            //Battler Constant Ranges
             List<float> c = new List<float>() {
                 (rho)*Battler.MAX_MAXHEALTH - Battler.MIN_MAXHEALTH,
                 (rho)*Battler.MAX_MAXSTAMINA - Battler.MIN_MAXSTAMINA,
@@ -156,8 +166,7 @@ public class GameManager : MonoBehaviour
     //Calculate how many new enemies need to be created to
     //satisfy the kill quota of the next level
     //So that the next generation is the top half of the previous
-    //plus the offspring produced to meet the quota
-    
+    //plus the offspring produced to meet the quota  
     private void NextGeneration()
     {
         //get all the enemies that fought this level
@@ -179,6 +188,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
         //Get the previous killGoals number of required instance vectors
         for (int i = 0; i < (killGoal-2) / 2; i++) {
             prime.Add(es[i].GetStats());
@@ -215,7 +225,7 @@ public class GameManager : MonoBehaviour
     
 
 
-    //givent the vectors of two slimes, mate them together
+    //givent the enemy instance vectors, mate them together
     //with the given constraint p
     //for each attribute, find the midpoint
     //find the distance between the attributes
@@ -225,8 +235,7 @@ public class GameManager : MonoBehaviour
     private List<float> Mate(List<float> x, List<float> y)
     {
         List<float> newborn = new List<float>();
-
-        
+ 
         for (int i = 0; i < x.Count; i++)
         {
             float midPoint = (x[i] + y[i]) / 2;
